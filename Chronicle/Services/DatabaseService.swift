@@ -248,4 +248,59 @@ final class DatabaseService {
         }
         return result
     }
+
+    func fetchPaymentRecords(forMonth yearMonth: YearMonth) throws -> [PaymentRecord] {
+        guard let db = db else { return [] }
+
+        let start = yearMonth.startDate
+        let end = yearMonth.endDate
+
+        var result: [PaymentRecord] = []
+        let query = paymentRecords
+            .filter(paidAt >= start && paidAt <= end)
+            .order(paidAt.desc)
+
+        for row in try db.prepare(query) {
+            let record = PaymentRecord(
+                id: UUID(uuidString: row[prId]) ?? UUID(),
+                billId: UUID(uuidString: row[prBillId]) ?? UUID(),
+                amountPaidCents: row[amountPaidCents],
+                paidAt: row[paidAt]
+            )
+            result.append(record)
+        }
+        return result
+    }
+
+    func wasPaidThisPeriod(for bill: Bill, in period: YearMonth) throws -> Bool {
+        guard let db = db else { return false }
+
+        let start = period.startDate
+        let end = period.endDate
+
+        let query = paymentRecords
+            .filter(prBillId == bill.id.uuidString)
+            .filter(paidAt >= start && paidAt <= end)
+            .limit(1)
+
+        return try db.pluck(query) != nil
+    }
+
+    func fetchPaymentRecordsGroupedByMonth() throws -> [YearMonth: [PaymentRecord]] {
+        let allRecords = try fetchAllPaymentRecords()
+        var grouped: [YearMonth: [PaymentRecord]] = [:]
+
+        for record in allRecords {
+            let ym = YearMonth(date: record.paidAt)
+            grouped[ym, default: []].append(record)
+        }
+
+        return grouped
+    }
+
+    func deletePaymentRecord(_ recordId: UUID) throws {
+        guard let db = db else { return }
+        let row = paymentRecords.filter(prId == recordId.uuidString)
+        try db.run(row.delete())
+    }
 }

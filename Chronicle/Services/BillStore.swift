@@ -184,4 +184,118 @@ final class BillStore: ObservableObject {
     var totalRemainingThisMonth: Decimal {
         totalDueThisMonth - totalPaidThisMonth
     }
+
+    // MARK: - Payment History
+
+    func paymentRecords(for bill: Bill) -> [PaymentRecord] {
+        do {
+            return try db.fetchPaymentRecords(for: bill.id)
+        } catch {
+            print("Failed to fetch payment records: \(error)")
+            return []
+        }
+    }
+
+    func allPaymentRecords() -> [PaymentRecord] {
+        do {
+            return try db.fetchAllPaymentRecords()
+        } catch {
+            print("Failed to fetch all payment records: \(error)")
+            return []
+        }
+    }
+
+    func paymentRecordsGroupedByMonth() -> [YearMonth: [PaymentRecord]] {
+        do {
+            return try db.fetchPaymentRecordsGroupedByMonth()
+        } catch {
+            print("Failed to group payment records: \(error)")
+            return [:]
+        }
+    }
+
+    func deletePaymentRecord(_ record: PaymentRecord) {
+        do {
+            try db.deletePaymentRecord(record.id)
+            loadBills()
+        } catch {
+            print("Failed to delete payment record: \(error)")
+        }
+    }
+
+    func wasPaidThisPeriod(for bill: Bill) -> Bool {
+        let currentMonth = YearMonth(date: Date())
+        do {
+            return try db.wasPaidThisPeriod(for: bill, in: currentMonth)
+        } catch {
+            return false
+        }
+    }
+
+    // MARK: - Monthly Stats (R4)
+
+    func totalSpentThisMonth() -> Decimal {
+        totalPaidThisMonth
+    }
+
+    func totalDueThisMonthValue() -> Decimal {
+        totalDueThisMonth
+    }
+
+    func spendingByCategory(for period: YearMonth) -> [Category: Decimal] {
+        let records = doGetPaymentRecords(for: period)
+        var result: [Category: Decimal] = [:]
+
+        for record in records {
+            if let bill = bills.first(where: { $0.id == record.billId }) {
+                result[bill.category, default: 0] += record.amount
+            }
+        }
+
+        return result
+    }
+
+    private func doGetPaymentRecords(for period: YearMonth) -> [PaymentRecord] {
+        do {
+            return try db.fetchPaymentRecords(forMonth: period)
+        } catch {
+            return []
+        }
+    }
+
+    func monthlyTrend(months: Int = 6) -> [YearMonth: Decimal] {
+        var result: [YearMonth: Decimal] = [:]
+        var current = YearMonth(date: Date())
+
+        for _ in 0..<months {
+            let spent = spendingByCategory(for: current).values.reduce(Decimal(0), +)
+            result[current] = spent
+            current = current.previous()
+        }
+
+        return result
+    }
+
+    // MARK: - Bills by Category
+
+    func bills(for category: Category) -> [Bill] {
+        return bills.filter { $0.category == category && !$0.isPaid }
+    }
+
+    // MARK: - Bills paid this month (from payment records, not just isPaid flag)
+
+    func billsPaidInMonth(_ period: YearMonth) -> [PaymentRecord] {
+        doGetPaymentRecords(for: period)
+    }
+
+    // MARK: - Undo Payment
+
+    func undoPayment(record: PaymentRecord) {
+        do {
+            try db.deletePaymentRecord(record.id)
+            loadBills()
+        } catch {
+            print("Failed to undo payment: \(error)")
+        }
+    }
 }

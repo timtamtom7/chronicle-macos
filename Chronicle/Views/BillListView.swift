@@ -1,5 +1,21 @@
 import SwiftUI
 
+// MARK: - Sort Order
+
+enum BillSortOrder: String, CaseIterable {
+    case dueDate = "Due Date"
+    case amountHighToLow = "Amount (High to Low)"
+    case alphabetical = "Alphabetical"
+
+    var keyboardShortcut: String {
+        switch self {
+        case .dueDate: return "d"
+        case .amountHighToLow: return "a"
+        case .alphabetical: return "l"
+        }
+    }
+}
+
 struct BillListView: View {
     @EnvironmentObject var billStore: BillStore
     @State private var showingAddSheet = false
@@ -8,6 +24,8 @@ struct BillListView: View {
     @State private var selectedCategory: Category?
     @State private var showDeleteAlert = false
     @State private var billToDelete: Bill?
+    @State private var sortOrder: BillSortOrder = .dueDate
+    @State private var showPastBills = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -78,7 +96,13 @@ struct BillListView: View {
             ForEach(Category.allCases, id: \.self) { cat in
                 let count = billStore.bills.filter { $0.category == cat }.count
                 if count > 0 {
-                    sidebarItem(title: cat.rawValue, icon: cat.icon, count: count, selected: selectedCategory == cat) {
+                    sidebarItem(
+                        title: cat.rawValue,
+                        icon: cat.icon,
+                        count: count,
+                        selected: selectedCategory == cat,
+                        color: CategoryColor.map[cat]
+                    ) {
                         selectedCategory = cat
                     }
                 }
@@ -97,14 +121,19 @@ struct BillListView: View {
         .background(Theme.surfaceSecondary)
     }
 
-    private func sidebarItem(title: String, icon: String? = nil, count: Int, selected: Bool, action: @escaping () -> Void) -> some View {
+    private func sidebarItem(title: String, icon: String? = nil, count: Int, selected: Bool, color: Color? = nil, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
                 if let icon = icon {
                     Image(systemName: icon)
                         .font(.system(size: 12))
-                        .foregroundColor(selected ? Theme.accent : Theme.textSecondary)
+                        .foregroundColor(selected ? (color ?? Theme.accent) : Theme.textSecondary)
                         .frame(width: 16)
+                } else {
+                    Circle()
+                        .fill(color ?? Theme.textTertiary)
+                        .frame(width: 8, height: 8)
+                        .opacity(selected ? 1 : 0.5)
                 }
                 Text(title)
                     .font(.system(size: 13))
@@ -180,6 +209,36 @@ struct BillListView: View {
 
             Spacer()
 
+            // Sort picker
+            Menu {
+                ForEach(BillSortOrder.allCases, id: \.self) { order in
+                    Button {
+                        sortOrder = order
+                    } label: {
+                        HStack {
+                            Text(order.rawValue)
+                            if sortOrder == order {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "arrow.up.arrow.down")
+                        .font(.system(size: 11))
+                    Text(sortOrder.rawValue)
+                        .font(.system(size: 12))
+                }
+                .foregroundColor(Theme.textSecondary)
+                .padding(.horizontal, Theme.spacing8)
+                .padding(.vertical, 5)
+                .background(Theme.surfaceSecondary)
+                .cornerRadius(Theme.radiusSmall)
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+
             // Add button
             Button(action: { showingAddSheet = true }) {
                 HStack(spacing: 4) {
@@ -219,9 +278,9 @@ struct BillListView: View {
                     billSection(title: "Past Due", bills: pastDueBills, accentColor: Theme.danger)
                 }
 
-                // Paid
+                // Past Bills (recurring paid - collapsible)
                 if !paidBills.isEmpty {
-                    billSection(title: "Paid", bills: paidBills, accentColor: Theme.success)
+                    pastBillsSection
                 }
 
                 if filteredBills.isEmpty {
@@ -229,6 +288,46 @@ struct BillListView: View {
                 }
             }
             .padding(Theme.spacing16)
+        }
+    }
+
+    private var pastBillsSection: some View {
+        VStack(alignment: .leading, spacing: Theme.spacing8) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showPastBills.toggle()
+                }
+            } label: {
+                HStack {
+                    Image(systemName: showPastBills ? "chevron.down" : "chevron.right")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(Theme.textTertiary)
+                    Text("PAID")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(Theme.textTertiary)
+                    Text("(\(paidBills.count))")
+                        .font(.system(size: 11))
+                        .foregroundColor(Theme.textTertiary)
+                    Spacer()
+                }
+            }
+            .buttonStyle(.plain)
+
+            if showPastBills {
+                VStack(spacing: Theme.spacing8) {
+                    ForEach(paidBills) { bill in
+                        BillRowView(
+                            bill: bill,
+                            onTogglePaid: { billStore.markPaid(bill, paid: !bill.isPaid) },
+                            onEdit: { selectedBill = bill },
+                            onDelete: {
+                                billToDelete = bill
+                                showDeleteAlert = true
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -241,6 +340,16 @@ struct BillListView: View {
 
         if let cat = selectedCategory {
             bills = bills.filter { $0.category == cat }
+        }
+
+        // Sort
+        switch sortOrder {
+        case .dueDate:
+            bills.sort { $0.dueDate < $1.dueDate }
+        case .amountHighToLow:
+            bills.sort { $0.amountCents > $1.amountCents }
+        case .alphabetical:
+            bills.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
 
         return bills
@@ -420,9 +529,12 @@ struct BillRowView: View {
     }
 
     private var leftBorderColor: Color {
+        if bill.isPaid {
+            return Theme.success
+        }
         switch bill.status() {
         case .dueToday, .dueSoon: return Theme.accent
-        case .upcoming: return Theme.border
+        case .upcoming: return CategoryColor.map[bill.category] ?? Theme.border
         case .overdue: return Theme.danger
         case .paid: return Theme.success
         }

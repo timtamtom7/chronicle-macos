@@ -196,7 +196,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setupMainWindow() {
-        let contentView = BillListView()
+        let contentView = MainTabView()
             .environmentObject(billStore)
 
         mainWindow = NSWindow(

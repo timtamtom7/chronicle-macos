@@ -94,21 +94,38 @@ struct ContentView: View {
 
             Spacer()
 
-            Button(action: { showSettingsSheet = true }) {
-                Image(systemName: "gearshape")
-                    .font(.system(size: 13))
-                    .foregroundColor(Theme.textSecondary)
-            }
-            .buttonStyle(.plain)
-            .help("Settings")
+            // Quick actions
+            HStack(spacing: Theme.spacing12) {
+                // Pay all due today button
+                if !billStore.upcomingBills.filter({ $0.status() == .dueToday }).isEmpty {
+                    Button(action: payAllDueToday) {
+                        HStack(spacing: 2) {
+                            Image(systemName: "checkmark.circle")
+                                .font(.system(size: 11))
+                            Text("Pay All Due")
+                                .font(.system(size: 11, weight: .medium))
+                        }
+                        .foregroundColor(Theme.success)
+                    }
+                    .buttonStyle(.plain)
+                }
 
-            Button(action: { showingAddSheet = true }) {
-                Image(systemName: "plus")
-                    .font(.system(size: 13))
+                Button(action: { showSettingsSheet = true }) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Settings")
+
+                Button(action: { showingAddSheet = true }) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 13))
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(Theme.accent)
+                .help("Add Bill")
             }
-            .buttonStyle(.plain)
-            .foregroundColor(Theme.accent)
-            .help("Add Bill")
         }
         .padding(.horizontal, Theme.spacing16)
         .padding(.vertical, Theme.spacing12)
@@ -171,6 +188,12 @@ struct ContentView: View {
                     .foregroundColor(Theme.textTertiary)
                     .textCase(.uppercase)
                 Spacer()
+                Button(action: showMainWindow) {
+                    Text("View All")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(Theme.accent)
+                }
+                .buttonStyle(.plain)
             }
 
             HStack(spacing: Theme.spacing16) {
@@ -198,6 +221,13 @@ struct ContentView: View {
 
     private func togglePaid(_ bill: Bill) {
         billStore.markPaid(bill, paid: !bill.isPaid)
+    }
+
+    private func payAllDueToday() {
+        let dueTodayBills = billStore.upcomingBills.filter { $0.status() == .dueToday }
+        for bill in dueTodayBills {
+            billStore.markPaid(bill, paid: true)
+        }
     }
 
     private func formatCurrency(_ value: Decimal) -> String {
@@ -230,6 +260,14 @@ struct BillCardView: View {
 
     var body: some View {
         HStack(spacing: Theme.spacing12) {
+            // Mark paid button
+            Button(action: { onTogglePaid(bill) }) {
+                Image(systemName: bill.isPaid ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 16))
+                    .foregroundColor(bill.isPaid ? Theme.success : Theme.textTertiary)
+            }
+            .buttonStyle(.plain)
+
             // Status indicator
             Circle()
                 .fill(statusColor)
@@ -246,13 +284,14 @@ struct BillCardView: View {
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
+                .strikethrough(bill.isPaid)
 
             Spacer()
 
             // Amount
             Text(bill.formattedAmount)
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
-                .foregroundColor(Theme.textPrimary)
+                .foregroundColor(bill.isPaid ? Theme.textTertiary : Theme.textPrimary)
 
             // Due date
             Text(formattedDueDate)

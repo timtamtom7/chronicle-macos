@@ -8,15 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		00DF8C4D0B54869903ADDBE5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711160B8C16D16E95C7B3A2F /* main.swift */; };
+		0CB0D3992C17A95903199332 /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */; };
 		1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */; };
 		1FB9E4C3402F0563E22953E2 /* Bill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010584A744B87C0D76BAF34C /* Bill.swift */; };
 		530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */; };
 		61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */; };
+		666365061234DEB80713515F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A93815CDE197FADCBF58BB /* HistoryView.swift */; };
 		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
 		C43E320379DBC07984826840 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 12728690ECED0F3634019379 /* SQLite */; };
 		CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */; };
 		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
+		EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5246250499B2D3CCC2F4D3CD /* MainTabView.swift */; };
 		F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E886527619ABE419071F7F /* ContentView.swift */; };
+		F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */; };
 		FC46E845F4F413745F254059 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F7ECEA259D53CB979FA683 /* Theme.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,13 +31,17 @@
 		1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillStore.swift; sourceTree = "<group>"; };
 		26F7ECEA259D53CB979FA683 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
+		5246250499B2D3CCC2F4D3CD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		52B8AFD3830B8788DA4E0BCF /* Chronicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBillSheet.swift; sourceTree = "<group>"; };
+		64A93815CDE197FADCBF58BB /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		711160B8C16D16E95C7B3A2F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronicleApp.swift; sourceTree = "<group>"; };
 		8E60BE2909D224FA810173A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillListView.swift; sourceTree = "<group>"; };
 		CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
+		FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +94,9 @@
 				6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */,
 				CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */,
 				17E886527619ABE419071F7F /* ContentView.swift */,
+				64A93815CDE197FADCBF58BB /* HistoryView.swift */,
+				5246250499B2D3CCC2F4D3CD /* MainTabView.swift */,
+				FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -102,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				010584A744B87C0D76BAF34C /* Bill.swift */,
+				ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -191,8 +203,12 @@
 				1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */,
 				F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */,
 				D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */,
+				666365061234DEB80713515F /* HistoryView.swift in Sources */,
+				EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */,
 				530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */,
+				F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */,
 				FC46E845F4F413745F254059 /* Theme.swift in Sources */,
+				0CB0D3992C17A95903199332 /* YearMonth.swift in Sources */,
 				00DF8C4D0B54869903ADDBE5 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
