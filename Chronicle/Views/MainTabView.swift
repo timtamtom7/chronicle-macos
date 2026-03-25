@@ -25,6 +25,27 @@ struct MainTabView: View {
                 }
                 .tag(2)
                 .keyboardShortcut("3")
+
+            HouseholdDashboardView()
+                .tabItem {
+                    Label("Household", systemImage: "house.fill")
+                }
+                .tag(3)
+                .keyboardShortcut("4")
+
+            BusinessView()
+                .tabItem {
+                    Label("Business", systemImage: "briefcase.fill")
+                }
+                .tag(4)
+                .keyboardShortcut("5")
+
+            APIServerView()
+                .tabItem {
+                    Label("API", systemImage: "server.rack")
+                }
+                .tag(5)
+                .keyboardShortcut("6")
         }
         .frame(minWidth: 560, minHeight: 400)
     }
