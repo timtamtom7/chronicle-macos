@@ -22,7 +22,9 @@
 		666365061234DEB80713515F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A93815CDE197FADCBF58BB /* HistoryView.swift */; };
 		6FB060FE480769F4FB15DCDE /* ExchangeRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */; };
 		7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C10F679571983C9EC78C7 /* Budget.swift */; };
+		98DC06937B2D6FDA4C7BC802 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91342124452FB09F9E03DCC5 /* ShareView.swift */; };
 		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
+		B3628BE4BCD4E49970E6AEF2 /* ShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF77EB48B31CA1189E2222E /* ShareService.swift */; };
 		C43E320379DBC07984826840 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 12728690ECED0F3634019379 /* SQLite */; };
 		C71F261B53152E557222CCAA /* BillTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EC9206C6E4962BA34DB74 /* BillTemplate.swift */; };
 		C9E4D5A6DEC685B4AE002F31 /* CSVImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05C5F47DFF873B52C0F0349 /* CSVImportService.swift */; };
@@ -57,6 +59,8 @@
 		711160B8C16D16E95C7B3A2F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronicleApp.swift; sourceTree = "<group>"; };
 		8E60BE2909D224FA810173A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8FF77EB48B31CA1189E2222E /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
+		91342124452FB09F9E03DCC5 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		B05C5F47DFF873B52C0F0349 /* CSVImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVImportService.swift; sourceTree = "<group>"; };
 		B3BB7091737C20A247D738FE /* ImportExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportView.swift; sourceTree = "<group>"; };
@@ -89,6 +93,7 @@
 				6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */,
 				EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */,
 				34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */,
+				8FF77EB48B31CA1189E2222E /* ShareService.swift */,
 				5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */,
 			);
 			path = Services;
@@ -127,6 +132,7 @@
 				B3BB7091737C20A247D738FE /* ImportExportView.swift */,
 				5246250499B2D3CCC2F4D3CD /* MainTabView.swift */,
 				FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */,
+				91342124452FB09F9E03DCC5 /* ShareView.swift */,
 				3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */,
 			);
 			path = Views;
@@ -248,6 +254,8 @@
 				EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */,
 				530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */,
 				F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */,
+				B3628BE4BCD4E49970E6AEF2 /* ShareService.swift in Sources */,
+				98DC06937B2D6FDA4C7BC802 /* ShareView.swift in Sources */,
 				2624197315802638F28506D2 /* TemplateService.swift in Sources */,
 				23FFC883170F2CBBD2B306FB /* TemplatesView.swift in Sources */,
 				FC46E845F4F413745F254059 /* Theme.swift in Sources */,
