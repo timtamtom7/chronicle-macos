@@ -26,7 +26,6 @@ final class BillStore: ObservableObject {
                 var mutableBill = bill
                 if bill.recurrence != .none {
                     let nextDue = calculateNextDueDate(bill: bill, from: today)
-                    // Update due date for display purposes, keep original dueDay
                     mutableBill = Bill(
                         id: bill.id,
                         name: bill.name,
@@ -67,6 +66,9 @@ final class BillStore: ObservableObject {
         do {
             try db.insertBill(bill)
             loadBills()
+            // Schedule notifications for the new bill
+            NotificationScheduler.shared.scheduleNotifications(for: bill)
+            NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
             print("Failed to add bill: \(error)")
         }
@@ -76,6 +78,9 @@ final class BillStore: ObservableObject {
         do {
             try db.updateBill(bill)
             loadBills()
+            // Reschedule notifications (cancel existing, schedule new)
+            NotificationScheduler.shared.scheduleNotifications(for: bill)
+            NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
             print("Failed to update bill: \(error)")
         }
@@ -83,8 +88,13 @@ final class BillStore: ObservableObject {
 
     func deleteBill(_ billId: UUID) {
         do {
+            // Cancel notifications before deleting
+            if let bill = bills.first(where: { $0.id == billId }) {
+                NotificationScheduler.shared.cancelNotifications(for: bill)
+            }
             try db.deleteBill(billId)
             loadBills()
+            NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
             print("Failed to delete bill: \(error)")
         }
@@ -93,7 +103,15 @@ final class BillStore: ObservableObject {
     func markPaid(_ bill: Bill, paid: Bool) {
         do {
             try db.markBillPaid(bill.id, paid: paid)
+            if paid {
+                // Cancel notifications when marked paid
+                NotificationScheduler.shared.cancelNotifications(for: bill)
+            } else {
+                // Reschedule if unmarking
+                NotificationScheduler.shared.scheduleNotifications(for: bill)
+            }
             loadBills()
+            NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
             print("Failed to mark bill paid: \(error)")
         }

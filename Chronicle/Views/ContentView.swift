@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 struct ContentView: View {
     @EnvironmentObject var billStore: BillStore
@@ -6,9 +7,17 @@ struct ContentView: View {
 
     @State private var showingAddSheet = false
     @State private var selectedBill: Bill?
+    @State private var showPermissionBanner = false
+    @State private var showSettingsSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
+            // Permission banner
+            if showPermissionBanner {
+                permissionBanner
+                Divider()
+            }
+
             // Header
             headerView
 
@@ -61,8 +70,17 @@ struct ContentView: View {
             AddBillSheet(isPresented: .constant(true), editingBill: bill)
                 .environmentObject(billStore)
         }
+        .sheet(isPresented: $showSettingsSheet) {
+            SettingsSheet(isPresented: $showSettingsSheet)
+        }
         .onReceive(NotificationCenter.default.publisher(for: .openAddBillSheet)) { _ in
             showingAddSheet = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .notificationPermissionDenied)) { _ in
+            showPermissionBanner = true
+        }
+        .onAppear {
+            checkNotificationPermission()
         }
     }
 
@@ -76,12 +94,21 @@ struct ContentView: View {
 
             Spacer()
 
+            Button(action: { showSettingsSheet = true }) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.textSecondary)
+            }
+            .buttonStyle(.plain)
+            .help("Settings")
+
             Button(action: { showingAddSheet = true }) {
                 Image(systemName: "plus")
                     .font(.system(size: 13))
             }
             .buttonStyle(.plain)
             .foregroundColor(Theme.accent)
+            .help("Add Bill")
         }
         .padding(.horizontal, Theme.spacing16)
         .padding(.vertical, Theme.spacing12)
@@ -103,6 +130,37 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, Theme.spacing32)
+    }
+
+    private var permissionBanner: some View {
+        HStack(spacing: Theme.spacing8) {
+            Image(systemName: "bell.slash.fill")
+                .font(.system(size: 13))
+                .foregroundColor(Theme.warning)
+
+            Text("Notifications are off. Enable in System Settings to get reminders.")
+                .font(.system(size: 11))
+                .foregroundColor(Theme.textSecondary)
+
+            Spacer()
+
+            Button(action: openSystemSettings) {
+                Text("Open Settings")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Theme.accent)
+            }
+            .buttonStyle(.plain)
+
+            Button(action: { showPermissionBanner = false }) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 10))
+                    .foregroundColor(Theme.textTertiary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, Theme.spacing16)
+        .padding(.vertical, Theme.spacing8)
+        .background(Theme.warning.opacity(0.1))
     }
 
     private var monthlyOverview: some View {
@@ -147,6 +205,20 @@ struct ContentView: View {
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         return formatter.string(from: NSDecimalNumber(decimal: value)) ?? "$0.00"
+    }
+
+    private func checkNotificationPermission() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                showPermissionBanner = settings.authorizationStatus == .denied
+            }
+        }
+    }
+
+    private func openSystemSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.notifications") {
+            NSWorkspace.shared.open(url)
+        }
     }
 }
 
@@ -217,5 +289,158 @@ struct BillCardView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d"
         return "Due \(formatter.string(from: bill.dueDate))"
+    }
+}
+
+// MARK: - Settings Sheet
+
+struct SettingsSheet: View {
+    @Binding var isPresented: Bool
+    @State private var notificationSoundEnabled = true
+    @State private var showingTestNotification = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("Settings")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Theme.textPrimary)
+                Spacer()
+                Button(action: { isPresented = false }) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(Theme.textTertiary)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(Theme.spacing16)
+
+            Divider()
+
+            ScrollView {
+                VStack(spacing: Theme.spacing16) {
+                    // Notifications Section
+                    settingsSection(title: "NOTIFICATIONS") {
+                        VStack(alignment: .leading, spacing: Theme.spacing12) {
+                            Toggle("Notification Sound", isOn: $notificationSoundEnabled)
+                                .toggleStyle(.switch)
+                                .onChange(of: notificationSoundEnabled) { newValue in
+                                    UserDefaults.standard.set(newValue, forKey: "notificationSoundEnabled")
+                                }
+
+                            Divider()
+
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Test Notifications")
+                                        .font(.system(size: 13))
+                                        .foregroundColor(Theme.textPrimary)
+                                    Text("Send a test notification to verify setup")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(Theme.textTertiary)
+                                }
+
+                                Spacer()
+
+                                Button(action: sendTestNotification) {
+                                    if showingTestNotification {
+                                        ProgressView()
+                                            .scaleEffect(0.7)
+                                    } else {
+                                        Text("Send Test")
+                                            .font(.system(size: 12, weight: .medium))
+                                            .foregroundColor(Theme.accent)
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                                .disabled(showingTestNotification)
+                            }
+
+                            Divider()
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Notification Time")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(Theme.textPrimary)
+                                Text("Reminders are sent at 9:00 AM local time")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(Theme.textTertiary)
+                            }
+
+                            Divider()
+
+                            Button(action: openNotificationSettings) {
+                                HStack {
+                                    Text("Open Notification Settings")
+                                        .font(.system(size: 13))
+                                        .foregroundColor(Theme.accent)
+                                    Spacer()
+                                    Image(systemName: "arrow.up.forward.square")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(Theme.textTertiary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    // About Section
+                    settingsSection(title: "ABOUT") {
+                        VStack(alignment: .leading, spacing: Theme.spacing8) {
+                            HStack {
+                                Text("Chronicle")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(Theme.textPrimary)
+                                Spacer()
+                                Text("Never miss a bill.")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(Theme.textTertiary)
+                            }
+                            Divider()
+                            Text("All data is stored locally on your device. No accounts, no cloud sync (yet).")
+                                .font(.system(size: 11))
+                                .foregroundColor(Theme.textTertiary)
+                        }
+                    }
+                }
+                .padding(Theme.spacing16)
+            }
+        }
+        .frame(width: 400, height: 400)
+        .background(Theme.background)
+        .onAppear {
+            notificationSoundEnabled = UserDefaults.standard.object(forKey: "notificationSoundEnabled") as? Bool ?? true
+        }
+    }
+
+    private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: Theme.spacing8) {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(Theme.textTertiary)
+                .tracking(0.05)
+
+            VStack(alignment: .leading, spacing: Theme.spacing8) {
+                content()
+            }
+            .padding(Theme.spacing12)
+            .background(Theme.surface)
+            .cornerRadius(Theme.radiusMedium)
+        }
+    }
+
+    private func sendTestNotification() {
+        showingTestNotification = true
+        NotificationScheduler.shared.sendTestNotification()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            showingTestNotification = false
+        }
+    }
+
+    private func openNotificationSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.notifications") {
+            NSWorkspace.shared.open(url)
+        }
     }
 }

@@ -12,7 +12,9 @@ struct AddBillSheet: View {
     @State private var recurrence: Recurrence = .monthly
     @State private var category: Category = .other
     @State private var notes: String = ""
-    @State private var reminderTiming: ReminderTiming = .none
+    @State private var reminderThreeDays: Bool = true
+    @State private var reminderOneDay: Bool = false
+    @State private var reminderDueDate: Bool = false
     @State private var autoMarkPaid: Bool = false
 
     @State private var showValidationError = false
@@ -25,6 +27,14 @@ struct AddBillSheet: View {
         name.count <= 50 &&
         !amountString.isEmpty &&
         (Decimal(string: amountString.replacingOccurrences(of: ",", with: ".")) ?? -1) >= 0
+    }
+
+    private var selectedReminders: [ReminderTiming] {
+        var timings: [ReminderTiming] = []
+        if reminderThreeDays { timings.append(.threeDays) }
+        if reminderOneDay { timings.append(.oneDay) }
+        if reminderDueDate { timings.append(.dueDate) }
+        return timings
     }
 
     var body: some View {
@@ -99,14 +109,17 @@ struct AddBillSheet: View {
                         .labelsHidden()
                     }
 
-                    // Reminder
-                    formField(title: "Reminder") {
-                        Picker("", selection: $reminderTiming) {
-                            ForEach(ReminderTiming.allCases, id: \.self) { timing in
-                                Text(timing.rawValue).tag(timing)
-                            }
+                    // Reminders
+                    formField(title: "Reminders") {
+                        VStack(alignment: .leading, spacing: Theme.spacing8) {
+                            reminderToggle(timing: .threeDays, label: "3 days before", isOn: $reminderThreeDays)
+                            reminderToggle(timing: .oneDay, label: "1 day before", isOn: $reminderOneDay)
+                            reminderToggle(timing: .dueDate, label: "On due date", isOn: $reminderDueDate)
+                            Text("Reminders are sent at 9:00 AM")
+                                .font(.system(size: 11))
+                                .foregroundColor(Theme.textTertiary)
+                                .padding(.top, 2)
                         }
-                        .pickerStyle(.segmented)
                     }
 
                     // Auto-mark paid
@@ -155,8 +168,11 @@ struct AddBillSheet: View {
                 recurrence = bill.recurrence
                 category = bill.category
                 notes = bill.notes ?? ""
-                reminderTiming = bill.reminderTimings.first ?? .none
                 autoMarkPaid = bill.autoMarkPaid
+                // Load reminder timings
+                reminderThreeDays = bill.reminderTimings.contains(.threeDays)
+                reminderOneDay = bill.reminderTimings.contains(.oneDay)
+                reminderDueDate = bill.reminderTimings.contains(.dueDate)
             }
         }
     }
@@ -191,6 +207,17 @@ struct AddBillSheet: View {
                 }
             }
             content()
+        }
+    }
+
+    private func reminderToggle(timing: ReminderTiming, label: String, isOn: Binding<Bool>) -> some View {
+        HStack(spacing: Theme.spacing8) {
+            Toggle(label, isOn: isOn)
+                .toggleStyle(.switch)
+                .labelsHidden()
+            Text(label)
+                .font(.system(size: 13))
+                .foregroundColor(Theme.textPrimary)
         }
     }
 
@@ -234,8 +261,6 @@ struct AddBillSheet: View {
         let calendar = Calendar.current
         let dueDay = calendar.component(.day, from: dueDate)
 
-        let reminders: [ReminderTiming] = reminderTiming == .none ? [] : [reminderTiming]
-
         let bill = Bill(
             id: editingBill?.id ?? UUID(),
             name: name.trimmingCharacters(in: .whitespaces),
@@ -245,7 +270,7 @@ struct AddBillSheet: View {
             recurrence: recurrence,
             category: category,
             notes: notes.isEmpty ? nil : notes,
-            reminderTimings: reminders,
+            reminderTimings: selectedReminders,
             autoMarkPaid: autoMarkPaid,
             isActive: true,
             isPaid: editingBill?.isPaid ?? false,
