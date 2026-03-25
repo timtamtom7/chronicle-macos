@@ -1,0 +1,393 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00DF8C4D0B54869903ADDBE5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711160B8C16D16E95C7B3A2F /* main.swift */; };
+		1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */; };
+		1FB9E4C3402F0563E22953E2 /* Bill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010584A744B87C0D76BAF34C /* Bill.swift */; };
+		61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */; };
+		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
+		C43E320379DBC07984826840 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 12728690ECED0F3634019379 /* SQLite */; };
+		CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */; };
+		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
+		F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E886527619ABE419071F7F /* ContentView.swift */; };
+		FC46E845F4F413745F254059 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F7ECEA259D53CB979FA683 /* Theme.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		010584A744B87C0D76BAF34C /* Bill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bill.swift; sourceTree = "<group>"; };
+		14021C37CEB6C6AA4005F91C /* Chronicle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chronicle.entitlements; sourceTree = "<group>"; };
+		17E886527619ABE419071F7F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillStore.swift; sourceTree = "<group>"; };
+		26F7ECEA259D53CB979FA683 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		52B8AFD3830B8788DA4E0BCF /* Chronicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBillSheet.swift; sourceTree = "<group>"; };
+		711160B8C16D16E95C7B3A2F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronicleApp.swift; sourceTree = "<group>"; };
+		8E60BE2909D224FA810173A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillListView.swift; sourceTree = "<group>"; };
+		CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FC925C626D2D8E3554E845E9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C43E320379DBC07984826840 /* SQLite in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2643B96B9AF0F27D2445300E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */,
+				CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		41428680DDF240E2D9CB8C4A /* Chronicle */ = {
+			isa = PBXGroup;
+			children = (
+				14021C37CEB6C6AA4005F91C /* Chronicle.entitlements */,
+				8E60BE2909D224FA810173A1 /* Info.plist */,
+				99C683ACFD684DB66A81A268 /* App */,
+				6D3BD6F4AF73591CE3722B1F /* Models */,
+				2643B96B9AF0F27D2445300E /* Services */,
+				68E0C20B3DA115DD151E7F61 /* Utilities */,
+				5ED80C2B716211C0393734D8 /* Views */,
+			);
+			path = Chronicle;
+			sourceTree = "<group>";
+		};
+		50990BF7E9F1B73EC0DCD24D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				52B8AFD3830B8788DA4E0BCF /* Chronicle.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5ED80C2B716211C0393734D8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */,
+				CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */,
+				17E886527619ABE419071F7F /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		68E0C20B3DA115DD151E7F61 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				26F7ECEA259D53CB979FA683 /* Theme.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		6D3BD6F4AF73591CE3722B1F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				010584A744B87C0D76BAF34C /* Bill.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		99C683ACFD684DB66A81A268 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */,
+				711160B8C16D16E95C7B3A2F /* main.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AE56D45C8328FE7E5658B01B = {
+			isa = PBXGroup;
+			children = (
+				41428680DDF240E2D9CB8C4A /* Chronicle */,
+				50990BF7E9F1B73EC0DCD24D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FC064724D5EDA918DD477092 /* Chronicle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF1FB7537C1C33931B3B7AC8 /* Build configuration list for PBXNativeTarget "Chronicle" */;
+			buildPhases = (
+				F1293B4F39803351D001064C /* Sources */,
+				FC925C626D2D8E3554E845E9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Chronicle;
+			packageProductDependencies = (
+				12728690ECED0F3634019379 /* SQLite */,
+			);
+			productName = Chronicle;
+			productReference = 52B8AFD3830B8788DA4E0BCF /* Chronicle.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		54813E9B82975F6CF5A2AE55 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					FC064724D5EDA918DD477092 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = EA0659AF456C2C634A2EE55C /* Build configuration list for PBXProject "Chronicle" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = AE56D45C8328FE7E5658B01B;
+			packageReferences = (
+				040D78E2F2C7CC30C035C5B5 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+			);
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FC064724D5EDA918DD477092 /* Chronicle */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F1293B4F39803351D001064C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */,
+				1FB9E4C3402F0563E22953E2 /* Bill.swift in Sources */,
+				A5DC182753667D4195B33F64 /* BillListView.swift in Sources */,
+				CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */,
+				1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */,
+				F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */,
+				D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */,
+				FC46E845F4F413745F254059 /* Theme.swift in Sources */,
+				00DF8C4D0B54869903ADDBE5 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		05E442B95FE242B19F180AE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		3DF0AF4976616D090D1EA2C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		53F2C4644D901DDF69DCA2AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Chronicle/Chronicle.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Chronicle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicle.macos;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D9F7522069B7874143B03E8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Chronicle/Chronicle.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Chronicle/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicle.macos;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EA0659AF456C2C634A2EE55C /* Build configuration list for PBXProject "Chronicle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05E442B95FE242B19F180AE0 /* Debug */,
+				3DF0AF4976616D090D1EA2C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EF1FB7537C1C33931B3B7AC8 /* Build configuration list for PBXNativeTarget "Chronicle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53F2C4644D901DDF69DCA2AF /* Debug */,
+				D9F7522069B7874143B03E8E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		040D78E2F2C7CC30C035C5B5 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 0.15.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		12728690ECED0F3634019379 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 040D78E2F2C7CC30C035C5B5 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 54813E9B82975F6CF5A2AE55 /* Project object */;
+}
