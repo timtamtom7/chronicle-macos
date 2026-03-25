@@ -7,11 +7,16 @@ final class BillStore: ObservableObject {
     @Published var upcomingBills: [Bill] = []
     @Published var searchText: String = ""
 
+    var baseCurrency: Currency {
+        Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
+    }
+
     private let db = DatabaseService.shared
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         loadBills()
+        Task { await ExchangeRateService.shared.fetchRatesIfNeeded() }
     }
 
     // MARK: - Load
@@ -20,16 +25,16 @@ final class BillStore: ObservableObject {
         do {
             var allBills = try db.fetchAllBills()
 
-            // Recalculate due dates for recurring bills
             let today = Date()
             allBills = allBills.map { bill in
-                var mutableBill = bill
                 if bill.recurrence != .none {
                     let nextDue = calculateNextDueDate(bill: bill, from: today)
-                    mutableBill = Bill(
+                    var updatedBill = bill
+                    updatedBill = Bill(
                         id: bill.id,
                         name: bill.name,
                         amountCents: bill.amountCents,
+                        currency: bill.currency,
                         dueDay: bill.dueDay,
                         dueDate: nextDue,
                         recurrence: bill.recurrence,
@@ -41,11 +46,11 @@ final class BillStore: ObservableObject {
                         isPaid: bill.isPaid,
                         createdAt: bill.createdAt
                     )
+                    return updatedBill
                 }
-                return mutableBill
+                return bill
             }
 
-            // Sort: unpaid first, then by due date
             allBills.sort { b1, b2 in
                 if b1.isPaid != b2.isPaid {
                     return !b1.isPaid
@@ -66,7 +71,6 @@ final class BillStore: ObservableObject {
         do {
             try db.insertBill(bill)
             loadBills()
-            // Schedule notifications for the new bill
             NotificationScheduler.shared.scheduleNotifications(for: bill)
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
@@ -78,7 +82,6 @@ final class BillStore: ObservableObject {
         do {
             try db.updateBill(bill)
             loadBills()
-            // Reschedule notifications (cancel existing, schedule new)
             NotificationScheduler.shared.scheduleNotifications(for: bill)
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
         } catch {
@@ -88,7 +91,6 @@ final class BillStore: ObservableObject {
 
     func deleteBill(_ billId: UUID) {
         do {
-            // Cancel notifications before deleting
             if let bill = bills.first(where: { $0.id == billId }) {
                 NotificationScheduler.shared.cancelNotifications(for: bill)
             }
@@ -104,10 +106,8 @@ final class BillStore: ObservableObject {
         do {
             try db.markBillPaid(bill.id, paid: paid)
             if paid {
-                // Cancel notifications when marked paid
                 NotificationScheduler.shared.cancelNotifications(for: bill)
             } else {
-                // Reschedule if unmarking
                 NotificationScheduler.shared.scheduleNotifications(for: bill)
             }
             loadBills()
@@ -157,7 +157,11 @@ final class BillStore: ObservableObject {
         return filteredBills.filter { $0.isPaid }
     }
 
-    // MARK: - Monthly Overview
+    // MARK: - Monthly Overview (multi-currency aware)
+
+    private var exchangeRates: [String: Double] {
+        ExchangeRateService.shared.rates
+    }
 
     var totalDueThisMonth: Decimal {
         let calendar = Calendar.current
@@ -167,7 +171,13 @@ final class BillStore: ObservableObject {
 
         return bills
             .filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd && !$0.isPaid }
-            .reduce(Decimal(0)) { $0 + $1.amount }
+            .reduce(Decimal(0)) { total, bill in
+                if let converted = bill.formattedAmountInBaseCurrency(baseCurrency: baseCurrency, rates: exchangeRates),
+                   let value = parseCurrencyValue(converted) {
+                    return total + value
+                }
+                return total + bill.amount
+            }
     }
 
     var totalPaidThisMonth: Decimal {
@@ -178,7 +188,19 @@ final class BillStore: ObservableObject {
 
         return bills
             .filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd && $0.isPaid }
-            .reduce(Decimal(0)) { $0 + $1.amount }
+            .reduce(Decimal(0)) { total, bill in
+                if let converted = bill.formattedAmountInBaseCurrency(baseCurrency: baseCurrency, rates: exchangeRates),
+                   let value = parseCurrencyValue(converted) {
+                    return total + value
+                }
+                return total + bill.amount
+            }
+    }
+
+    private func parseCurrencyValue(_ formatted: String) -> Decimal? {
+        let cleaned = formatted.replacingOccurrences(of: "[^0-9.,]", with: "", options: .regularExpression)
+        let normalized = cleaned.replacingOccurrences(of: ",", with: ".")
+        return Decimal(string: normalized)
     }
 
     var totalRemainingThisMonth: Decimal {
@@ -232,7 +254,7 @@ final class BillStore: ObservableObject {
         }
     }
 
-    // MARK: - Monthly Stats (R4)
+    // MARK: - Monthly Stats
 
     func totalSpentThisMonth() -> Decimal {
         totalPaidThisMonth
@@ -276,19 +298,13 @@ final class BillStore: ObservableObject {
         return result
     }
 
-    // MARK: - Bills by Category
-
     func bills(for category: Category) -> [Bill] {
         return bills.filter { $0.category == category && !$0.isPaid }
     }
 
-    // MARK: - Bills paid this month (from payment records, not just isPaid flag)
-
     func billsPaidInMonth(_ period: YearMonth) -> [PaymentRecord] {
         doGetPaymentRecords(for: period)
     }
-
-    // MARK: - Undo Payment
 
     func undoPayment(record: PaymentRecord) {
         do {

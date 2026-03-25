@@ -5,6 +5,8 @@ final class DatabaseService {
     static let shared = DatabaseService()
 
     private var db: Connection?
+    private let schemaVersionKey = "chronicleSchemaVersion"
+    private let currentSchemaVersion = 2
 
     // MARK: - Table Definitions
 
@@ -12,6 +14,7 @@ final class DatabaseService {
     private let id = Expression<String>("id")
     private let name = Expression<String>("name")
     private let amountCents = Expression<Int>("amount_cents")
+    private let currency = Expression<String>("currency")
     private let dueDay = Expression<Int>("due_day")
     private let dueDate = Expression<Date>("due_date")
     private let recurrence = Expression<String>("recurrence")
@@ -33,6 +36,7 @@ final class DatabaseService {
 
     private init() {
         setupDatabase()
+        applyMigrations()
     }
 
     private func setupDatabase() {
@@ -60,6 +64,7 @@ final class DatabaseService {
             t.column(id, primaryKey: true)
             t.column(name)
             t.column(amountCents)
+            t.column(currency)
             t.column(dueDay)
             t.column(dueDate)
             t.column(recurrence)
@@ -80,6 +85,37 @@ final class DatabaseService {
         })
     }
 
+    // MARK: - Migrations
+
+    private func applyMigrations() {
+        let savedVersion = UserDefaults.standard.integer(forKey: schemaVersionKey)
+
+        if savedVersion < 2 {
+            migrateToV2()
+        }
+
+        UserDefaults.standard.set(currentSchemaVersion, forKey: schemaVersionKey)
+    }
+
+    private func migrateToV2() {
+        guard let db = db else { return }
+
+        do {
+            var columnNames: [String] = []
+            for row in try db.prepare("PRAGMA table_info(bills)") {
+                if let name = row[0] as? String {
+                    columnNames.append(name)
+                }
+            }
+
+            if !columnNames.contains("currency") {
+                try db.execute("ALTER TABLE bills ADD COLUMN currency TEXT NOT NULL DEFAULT 'USD'")
+            }
+        } catch {
+            print("Migration V2 failed: \(error)")
+        }
+    }
+
     // MARK: - Bill CRUD
 
     func insertBill(_ bill: Bill) throws {
@@ -91,6 +127,7 @@ final class DatabaseService {
             id <- bill.id.uuidString,
             name <- bill.name,
             amountCents <- bill.amountCents,
+            currency <- bill.currency.rawValue,
             dueDay <- bill.dueDay,
             dueDate <- bill.dueDate,
             recurrence <- bill.recurrence.rawValue,
@@ -113,6 +150,7 @@ final class DatabaseService {
         try db.run(billRow.update(
             name <- bill.name,
             amountCents <- bill.amountCents,
+            currency <- bill.currency.rawValue,
             dueDay <- bill.dueDay,
             dueDate <- bill.dueDate,
             recurrence <- bill.recurrence.rawValue,
@@ -131,7 +169,6 @@ final class DatabaseService {
         let billRow = bills.filter(id == billId.uuidString)
         try db.run(billRow.delete())
 
-        // Also delete associated payment records
         let records = paymentRecords.filter(prBillId == billId.uuidString)
         try db.run(records.delete())
     }
@@ -154,7 +191,6 @@ final class DatabaseService {
         try db.run(billRow.update(isPaid <- paid))
 
         if paid {
-            // Record payment
             if let bill = try fetchBill(by: billId) {
                 let record = PaymentRecord(
                     billId: billId,
@@ -175,10 +211,14 @@ final class DatabaseService {
             return decoded
         }()
 
+        let currencyStr = row[currency]
+        let currencyEnum = Currency(rawValue: currencyStr) ?? .usd
+
         return Bill(
             id: UUID(uuidString: row[id]) ?? UUID(),
             name: row[name],
             amountCents: row[amountCents],
+            currency: currencyEnum,
             dueDay: row[dueDay],
             dueDate: row[dueDate],
             recurrence: Recurrence(rawValue: row[recurrence]) ?? .none,

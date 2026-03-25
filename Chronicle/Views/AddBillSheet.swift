@@ -8,6 +8,7 @@ struct AddBillSheet: View {
 
     @State private var name: String = ""
     @State private var amountString: String = ""
+    @State private var currency: Currency = .usd
     @State private var dueDate: Date = Date()
     @State private var recurrence: Recurrence = .monthly
     @State private var category: Category = .other
@@ -64,11 +65,18 @@ struct AddBillSheet: View {
                         }
                     }
 
-                    // Amount
+                    // Amount + Currency
                     formField(title: "Amount", required: true) {
-                        HStack {
-                            Text("$")
-                                .foregroundColor(Theme.textSecondary)
+                        HStack(spacing: 8) {
+                            // Currency Picker
+                            Picker("", selection: $currency) {
+                                ForEach(Currency.allCases) { curr in
+                                    Text(curr.symbol).tag(curr)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .frame(width: 60)
+
                             TextField("0.00", text: $amountString)
                                 .textFieldStyle(.roundedBorder)
                         }
@@ -164,15 +172,17 @@ struct AddBillSheet: View {
             if let bill = editingBill {
                 name = bill.name
                 amountString = String(format: "%.2f", NSDecimalNumber(decimal: bill.amount).doubleValue)
+                currency = bill.currency
                 dueDate = bill.dueDate
                 recurrence = bill.recurrence
                 category = bill.category
                 notes = bill.notes ?? ""
                 autoMarkPaid = bill.autoMarkPaid
-                // Load reminder timings
                 reminderThreeDays = bill.reminderTimings.contains(.threeDays)
                 reminderOneDay = bill.reminderTimings.contains(.oneDay)
                 reminderDueDate = bill.reminderTimings.contains(.dueDate)
+            } else {
+                currency = Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
             }
         }
     }
@@ -256,7 +266,8 @@ struct AddBillSheet: View {
         guard isValid else { return }
 
         let amountValue = Decimal(string: amountString.replacingOccurrences(of: ",", with: ".")) ?? 0
-        let amountCents = Int(NSDecimalNumber(decimal: amountValue * 100).intValue)
+        let divisor = currency.isZeroDecimal ? Decimal(1) : Decimal(100)
+        let amountCents = Int(NSDecimalNumber(decimal: amountValue * divisor).intValue)
 
         let calendar = Calendar.current
         let dueDay = calendar.component(.day, from: dueDate)
@@ -265,6 +276,7 @@ struct AddBillSheet: View {
             id: editingBill?.id ?? UUID(),
             name: name.trimmingCharacters(in: .whitespaces),
             amountCents: amountCents,
+            currency: currency,
             dueDay: dueDay,
             dueDate: dueDate,
             recurrence: recurrence,
@@ -283,6 +295,7 @@ struct AddBillSheet: View {
             billStore.addBill(bill)
         }
 
+        NotificationCenter.default.post(name: NSNotification.Name("ChronicleDataDidChange"), object: nil)
         isPresented = false
     }
 }

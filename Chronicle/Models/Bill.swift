@@ -1,11 +1,66 @@
 import Foundation
 
+// MARK: - Currency
+
+enum Currency: String, CaseIterable, Codable, Identifiable {
+    case usd = "USD"
+    case eur = "EUR"
+    case gbp = "GBP"
+    case cad = "CAD"
+    case aud = "AUD"
+    case jpy = "JPY"
+    case chf = "CHF"
+    case inr = "INR"
+    case brl = "BRL"
+    case mxn = "MXN"
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .usd: return "$"
+        case .eur: return "€"
+        case .gbp: return "£"
+        case .cad: return "CA$"
+        case .aud: return "A$"
+        case .jpy: return "¥"
+        case .chf: return "CHF"
+        case .inr: return "₹"
+        case .brl: return "R$"
+        case .mxn: return "MX$"
+        }
+    }
+
+    var name: String {
+        switch self {
+        case .usd: return "US Dollar"
+        case .eur: return "Euro"
+        case .gbp: return "British Pound"
+        case .cad: return "Canadian Dollar"
+        case .aud: return "Australian Dollar"
+        case .jpy: return "Japanese Yen"
+        case .chf: return "Swiss Franc"
+        case .inr: return "Indian Rupee"
+        case .brl: return "Brazilian Real"
+        case .mxn: return "Mexican Peso"
+        }
+    }
+
+    var isZeroDecimal: Bool {
+        switch self {
+        case .jpy: return true
+        default: return false
+        }
+    }
+}
+
 // MARK: - Bill Model
 
-struct Bill: Identifiable, Equatable {
+struct Bill: Identifiable, Equatable, Codable {
     let id: UUID
     var name: String
     var amountCents: Int
+    var currency: Currency
     var dueDay: Int
     var dueDate: Date
     var recurrence: Recurrence
@@ -21,6 +76,7 @@ struct Bill: Identifiable, Equatable {
         id: UUID = UUID(),
         name: String,
         amountCents: Int,
+        currency: Currency = .usd,
         dueDay: Int,
         dueDate: Date,
         recurrence: Recurrence = .none,
@@ -35,6 +91,7 @@ struct Bill: Identifiable, Equatable {
         self.id = id
         self.name = name
         self.amountCents = amountCents
+        self.currency = currency
         self.dueDay = dueDay
         self.dueDate = dueDate
         self.recurrence = recurrence
@@ -48,14 +105,47 @@ struct Bill: Identifiable, Equatable {
     }
 
     var amount: Decimal {
-        Decimal(amountCents) / 100
+        Decimal(amountCents) / (currency.isZeroDecimal ? Decimal(1) : Decimal(100))
     }
 
     var formattedAmount: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = "USD"
-        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
+        formatter.currencyCode = currency.rawValue
+        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(currency.symbol)0.00"
+    }
+
+    func formattedAmountWithCode(_ showCode: Bool = false) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currency.rawValue
+        let formatted = formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(currency.symbol)0.00"
+        if showCode {
+            return "\(formatted) \(currency.rawValue)"
+        }
+        return formatted
+    }
+
+    func amountInBaseCurrency(baseCurrency: Currency, rates: [String: Double]) -> Decimal? {
+        if currency == baseCurrency { return amount }
+
+        guard let rate = rates[currency.rawValue],
+              let baseRate = rates[baseCurrency.rawValue],
+              baseRate > 0 else { return nil }
+
+        let rateToUSD = 1.0 / rate
+        let amountUSD = NSDecimalNumber(decimal: amount).doubleValue * rateToUSD
+        let targetRate = baseRate
+        let amountInTarget = amountUSD * targetRate
+        return Decimal(amountInTarget)
+    }
+
+    func formattedAmountInBaseCurrency(baseCurrency: Currency, rates: [String: Double]) -> String? {
+        guard let converted = amountInBaseCurrency(baseCurrency: baseCurrency, rates: rates) else { return nil }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = baseCurrency.rawValue
+        return formatter.string(from: NSDecimalNumber(decimal: converted)) ?? "\(baseCurrency.symbol)0.00"
     }
 }
 
@@ -147,7 +237,6 @@ extension Bill {
         if isPaid { return .paid }
 
         let calendar = Calendar.current
-        let dueCalendar = Calendar(identifier: .gregorian)
         let dueStart = calendar.startOfDay(for: dueDate)
         let todayStart = calendar.startOfDay(for: date)
 
@@ -214,7 +303,7 @@ private func addMonth(to date: Date, calendar: Calendar) -> Date {
 
 // MARK: - Payment Record
 
-struct PaymentRecord: Identifiable {
+struct PaymentRecord: Identifiable, Codable {
     let id: UUID
     let billId: UUID
     let amountPaidCents: Int
