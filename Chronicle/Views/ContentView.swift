@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var showBudgetSheet = false
     @State private var showImportExportSheet = false
     @State private var showShareSheet = false
+    @State private var showAnalyticsSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -101,6 +102,10 @@ struct ContentView: View {
             ShareView(isPresented: $showShareSheet)
                 .environmentObject(billStore)
         }
+        .sheet(isPresented: $showAnalyticsSheet) {
+            AnalyticsView(isPresented: $showAnalyticsSheet)
+                .environmentObject(billStore)
+        }
         .onReceive(NotificationCenter.default.publisher(for: .openAddBillSheet)) { _ in
             showingAddSheet = true
         }
@@ -177,6 +182,14 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Share")
+
+                Button(action: { showAnalyticsSheet = true }) {
+                    Image(systemName: "chart.bar.xaxis")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Analytics")
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")

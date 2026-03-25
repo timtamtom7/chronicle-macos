@@ -16,6 +16,7 @@
 		23FFC883170F2CBBD2B306FB /* TemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */; };
 		2624197315802638F28506D2 /* TemplateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */; };
 		530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */; };
+		5365C689A7C1BDCBD17C2265 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A702C7340372E907FA8D658 /* AnalyticsView.swift */; };
 		57EEC6DA81BA26C69E9CDD24 /* ImportExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3BB7091737C20A247D738FE /* ImportExportView.swift */; };
 		5F1788601B33E55EBF7E29B4 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */; };
 		61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */; };
@@ -49,6 +50,7 @@
 		34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
 		3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateService.swift; sourceTree = "<group>"; };
+		4A702C7340372E907FA8D658 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetService.swift; sourceTree = "<group>"; };
 		5246250499B2D3CCC2F4D3CD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		52B8AFD3830B8788DA4E0BCF /* Chronicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */,
+				4A702C7340372E907FA8D658 /* AnalyticsView.swift */,
 				CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */,
 				326830CC7827278F9CAE4744 /* BudgetView.swift */,
 				17E886527619ABE419071F7F /* ContentView.swift */,
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */,
+				5365C689A7C1BDCBD17C2265 /* AnalyticsView.swift in Sources */,
 				1FB9E4C3402F0563E22953E2 /* Bill.swift in Sources */,
 				A5DC182753667D4195B33F64 /* BillListView.swift in Sources */,
 				CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */,
