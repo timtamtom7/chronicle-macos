@@ -6,17 +6,62 @@ final class BillStore: ObservableObject {
     @Published var bills: [Bill] = []
     @Published var upcomingBills: [Bill] = []
     @Published var searchText: String = ""
+    @Published var templates: [BillTemplate] = []
 
     var baseCurrency: Currency {
         Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
     }
 
     private let db = DatabaseService.shared
+    private let templateService = TemplateService.shared
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         loadBills()
+        loadTemplates()
         Task { await ExchangeRateService.shared.fetchRatesIfNeeded() }
+    }
+
+    // MARK: - Templates
+
+    func loadTemplates() {
+        templates = templateService.fetchAllTemplates()
+    }
+
+    func addTemplate(_ template: BillTemplate) {
+        templateService.saveTemplate(template)
+        loadTemplates()
+    }
+
+    func createTemplateFromBill(_ bill: Bill) {
+        let template = BillTemplate.fromBill(bill)
+        templateService.saveTemplate(template)
+        loadTemplates()
+    }
+
+    func deleteTemplate(_ templateId: UUID) {
+        templateService.deleteTemplate(templateId)
+        loadTemplates()
+    }
+
+    func duplicateTemplate(_ template: BillTemplate) {
+        let duplicate = templateService.duplicateTemplate(template)
+        templateService.saveTemplate(duplicate)
+        loadTemplates()
+    }
+
+    func createBillFromTemplate(_ template: BillTemplate, dueDate: Date = Date()) -> Bill {
+        template.toBill(dueDate: dueDate)
+    }
+
+    func importTemplatesFromBills() {
+        let suggested = templateService.suggestTemplateFromExistingBills(bills)
+        for template in suggested {
+            if !templates.contains(where: { $0.name == template.name && $0.category == template.category }) {
+                templateService.saveTemplate(template)
+            }
+        }
+        loadTemplates()
     }
 
     // MARK: - Load

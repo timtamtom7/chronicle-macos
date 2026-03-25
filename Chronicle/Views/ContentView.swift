@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var selectedBill: Bill?
     @State private var showPermissionBanner = false
     @State private var showSettingsSheet = false
+    @State private var showTemplatesSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,6 +35,14 @@ struct ContentView: View {
                             BillCardView(bill: bill, onTogglePaid: togglePaid)
                                 .onTapGesture {
                                     selectedBill = bill
+                                }
+                                .contextMenu {
+                                    Button(action: { billStore.createTemplateFromBill(bill) }) {
+                                        Label("Save as Template", systemImage: "doc.on.doc")
+                                    }
+                                    Button(action: { selectedBill = bill }) {
+                                        Label("Edit Bill", systemImage: "pencil")
+                                    }
                                 }
                         }
 
@@ -72,6 +81,10 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showSettingsSheet) {
             SettingsSheet(isPresented: $showSettingsSheet)
+        }
+        .sheet(isPresented: $showTemplatesSheet) {
+            TemplatesView(isPresented: $showTemplatesSheet)
+                .environmentObject(billStore)
         }
         .onReceive(NotificationCenter.default.publisher(for: .openAddBillSheet)) { _ in
             showingAddSheet = true
@@ -117,6 +130,14 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Settings")
+
+                Button(action: { showTemplatesSheet = true }) {
+                    Image(systemName: "doc.on.doc")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Templates")
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
