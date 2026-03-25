@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00DF8C4D0B54869903ADDBE5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711160B8C16D16E95C7B3A2F /* main.swift */; };
+		02DCC70751A3FA833495D39F /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326830CC7827278F9CAE4744 /* BudgetView.swift */; };
 		0CAA19246C71196E86C5D535 /* iCloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */; };
 		0CB0D3992C17A95903199332 /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */; };
 		1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */; };
@@ -19,6 +20,7 @@
 		61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */; };
 		666365061234DEB80713515F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A93815CDE197FADCBF58BB /* HistoryView.swift */; };
 		6FB060FE480769F4FB15DCDE /* ExchangeRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */; };
+		7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C10F679571983C9EC78C7 /* Budget.swift */; };
 		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
 		C43E320379DBC07984826840 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 12728690ECED0F3634019379 /* SQLite */; };
 		C71F261B53152E557222CCAA /* BillTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170EC9206C6E4962BA34DB74 /* BillTemplate.swift */; };
@@ -26,6 +28,7 @@
 		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
 		EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5246250499B2D3CCC2F4D3CD /* MainTabView.swift */; };
 		F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E886527619ABE419071F7F /* ContentView.swift */; };
+		F81A567935E2D43E483EBBCB /* BudgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */; };
 		F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */; };
 		FC46E845F4F413745F254059 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F7ECEA259D53CB979FA683 /* Theme.swift */; };
 /* End PBXBuildFile section */
@@ -37,9 +40,12 @@
 		17E886527619ABE419071F7F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillStore.swift; sourceTree = "<group>"; };
 		26F7ECEA259D53CB979FA683 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		2C9C10F679571983C9EC78C7 /* Budget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget.swift; sourceTree = "<group>"; };
+		326830CC7827278F9CAE4744 /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 		34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
 		3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateService.swift; sourceTree = "<group>"; };
+		4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetService.swift; sourceTree = "<group>"; };
 		5246250499B2D3CCC2F4D3CD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		52B8AFD3830B8788DA4E0BCF /* Chronicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateService.swift; sourceTree = "<group>"; };
@@ -72,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */,
+				4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */,
 				CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */,
 				3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */,
 				6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */,
@@ -109,6 +116,7 @@
 			children = (
 				6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */,
 				CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */,
+				326830CC7827278F9CAE4744 /* BudgetView.swift */,
 				17E886527619ABE419071F7F /* ContentView.swift */,
 				64A93815CDE197FADCBF58BB /* HistoryView.swift */,
 				5246250499B2D3CCC2F4D3CD /* MainTabView.swift */,
@@ -131,6 +139,7 @@
 			children = (
 				010584A744B87C0D76BAF34C /* Bill.swift */,
 				170EC9206C6E4962BA34DB74 /* BillTemplate.swift */,
+				2C9C10F679571983C9EC78C7 /* Budget.swift */,
 				ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */,
 			);
 			path = Models;
@@ -219,6 +228,9 @@
 				A5DC182753667D4195B33F64 /* BillListView.swift in Sources */,
 				CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */,
 				C71F261B53152E557222CCAA /* BillTemplate.swift in Sources */,
+				7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */,
+				F81A567935E2D43E483EBBCB /* BudgetService.swift in Sources */,
+				02DCC70751A3FA833495D39F /* BudgetView.swift in Sources */,
 				1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */,
 				F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */,
 				D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */,

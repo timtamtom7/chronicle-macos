@@ -7,6 +7,7 @@ final class BillStore: ObservableObject {
     @Published var upcomingBills: [Bill] = []
     @Published var searchText: String = ""
     @Published var templates: [BillTemplate] = []
+    @Published var categoryBudgets: [CategoryBudget] = []
 
     var baseCurrency: Currency {
         Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
@@ -14,11 +15,13 @@ final class BillStore: ObservableObject {
 
     private let db = DatabaseService.shared
     private let templateService = TemplateService.shared
+    private let budgetService = BudgetService.shared
     private var cancellables = Set<AnyCancellable>()
 
     init() {
         loadBills()
         loadTemplates()
+        loadBudgets()
         Task { await ExchangeRateService.shared.fetchRatesIfNeeded() }
     }
 
@@ -62,6 +65,70 @@ final class BillStore: ObservableObject {
             }
         }
         loadTemplates()
+    }
+
+    // MARK: - Budgets
+
+    func loadBudgets() {
+        categoryBudgets = budgetService.fetchAllBudgets()
+    }
+
+    func saveBudget(_ budget: CategoryBudget) {
+        budgetService.saveBudget(budget)
+        loadBudgets()
+    }
+
+    func deleteBudget(_ budgetId: UUID) {
+        budgetService.deleteBudget(budgetId)
+        loadBudgets()
+    }
+
+    func budget(for category: Category) -> CategoryBudget? {
+        categoryBudgets.first { $0.category == category }
+    }
+
+    func spendingForCategory(_ category: Category) -> Decimal {
+        let calendar = Calendar.current
+        let now = Date()
+        let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
+
+        return bills
+            .filter { $0.category == category && $0.isPaid && $0.dueDate >= monthStart }
+            .reduce(Decimal(0)) { total, bill in
+                total + bill.amount
+            }
+    }
+
+    func budgetStatus(for category: Category) -> (budget: CategoryBudget?, spent: Decimal, status: BudgetStatus) {
+        let budget = self.budget(for: category)
+        let spent = spendingForCategory(category)
+        let status: BudgetStatus
+        if let b = budget, b.isEnabled {
+            status = budgetService.budgetStatus(for: b, spent: spent)
+        } else {
+            status = .underBudget
+        }
+        return (budget, spent, status)
+    }
+
+    var totalMonthlyBudget: Decimal {
+        budgetService.monthlyBudget
+    }
+
+    var hasMonthlyBudget: Bool {
+        budgetService.hasMonthlyBudget
+    }
+
+    func setMonthlyBudget(_ amount: Decimal) {
+        let cents = Int(NSDecimalNumber(decimal: amount * 100).intValue)
+        budgetService.monthlyBudgetCents = cents
+    }
+
+    var overallBudgetStatus: (spent: Decimal, limit: Decimal, status: BudgetStatus) {
+        let spent = totalPaidThisMonth
+        let limit = totalMonthlyBudget
+        let status = budgetService.overallBudgetStatus(spent: spent, limit: limit)
+        return (spent, limit, status)
     }
 
     // MARK: - Load

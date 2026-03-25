@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var showPermissionBanner = false
     @State private var showSettingsSheet = false
     @State private var showTemplatesSheet = false
+    @State private var showBudgetSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -86,6 +87,10 @@ struct ContentView: View {
             TemplatesView(isPresented: $showTemplatesSheet)
                 .environmentObject(billStore)
         }
+        .sheet(isPresented: $showBudgetSheet) {
+            BudgetView(isPresented: $showBudgetSheet)
+                .environmentObject(billStore)
+        }
         .onReceive(NotificationCenter.default.publisher(for: .openAddBillSheet)) { _ in
             showingAddSheet = true
         }
@@ -138,6 +143,14 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Templates")
+
+                Button(action: { showBudgetSheet = true }) {
+                    Image(systemName: "chart.pie")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Budgets")
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
