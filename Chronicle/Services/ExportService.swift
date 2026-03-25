@@ -24,7 +24,7 @@ final class ExportService {
         let payments = try DatabaseService.shared.fetchAllPaymentRecords()
 
         let metadata = ExportMetadata(
-            appVersion: "R5",
+            appVersion: "R8",
             exportDate: Date(),
             billCount: bills.count,
             paymentCount: payments.count
@@ -48,6 +48,77 @@ final class ExportService {
         try jsonData.write(to: exportURL)
 
         return exportURL
+    }
+
+    func exportToCSV(bills: [Bill], includePaid: Bool = true) -> URL? {
+        var csvLines: [String] = []
+
+        // Header
+        csvLines.append("name,amount,currency,due_date,due_day,recurrence,category,is_paid,notes")
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+
+        for bill in bills {
+            if !includePaid && bill.isPaid { continue }
+
+            let dueDate = dateFormatter.string(from: bill.dueDate)
+            let notes = (bill.notes ?? "").replacingOccurrences(of: "\"", with: "\"\"")
+
+            let line = "\"\(bill.name)\",\(bill.amountCents),\(bill.currency.rawValue),\(dueDate),\(bill.dueDay),\(bill.recurrence.rawValue),\(bill.category.rawValue),\(bill.isPaid ? "yes" : "no"),\"\(notes)\""
+            csvLines.append(line)
+        }
+
+        let csvContent = csvLines.joined(separator: "\n")
+
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "Chronicle-Bills-\(formattedDate()).csv"
+        let fileURL = tempDir.appendingPathComponent(fileName)
+
+        do {
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                try FileManager.default.removeItem(at: fileURL)
+            }
+            try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+            return fileURL
+        } catch {
+            print("Failed to write CSV: \(error)")
+            return nil
+        }
+    }
+
+    func exportPaymentHistory(payments: [PaymentRecord], bills: [Bill]) -> URL? {
+        var csvLines: [String] = []
+        csvLines.append("bill_name,amount,paid_at,category")
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+
+        for payment in payments {
+            let bill = bills.first { $0.id == payment.billId }
+            let billName = bill?.name ?? "Unknown"
+            let category = bill?.category.rawValue ?? "Other"
+            let paidAt = dateFormatter.string(from: payment.paidAt)
+            let line = "\"\(billName)\",\(payment.amountPaidCents),\(paidAt),\(category)"
+            csvLines.append(line)
+        }
+
+        let csvContent = csvLines.joined(separator: "\n")
+
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileName = "Chronicle-Payments-\(formattedDate()).csv"
+        let fileURL = tempDir.appendingPathComponent(fileName)
+
+        do {
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                try FileManager.default.removeItem(at: fileURL)
+            }
+            try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+            return fileURL
+        } catch {
+            print("Failed to write CSV: \(error)")
+            return nil
+        }
     }
 
     private func formattedDate() -> String {

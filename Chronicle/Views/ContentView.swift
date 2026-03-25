@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var showSettingsSheet = false
     @State private var showTemplatesSheet = false
     @State private var showBudgetSheet = false
+    @State private var showImportExportSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -91,6 +92,10 @@ struct ContentView: View {
             BudgetView(isPresented: $showBudgetSheet)
                 .environmentObject(billStore)
         }
+        .sheet(isPresented: $showImportExportSheet) {
+            ImportExportView(isPresented: $showImportExportSheet)
+                .environmentObject(billStore)
+        }
         .onReceive(NotificationCenter.default.publisher(for: .openAddBillSheet)) { _ in
             showingAddSheet = true
         }
@@ -151,6 +156,14 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Budgets")
+
+                Button(action: { showImportExportSheet = true }) {
+                    Image(systemName: "arrow.up.arrow.down")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Import/Export")
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
