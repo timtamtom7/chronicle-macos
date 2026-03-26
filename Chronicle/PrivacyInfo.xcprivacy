@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- R19: Privacy Manifest - No tracking, no analytics, local-first -->
+    
+    <!-- Privacy Tracking: Chronicle does NOT track users -->
+    <key>NSPrivacyTracking</key>
+    <false/>
+    
+    <!-- Privacy Tracking Domains: None -->
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+    
+    <!-- Data Types Collected: NONE - Chronicle is fully local-first -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+    
+    <!-- Data Types Accessed: Only userDefaults for app preferences -->
+    <key>NSPrivacyAccessedDataTypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedDataType</key>
+            <string>NSPrivacyAccessedDataTypeUserDefaults</string>
+            <key>NSPrivacyAccessedDataTypeReasons</key>
+            <array>
+                <string>CA92.1</string><!-- App functionality -->
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>

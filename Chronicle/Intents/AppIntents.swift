@@ -1,7 +1,7 @@
 import Foundation
 import AppIntents
 
-// MARK: - App Intents for Shortcuts Integration
+// MARK: - App Intents for Shortcuts Integration (R11 + R18 expanded)
 
 // MARK: - Get Upcoming Bills Intent
 
@@ -28,7 +28,7 @@ struct GetUpcomingBillsIntent: AppIntent {
             return .result(value: [])
         }
         
-        let upcoming = billStore.upcomingBills.filter { $0.dueDate >= today && $0.dueDate <= futureDate }
+        let upcoming = billStore.bills.filter { $0.dueDate >= today && $0.dueDate <= futureDate && !$0.isPaid }
         
         let result = upcoming.map { bill -> String in
             let dueFormatter = DateFormatter()
@@ -49,36 +49,43 @@ struct AddBillIntent: AppIntent {
     static var title: LocalizedStringResource = "Add Bill to Chronicle"
     static var description = IntentDescription("Adds a new bill to Chronicle")
     
-    @Parameter(title: "Bill Name")
+    @Parameter(title: "Name")
     var name: String
     
-    @Parameter(title: "Amount (dollars)")
+    @Parameter(title: "Amount")
     var amount: Double
     
-    @Parameter(title: "Due Day of Month")
-    var dueDay: Int
+    @Parameter(title: "Due Date")
+    var dueDate: Date
     
     @Parameter(title: "Category", default: "Other")
     var categoryName: String
     
-    @Parameter(title: "Recurrence", default: "Monthly")
+    @Parameter(title: "Recurrence", default: "none")
     var recurrenceName: String
     
     static var parameterSummary: some ParameterSummary {
-        Summary("Add bill \(\.$name) for \(\.$amount) due on day \(\.$dueDay)")
+        Summary("Add bill \(\.$name) for \(\.$amount) due \(\.$dueDate)")
     }
     
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let category = Category(rawValue: categoryName) ?? .other
-        let recurrence = Recurrence(rawValue: recurrenceName) ?? .monthly
+        let billStore = BillStore()
+        billStore.loadBills()
         
         let calendar = Calendar.current
-        var components = calendar.dateComponents([.year, .month], from: Date())
-        components.day = min(dueDay, 28) // Cap at 28 for safety
-        let dueDate = calendar.date(from: components) ?? Date()
-        
+        let dueDay = calendar.component(.day, from: dueDate)
         let amountCents = Int(amount * 100)
+        
+        // Parse category
+        let category = Category.allCases.first { 
+            $0.rawValue.lowercased() == categoryName.lowercased() 
+        } ?? .other
+        
+        // Parse recurrence
+        let recurrence = Recurrence.allCases.first { 
+            $0.rawValue.lowercased() == recurrenceName.lowercased() 
+        } ?? .none
         
         let bill = Bill(
             name: name,
@@ -89,14 +96,13 @@ struct AddBillIntent: AppIntent {
             category: category
         )
         
-        let billStore = BillStore()
         billStore.addBill(bill)
         
-        return .result(dialog: "Added \(name) for $\(String(format: "%.2f", amount)) due on day \(dueDay)")
+        return .result(dialog: "Added bill '\(name)' for $\(String(format: "%.2f", amount))")
     }
 }
 
-// MARK: - Mark Bill Paid Intent
+// MARK: - Mark Bill as Paid Intent
 
 @available(macOS 13.0, *)
 struct MarkBillPaidIntent: AppIntent {
@@ -106,54 +112,61 @@ struct MarkBillPaidIntent: AppIntent {
     @Parameter(title: "Bill Name")
     var billName: String
     
-    static var parameterSummary: some ParameterSummary {
-        Summary("Mark \(\.$billName) as paid")
-    }
-    
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let billStore = BillStore()
         billStore.loadBills()
         
-        guard let bill = billStore.bills.first(where: { $0.name.localizedCaseInsensitiveContains(billName) && !$0.isPaid }) else {
-            return .result(dialog: "No unpaid bill found matching '\(billName)'")
+        if let index = billStore.bills.firstIndex(where: { $0.name.localizedCaseInsensitiveContains(billName) && !$0.isPaid }) {
+            var bill = billStore.bills[index]
+            bill.isPaid = true
+            billStore.updateBill(bill)
+            return .result(dialog: "Marked '\(bill.name)' as paid")
+        } else {
+            return .result(dialog: "Could not find unpaid bill matching '\(billName)'")
         }
-        
-        billStore.markPaid(bill, paid: true)
-        
-        return .result(dialog: "Marked '\(bill.name)' as paid")
     }
 }
 
-// MARK: - Get Monthly Total Intent
+// MARK: - Get Monthly Spending Intent (R18)
 
 @available(macOS 13.0, *)
-struct GetMonthlyTotalIntent: AppIntent {
-    static var title: LocalizedStringResource = "Get Monthly Bills Total"
-    static var description = IntentDescription("Returns the total of all bills for the current month")
+struct GetMonthlySpendingIntent: AppIntent {
+    static var title: LocalizedStringResource = "Get Monthly Spending Total"
+    static var description = IntentDescription("Returns the total amount spent on bills this month")
     
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<Double> {
         let billStore = BillStore()
         billStore.loadBills()
         
-        let total = billStore.totalDueThisMonth
-        return .result(value: NSDecimalNumber(decimal: total).doubleValue)
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
+        
+        let monthlyTotal = billStore.bills
+            .filter { $0.isPaid }
+            .reduce(0.0) { total, bill in
+                guard bill.dueDate >= startOfMonth && bill.dueDate <= now else { return total }
+                return total + (Decimal(bill.amountCents) / 100 as Decimal as NSDecimalNumber).doubleValue
+            }
+        
+        return .result(value: monthlyTotal)
     }
 }
 
-// MARK: - Get Bill Status Intent
+// MARK: - Get Spending by Category Intent (R18)
 
 @available(macOS 13.0, *)
-struct GetBillStatusIntent: AppIntent {
-    static var title: LocalizedStringResource = "Get Bill Status"
-    static var description = IntentDescription("Returns the payment status of a specific bill")
+struct GetSpendingByCategoryIntent: AppIntent {
+    static var title: LocalizedStringResource = "Get Spending by Category"
+    static var description = IntentDescription("Returns spending totals grouped by category as a formatted string")
     
-    @Parameter(title: "Bill Name")
-    var billName: String
+    @Parameter(title: "Month Offset", default: 0)
+    var monthOffset: Int
     
     static var parameterSummary: some ParameterSummary {
-        Summary("Get status of \(\.$billName)")
+        Summary("Get spending by category for month offset \(\.$monthOffset)")
     }
     
     @MainActor
@@ -161,29 +174,92 @@ struct GetBillStatusIntent: AppIntent {
         let billStore = BillStore()
         billStore.loadBills()
         
-        guard let bill = billStore.bills.first(where: { $0.name.localizedCaseInsensitiveContains(billName) }) else {
-            return .result(value: "Bill not found")
+        let calendar = Calendar.current
+        let now = Date()
+        guard let targetMonth = calendar.date(byAdding: .month, value: -monthOffset, to: now),
+              let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: targetMonth)),
+              let endOfMonth = calendar.date(byAdding: .month, value: 1, to: startOfMonth) else {
+            return .result(value: "Error calculating month range")
         }
         
-        let status: String
-        if bill.isPaid {
-            status = "Paid"
-        } else {
-            let daysUntilDue = Calendar.current.dateComponents([.day], from: Date(), to: bill.dueDate).day ?? 0
-            if daysUntilDue < 0 {
-                status = "Overdue by \(abs(daysUntilDue)) days"
-            } else if daysUntilDue == 0 {
-                status = "Due today"
-            } else {
-                status = "Due in \(daysUntilDue) days"
-            }
+        var spending: [String: Double] = [:]
+        for bill in billStore.bills where bill.isPaid {
+            guard bill.dueDate >= startOfMonth && bill.dueDate < endOfMonth else { continue }
+            let categoryName = bill.category.rawValue
+            let amount = (Decimal(bill.amountCents) / 100 as Decimal as NSDecimalNumber).doubleValue
+            spending[categoryName, default: 0] += amount
         }
         
-        return .result(value: "\(bill.name): \(status) — \(bill.formattedAmount)")
+        // Format as readable string
+        let lines = spending.sorted { $0.value > $1.value }.map { category, amount in
+            "\(category): $\(String(format: "%.2f", amount))"
+        }
+        let result = lines.isEmpty ? "No spending recorded" : lines.joined(separator: "\n")
+        
+        return .result(value: result)
     }
 }
 
-// MARK: - App Shortcuts Provider
+// MARK: - Create Bill from Text Intent (R18)
+
+@available(macOS 13.0, *)
+struct CreateBillFromTextIntent: AppIntent {
+    static var title: LocalizedStringResource = "Create Bill from Text"
+    static var description = IntentDescription("Parses natural language text to create a bill")
+    
+    @Parameter(title: "Text")
+    var text: String
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("Create bill from: \(\.$text)")
+    }
+    
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let billStore = BillStore()
+        billStore.loadBills()
+        
+        // Simple parser: "Netflix $15.99 monthly on the 15th"
+        let amountPattern = #"\$?(\d+\.?\d*)"#
+        let amountRegex = try? NSRegularExpression(pattern: amountPattern)
+        let amountRange = NSRange(text.startIndex..., in: text)
+        var extractedAmount: Double = 0
+        
+        if let match = amountRegex?.firstMatch(in: text, range: amountRange),
+           let range = Range(match.range(at: 1), in: text) {
+            extractedAmount = Double(String(text[range])) ?? 0
+        }
+        
+        // Extract name (first word before $ or quoted)
+        var extractedName = "Parsed Bill"
+        if let dollarSign = text.firstIndex(of: "$") {
+            let nameStart = text.startIndex
+            let nameEnd = dollarSign
+            if nameStart < nameEnd {
+                extractedName = String(text[nameStart..<nameEnd]).trimmingCharacters(in: .whitespaces)
+            }
+        }
+        
+        // Default due date = today + 7 days
+        let dueDate = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
+        let dueDay = Calendar.current.component(.day, from: dueDate)
+        
+        let bill = Bill(
+            name: extractedName.isEmpty ? "Parsed Bill" : extractedName,
+            amountCents: Int(extractedAmount * 100),
+            dueDay: dueDay,
+            dueDate: dueDate,
+            recurrence: .none,
+            category: .other
+        )
+        
+        billStore.addBill(bill)
+        
+        return .result(dialog: "Created bill '\(extractedName)' for $\(String(format: "%.2f", extractedAmount))")
+    }
+}
+
+// MARK: - App Shortcuts Provider (R18)
 
 @available(macOS 13.0, *)
 struct ChronicleShortcuts: AppShortcutsProvider {
@@ -192,41 +268,19 @@ struct ChronicleShortcuts: AppShortcutsProvider {
             intent: GetUpcomingBillsIntent(),
             phrases: [
                 "Get upcoming bills in \(.applicationName)",
-                "What bills are due in \(.applicationName)",
-                "List my bills from \(.applicationName)"
+                "Show my bills in \(.applicationName)"
             ],
-            shortTitle: "Get Upcoming Bills",
-            systemImageName: "list.bullet.rectangle"
+            shortTitle: "Upcoming Bills",
+            systemImageName: "list.bullet"
         )
         
         AppShortcut(
-            intent: AddBillIntent(),
+            intent: GetMonthlySpendingIntent(),
             phrases: [
-                "Add a bill to \(.applicationName)",
-                "Create new bill in \(.applicationName)",
-                "Track a new payment in \(.applicationName)"
+                "How much have I spent this month on \(.applicationName)",
+                "Monthly spending in \(.applicationName)"
             ],
-            shortTitle: "Add Bill",
-            systemImageName: "plus.circle"
-        )
-        
-        AppShortcut(
-            intent: MarkBillPaidIntent(),
-            phrases: [
-                "Mark bill as paid in \(.applicationName)",
-                "Record payment in \(.applicationName)"
-            ],
-            shortTitle: "Mark Paid",
-            systemImageName: "checkmark.circle"
-        )
-        
-        AppShortcut(
-            intent: GetMonthlyTotalIntent(),
-            phrases: [
-                "How much are my bills this month in \(.applicationName)",
-                "Total bills from \(.applicationName)"
-            ],
-            shortTitle: "Monthly Total",
+            shortTitle: "Monthly Spending",
             systemImageName: "dollarsign.circle"
         )
     }
