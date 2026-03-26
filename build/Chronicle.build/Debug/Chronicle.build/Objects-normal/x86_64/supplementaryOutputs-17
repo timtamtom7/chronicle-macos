@@ -1,0 +1,37 @@
+{
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/SubscriptionTier.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Team.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/TeamService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/TemplateService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/TemplatesView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.swiftdeps"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/AI/DuplicateDetector.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/App/ChronicleApp.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/DatabaseService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/ExchangeRateService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/ContentView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.swiftdeps"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/BillTemplate.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillTemplate.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillTemplate.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillTemplate.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillTemplate.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillTemplate.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Budget.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/Budget.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/Budget.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/Budget.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/Budget.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/Budget.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/BillStore.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillStore.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillStore.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillStore.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillStore.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BillStore.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/BudgetService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/BudgetView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetView.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/BudgetView.swiftdeps"
+  }
+}

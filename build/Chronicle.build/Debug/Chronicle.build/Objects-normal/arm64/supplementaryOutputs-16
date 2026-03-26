@@ -1,0 +1,37 @@
+{
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/PlatformExpansionService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PlatformExpansionService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PlatformExpansionService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PlatformExpansionService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PlatformExpansionService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PlatformExpansionService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/PrivacyService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PrivacyService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PrivacyService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PrivacyService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PrivacyService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/PrivacyService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/ShareService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareService.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareService.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/SubscriptionManager.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/SubscriptionManager.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/SubscriptionManager.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/SubscriptionManager.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/SubscriptionManager.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/SubscriptionManager.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/ShareView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareView.dia",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/arm64/ShareView.swiftdeps"
+  }
+}

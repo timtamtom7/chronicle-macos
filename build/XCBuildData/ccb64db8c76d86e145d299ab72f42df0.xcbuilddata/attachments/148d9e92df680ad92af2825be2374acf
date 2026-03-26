@@ -1,0 +1,509 @@
+{
+  "" : {
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Chronicle-primary.dia",
+    "emit-module-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Chronicle-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Chronicle-primary-emit-module.dia",
+    "pch" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Chronicle-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Chronicle-primary.swiftdeps"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/AI/CategorizationEngine.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CategorizationEngine~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/AI/DuplicateDetector.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DuplicateDetector~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/AI/InsightsGenerator.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/InsightsGenerator~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/App/ChronicleApp.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ChronicleApp~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/App/main.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/main~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Intents/AppIntents.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIntents~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Bill.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Bill~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/BillTemplate.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillTemplate~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Budget.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Budget~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Business.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Business~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Household.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Household~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/SubscriptionTier.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionTier~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/Team.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Team~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Models/YearMonth.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/YearMonth~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/AIInsightsService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AIInsightsService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/APIService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/AuditLogService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AuditLogService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/BillStore.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillStore~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/BudgetService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/BusinessService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/CSVImportService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/CSVImportService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/DatabaseService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/DatabaseService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/ExchangeRateService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExchangeRateService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/ExportService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ExportService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/HouseholdService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/NotificationScheduler.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/NotificationScheduler~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/PlatformExpansionService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PlatformExpansionService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/PrivacyService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/PrivacyService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/ShareService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/SubscriptionManager.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/SubscriptionManager~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/TeamService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TeamService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/TemplateService.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplateService~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Services/iCloudSyncManager.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/iCloudSyncManager~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Utilities/Theme.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/Theme~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/APIServerView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/APIServerView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/AddBillSheet.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AddBillSheet~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/AnalyticsView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AnalyticsView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/AppIconView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/AppIconView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/BillListView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BillListView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/BudgetView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BudgetView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/BusinessView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/BusinessView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/ContentView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ContentView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/HistoryView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HistoryView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/HouseholdView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/HouseholdView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/ImportExportView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ImportExportView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/MainTabView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/MainTabView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/OverviewView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/OverviewView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/ShareView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/ShareView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/Chronicle/Views/TemplatesView.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/TemplatesView~partial.swiftmodule"
+  },
+  "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/mauriello/Dev/chronicle-macos/build/Chronicle.build/Debug/Chronicle.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

@@ -269,17 +269,22 @@ func calculateNextDueDate(bill: Bill, from date: Date = Date()) -> Date {
         case .none:
             return nextDate
         case .weekly:
-            nextDate = calendar.date(byAdding: .day, value: 7, to: nextDate)!
+            guard let next = calendar.date(byAdding: .day, value: 7, to: nextDate) else { return nextDate }
+            nextDate = next
         case .biweekly:
-            nextDate = calendar.date(byAdding: .day, value: 14, to: nextDate)!
+            guard let next = calendar.date(byAdding: .day, value: 14, to: nextDate) else { return nextDate }
+            nextDate = next
         case .monthly:
             nextDate = addMonth(to: nextDate, calendar: calendar)
         case .quarterly:
-            nextDate = calendar.date(byAdding: .month, value: 3, to: nextDate)!
+            guard let next = calendar.date(byAdding: .month, value: 3, to: nextDate) else { return nextDate }
+            nextDate = next
         case .semiAnnual:
-            nextDate = calendar.date(byAdding: .month, value: 6, to: nextDate)!
+            guard let next = calendar.date(byAdding: .month, value: 6, to: nextDate) else { return nextDate }
+            nextDate = next
         case .annual:
-            nextDate = calendar.date(byAdding: .year, value: 1, to: nextDate)!
+            guard let next = calendar.date(byAdding: .year, value: 1, to: nextDate) else { return nextDate }
+            nextDate = next
         }
     }
 
