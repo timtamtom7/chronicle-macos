@@ -17,6 +17,8 @@ struct HistoryView: View {
                 TextField("Search by bill name", text: $searchText)
                     .font(.system(size: 13))
                     .textFieldStyle(.plain)
+                    .accessibilityLabel("Search payment history")
+                    .accessibilityHint("Type to filter payment records by bill name")
                 if !searchText.isEmpty {
                     Button(action: { searchText = "" }) {
                         Image(systemName: "xmark.circle.fill")
@@ -24,6 +26,7 @@ struct HistoryView: View {
                             .foregroundColor(Theme.textTertiary)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Clear search")
                 }
             }
             .padding(.horizontal, Theme.spacing12)
@@ -171,6 +174,7 @@ struct HistoryView: View {
         .background(Theme.surface)
         .cornerRadius(Theme.radiusMedium)
         .shadow(color: .black.opacity(0.15), radius: 8, y: 4)
+        .accessibilityLabel("Payment for \(toast.billName) has been undone")
     }
 
     // MARK: - Helpers
@@ -196,6 +200,7 @@ struct HistoryRowView: View {
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
+                .accessibilityLabel("\(billName), paid \(record.formattedAmount)")
 
             Spacer()
 

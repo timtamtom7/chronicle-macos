@@ -52,6 +52,8 @@ struct AddBillSheet: View {
                     formField(title: "Bill Name", required: true) {
                         TextField("e.g. Rent, Internet, Netflix", text: $name)
                             .textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Bill name")
+                            .accessibilityHint("Enter the name of the bill, up to 50 characters")
                             .onChange(of: name) { newValue in
                                 if newValue.count > 50 {
                                     name = String(newValue.prefix(50))
@@ -76,9 +78,13 @@ struct AddBillSheet: View {
                             }
                             .pickerStyle(.menu)
                             .frame(width: 60)
+                            .accessibilityLabel("Currency")
+                            .accessibilityHint("Select the currency for this bill")
 
                             TextField("0.00", text: $amountString)
                                 .textFieldStyle(.roundedBorder)
+                                .accessibilityLabel("Bill amount")
+                                .accessibilityHint("Enter the bill amount")
                         }
                     }
 
@@ -91,6 +97,8 @@ struct AddBillSheet: View {
                         )
                         .datePickerStyle(.compact)
                         .labelsHidden()
+                        .accessibilityLabel("Due date")
+                        .accessibilityHint("Select the due date for this bill")
                     }
 
                     // Recurrence
@@ -101,6 +109,8 @@ struct AddBillSheet: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .accessibilityLabel("Recurrence")
+                        .accessibilityHint("Select how often this bill recurs")
                     }
 
                     // Category
@@ -115,6 +125,8 @@ struct AddBillSheet: View {
                             }
                         }
                         .labelsHidden()
+                        .accessibilityLabel("Category")
+                        .accessibilityHint("Select the category for this bill")
                     }
 
                     // Reminders
@@ -134,6 +146,8 @@ struct AddBillSheet: View {
                     formField(title: "Auto-mark Paid") {
                         Toggle("Automatically mark as paid on due date", isOn: $autoMarkPaid)
                             .toggleStyle(.switch)
+                            .accessibilityLabel("Auto-mark paid")
+                            .accessibilityHint("When enabled, this bill will be automatically marked as paid on its due date")
                     }
 
                     // Notes
@@ -145,6 +159,8 @@ struct AddBillSheet: View {
                                 RoundedRectangle(cornerRadius: 6)
                                     .stroke(Theme.border, lineWidth: 1)
                             )
+                            .accessibilityLabel("Notes")
+                            .accessibilityHint("Enter optional notes for this bill, up to 200 characters")
                             .onChange(of: notes) { newValue in
                                 if newValue.count > 200 {
                                     notes = String(newValue.prefix(200))
@@ -201,6 +217,8 @@ struct AddBillSheet: View {
                     .foregroundColor(Theme.textTertiary)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Close")
+            .accessibilityHint("Closes the add bill sheet without saving")
         }
         .padding(Theme.spacing16)
     }
@@ -244,6 +262,8 @@ struct AddBillSheet: View {
             .foregroundColor(Theme.textSecondary)
             .padding(.horizontal, Theme.spacing12)
             .padding(.vertical, 8)
+            .accessibilityLabel("Cancel")
+            .accessibilityHint("Closes this sheet without saving")
 
             Button(action: save) {
                 Text(isEditing ? "Save Changes" : "Add Bill")
@@ -256,6 +276,8 @@ struct AddBillSheet: View {
             }
             .buttonStyle(.plain)
             .disabled(!isValid)
+            .accessibilityLabel(isEditing ? "Save changes" : "Add bill")
+            .accessibilityHint(isEditing ? "Saves the edited bill" : "Creates a new bill with the entered details")
         }
         .padding(Theme.spacing16)
     }

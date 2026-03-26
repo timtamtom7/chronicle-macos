@@ -141,6 +141,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.success)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Pay all due today")
+                    .accessibilityHint("Marks all bills due today as paid")
                 }
 
                 Button(action: { showSettingsSheet = true }) {
@@ -149,7 +151,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Settings")
+                .accessibilityLabel("Settings")
+                .accessibilityHint("Opens the settings sheet")
 
                 Button(action: { showTemplatesSheet = true }) {
                     Image(systemName: "doc.on.doc")
@@ -157,7 +160,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Templates")
+                .accessibilityLabel("Templates")
+                .accessibilityHint("Opens the bill templates sheet")
 
                 Button(action: { showBudgetSheet = true }) {
                     Image(systemName: "chart.pie")
@@ -165,7 +169,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Budgets")
+                .accessibilityLabel("Budgets")
+                .accessibilityHint("Opens the budgets sheet")
 
                 Button(action: { showImportExportSheet = true }) {
                     Image(systemName: "arrow.up.arrow.down")
@@ -173,7 +178,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Import/Export")
+                .accessibilityLabel("Import/Export")
+                .accessibilityHint("Opens the import export sheet")
 
                 Button(action: { showShareSheet = true }) {
                     Image(systemName: "square.and.arrow.up")
@@ -181,7 +187,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Share")
+                .accessibilityLabel("Share")
+                .accessibilityHint("Opens the share sheet")
 
                 Button(action: { showAnalyticsSheet = true }) {
                     Image(systemName: "chart.bar.xaxis")
@@ -189,7 +196,8 @@ struct ContentView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)
-                .help("Analytics")
+                .accessibilityLabel("Analytics")
+                .accessibilityHint("Opens the analytics sheet")
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
@@ -197,7 +205,8 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(Theme.accent)
-                .help("Add Bill")
+                .accessibilityLabel("Add bill")
+                .accessibilityHint("Opens the add bill sheet")
             }
         }
         .padding(.horizontal, Theme.spacing16)
@@ -240,6 +249,8 @@ struct ContentView: View {
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Open Settings")
+            .accessibilityHint("Opens system notification settings")
 
             Button(action: { showPermissionBanner = false }) {
                 Image(systemName: "xmark")
@@ -247,6 +258,8 @@ struct ContentView: View {
                     .foregroundColor(Theme.textTertiary)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss")
+            .accessibilityHint("Dismisses the notification permission warning")
         }
         .padding(.horizontal, Theme.spacing16)
         .padding(.vertical, Theme.spacing8)
@@ -340,6 +353,8 @@ struct BillCardView: View {
                     .foregroundColor(bill.isPaid ? Theme.success : Theme.textTertiary)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(bill.isPaid ? "Mark \(bill.name) as unpaid" : "Mark \(bill.name) as paid")
+            .accessibilityHint("Toggles the paid status of this bill")
 
             // Status indicator
             Circle()
@@ -425,6 +440,8 @@ struct SettingsSheet: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes the settings sheet")
             }
             .padding(Theme.spacing16)
 
@@ -437,6 +454,8 @@ struct SettingsSheet: View {
                         VStack(alignment: .leading, spacing: Theme.spacing12) {
                             Toggle("Notification Sound", isOn: $notificationSoundEnabled)
                                 .toggleStyle(.switch)
+                                .accessibilityLabel("Notification sound")
+                                .accessibilityHint("Toggle to enable or disable notification sound")
                                 .onChange(of: notificationSoundEnabled) { newValue in
                                     UserDefaults.standard.set(newValue, forKey: "notificationSoundEnabled")
                                 }
@@ -467,6 +486,8 @@ struct SettingsSheet: View {
                                 }
                                 .buttonStyle(.plain)
                                 .disabled(showingTestNotification)
+                                .accessibilityLabel("Send test notification")
+                                .accessibilityHint("Sends a test notification to verify your setup")
                             }
 
                             Divider()
@@ -494,6 +515,8 @@ struct SettingsSheet: View {
                                 }
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel("Open notification settings")
+                            .accessibilityHint("Opens system notification preferences")
                         }
                     }
 

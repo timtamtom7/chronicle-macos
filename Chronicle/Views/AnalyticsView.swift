@@ -21,6 +21,8 @@ struct AnalyticsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                .accessibilityLabel("Analytics period")
+                .accessibilityHint("Select the time period for analytics data")
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
@@ -28,6 +30,8 @@ struct AnalyticsView: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close analytics")
+                .accessibilityHint("Closes the analytics view")
             }
             .padding(Theme.spacing16)
 

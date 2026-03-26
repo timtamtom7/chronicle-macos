@@ -21,6 +21,8 @@ struct ShareView: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes the share view")
             }
             .padding(Theme.spacing16)
 
@@ -38,10 +40,14 @@ struct ShareView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityLabel("Share range")
+                    .accessibilityHint("Select which bills to include in the share")
                 }
 
                 Toggle("Include paid bills", isOn: $includePaid)
                     .toggleStyle(.switch)
+                    .accessibilityLabel("Include paid bills")
+                    .accessibilityHint("Toggle to include or exclude paid bills from the share")
 
                 Divider()
 

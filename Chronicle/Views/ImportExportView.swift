@@ -26,6 +26,8 @@ struct ImportExportView: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes the import export view")
             }
             .padding(Theme.spacing16)
 
@@ -87,6 +89,8 @@ struct ImportExportView: View {
                 .cornerRadius(Theme.radiusSmall)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Choose CSV file")
+            .accessibilityHint("Opens a file picker to select a CSV file to import bills from")
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("CSV Format:")
@@ -137,6 +141,7 @@ struct ImportExportView: View {
                     action: exportPaymentsCSV
                 )
             }
+            .accessibilityElement(children: .contain)
         }
     }
 
@@ -245,6 +250,8 @@ struct ImportResultSheet: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes the import result view")
             }
             .padding(Theme.spacing16)
 
@@ -306,6 +313,8 @@ struct ImportResultSheet: View {
                     .padding(.vertical, 8)
                     .background(Theme.accent)
                     .cornerRadius(Theme.radiusSmall)
+                    .accessibilityLabel("Done")
+                    .accessibilityHint("Closes the import result view")
             }
             .padding(Theme.spacing16)
         }

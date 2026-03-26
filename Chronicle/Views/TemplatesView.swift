@@ -33,6 +33,8 @@ struct TemplatesView: View {
                             .foregroundColor(Theme.accent)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel("Suggest templates")
+                        .accessibilityHint("Creates bill templates from your existing bills")
                     }
 
                     Button(action: { showAddTemplate = true }) {
@@ -49,6 +51,8 @@ struct TemplatesView: View {
                         .cornerRadius(Theme.radiusSmall)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("New template")
+                    .accessibilityHint("Create a new bill template")
 
                     Button(action: { isPresented = false }) {
                         Image(systemName: "xmark")
@@ -56,6 +60,8 @@ struct TemplatesView: View {
                             .foregroundColor(Theme.textTertiary)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Close")
+                    .accessibilityHint("Closes the templates view")
                 }
             }
             .padding(Theme.spacing16)
@@ -258,6 +264,8 @@ struct TemplateEditorSheet: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes this sheet without saving")
             }
             .padding(Theme.spacing16)
 
@@ -268,6 +276,8 @@ struct TemplateEditorSheet: View {
                     formField(title: "Template Name", required: true) {
                         TextField("e.g. Monthly Rent", text: $name)
                             .textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Template name")
+                            .accessibilityHint("Enter a name for this template")
                     }
 
                     formField(title: "Amount", required: true) {
@@ -279,9 +289,12 @@ struct TemplateEditorSheet: View {
                             }
                             .pickerStyle(.menu)
                             .frame(width: 60)
+                            .accessibilityLabel("Currency")
 
                             TextField("0.00", text: $amountString)
                                 .textFieldStyle(.roundedBorder)
+                                .accessibilityLabel("Amount")
+                                .accessibilityHint("Enter the bill amount")
                         }
                     }
 
@@ -290,6 +303,9 @@ struct TemplateEditorSheet: View {
                             Text("Day \(dueDay)")
                                 .font(.system(size: 13))
                         }
+                        .accessibilityLabel("Due day of month")
+                        .accessibilityValue("Day \(dueDay)")
+                        .accessibilityHint("Select the day of the month for due dates")
                     }
 
                     formField(title: "Recurrence") {
@@ -299,6 +315,8 @@ struct TemplateEditorSheet: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .accessibilityLabel("Recurrence")
+                        .accessibilityHint("Select how often this bill recurs")
                     }
 
                     formField(title: "Category") {
@@ -312,6 +330,8 @@ struct TemplateEditorSheet: View {
                             }
                         }
                         .labelsHidden()
+                        .accessibilityLabel("Category")
+                        .accessibilityHint("Select the category for this template")
                     }
 
                     formField(title: "Reminders") {
@@ -325,6 +345,8 @@ struct TemplateEditorSheet: View {
                     formField(title: "Auto-mark Paid") {
                         Toggle("Automatically mark as paid on due date", isOn: $autoMarkPaid)
                             .toggleStyle(.switch)
+                            .accessibilityLabel("Auto-mark paid")
+                            .accessibilityHint("Automatically mark bills as paid on their due date")
                     }
 
                     formField(title: "Notes") {
@@ -335,6 +357,8 @@ struct TemplateEditorSheet: View {
                                 RoundedRectangle(cornerRadius: 6)
                                     .stroke(Theme.border, lineWidth: 1)
                             )
+                            .accessibilityLabel("Notes")
+                            .accessibilityHint("Enter optional notes for this template")
                     }
                 }
                 .padding(Theme.spacing16)
@@ -349,6 +373,8 @@ struct TemplateEditorSheet: View {
                     .foregroundColor(Theme.textSecondary)
                     .padding(.horizontal, Theme.spacing12)
                     .padding(.vertical, 8)
+                    .accessibilityLabel("Cancel")
+                    .accessibilityHint("Closes this sheet without saving")
 
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Create Template")
@@ -361,6 +387,8 @@ struct TemplateEditorSheet: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(!isValid)
+                .accessibilityLabel(isEditing ? "Save template" : "Create template")
+                .accessibilityHint(isEditing ? "Saves the edited template" : "Creates a new template")
             }
             .padding(Theme.spacing16)
         }
@@ -468,6 +496,8 @@ struct CreateBillFromTemplateSheet: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes this sheet without creating a bill")
             }
             .padding(Theme.spacing16)
 
@@ -499,6 +529,8 @@ struct CreateBillFromTemplateSheet: View {
                     DatePicker("", selection: $dueDate, displayedComponents: .date)
                         .datePickerStyle(.compact)
                         .labelsHidden()
+                        .accessibilityLabel("Due date")
+                        .accessibilityHint("Select the due date for this bill")
                 }
 
                 Text("This will create a new bill with the template's settings. The template itself will not be modified.")
@@ -517,6 +549,8 @@ struct CreateBillFromTemplateSheet: View {
                     .foregroundColor(Theme.textSecondary)
                     .padding(.horizontal, Theme.spacing12)
                     .padding(.vertical, 8)
+                    .accessibilityLabel("Cancel")
+                    .accessibilityHint("Closes this sheet without creating a bill")
 
                 Button(action: createBill) {
                     Text("Create Bill")
@@ -528,6 +562,8 @@ struct CreateBillFromTemplateSheet: View {
                         .cornerRadius(Theme.radiusSmall)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Create bill")
+                .accessibilityHint("Creates a new bill using this template")
             }
             .padding(Theme.spacing16)
         }

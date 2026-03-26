@@ -148,6 +148,7 @@ struct BillListView: View {
             .background(selected ? Theme.accent.opacity(0.1) : Color.clear)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("\(title), \(count) bills\(selected ? ", selected" : "")")
     }
 
     private var statsView: some View {
@@ -160,6 +161,7 @@ struct BillListView: View {
                 Text(formatCurrency(billStore.totalDueThisMonth))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(Theme.accent)
+                    .accessibilityLabel("Due this month: \(formatCurrency(billStore.totalDueThisMonth))")
             }
             HStack {
                 Text("Paid this month")
@@ -169,6 +171,7 @@ struct BillListView: View {
                 Text(formatCurrency(billStore.totalPaidThisMonth))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(Theme.success)
+                    .accessibilityLabel("Paid this month: \(formatCurrency(billStore.totalPaidThisMonth))")
             }
             HStack {
                 Text("Remaining")
@@ -178,6 +181,7 @@ struct BillListView: View {
                 Text(formatCurrency(billStore.totalRemainingThisMonth))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundColor(Theme.warning)
+                    .accessibilityLabel("Remaining: \(formatCurrency(billStore.totalRemainingThisMonth))")
             }
         }
     }
@@ -194,12 +198,15 @@ struct BillListView: View {
                     .textFieldStyle(.plain)
                     .font(.system(size: 13))
                     .frame(width: 200)
+                    .accessibilityLabel("Search bills")
+                    .accessibilityHint("Type to filter bills by name")
                 if !searchText.isEmpty {
                     Button(action: { searchText = "" }) {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(Theme.textTertiary)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Clear search")
                 }
             }
             .padding(.horizontal, Theme.spacing8)
@@ -238,6 +245,8 @@ struct BillListView: View {
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
+            .accessibilityLabel("Sort bills by \(sortOrder.rawValue)")
+            .accessibilityHint("Opens menu to change sort order")
 
             // Add button
             Button(action: { showingAddSheet = true }) {
@@ -253,6 +262,7 @@ struct BillListView: View {
                 .cornerRadius(Theme.radiusSmall)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Add new bill")
         }
         .padding(.horizontal, Theme.spacing16)
         .padding(.vertical, Theme.spacing12)
@@ -312,6 +322,8 @@ struct BillListView: View {
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Paid bills section, \(paidBills.count) paid bills")
+            .accessibilityHint(showPastBills ? "Collapses paid bills list" : "Expands paid bills list")
 
             if showPastBills {
                 VStack(spacing: Theme.spacing8) {
@@ -440,6 +452,8 @@ struct BillRowView: View {
                     .foregroundColor(checkboxColor)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(bill.isPaid ? "Mark \(bill.name) as unpaid" : "Mark \(bill.name) as paid")
+            .accessibilityHint("Toggles the paid status of this bill")
 
             // Left border accent
             RoundedRectangle(cornerRadius: 2)
@@ -452,6 +466,7 @@ struct BillRowView: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(bill.isPaid ? Theme.textTertiary : Theme.textPrimary)
                     .strikethrough(bill.isPaid)
+                    .accessibilityLabel("\(bill.name), \(bill.formattedAmount)")
 
                 HStack(spacing: Theme.spacing4) {
                     Text(bill.formattedAmount)
@@ -502,6 +517,8 @@ struct BillRowView: View {
                             .foregroundColor(Theme.textSecondary)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Edit \(bill.name)")
+                    .accessibilityHint("Opens the edit sheet for this bill")
 
                     Button(action: onDelete) {
                         Image(systemName: "trash")
@@ -509,6 +526,8 @@ struct BillRowView: View {
                             .foregroundColor(Theme.danger)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Delete \(bill.name)")
+                    .accessibilityHint("Permanently deletes this bill")
                 }
             }
         }

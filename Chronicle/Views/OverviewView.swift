@@ -42,6 +42,8 @@ struct OverviewView: View {
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Previous month")
+            .accessibilityHint("Navigate to the previous month")
 
             Spacer()
 
@@ -58,6 +60,8 @@ struct OverviewView: View {
             }
             .buttonStyle(.plain)
             .disabled(!canGoNext)
+            .accessibilityLabel("Next month")
+            .accessibilityHint("Navigate to the next month")
         }
         .padding(.horizontal, Theme.spacing16)
         .padding(.vertical, Theme.spacing12)

@@ -43,11 +43,15 @@ struct HouseholdDashboardView: View {
                     showCreateHousehold = true
                 }
                 .buttonStyle(.borderedProminent)
+                .accessibilityLabel("Create household")
+                .accessibilityHint("Create a new household to share bills with")
 
                 Button("Join Household") {
                     showJoinHousehold = true
                 }
                 .buttonStyle(.bordered)
+                .accessibilityLabel("Join household")
+                .accessibilityHint("Join an existing household using an invite code")
             }
         }
         .padding()
@@ -141,6 +145,7 @@ struct HouseholdDashboardView: View {
         .padding()
         .background(Color(NSColor.controlBackgroundColor))
         .cornerRadius(8)
+        .accessibilityLabel("\(member.name)\(member.isOwner ? ", owner" : "")")
     }
 
     // MARK: - Balances Section
@@ -184,6 +189,7 @@ struct HouseholdDashboardView: View {
             }
         }
         .padding(.vertical, 4)
+        .accessibilityLabel("\(balance.memberName), \(balance.isOwed ? "is owed \(formatCents(balance.netBalanceCents))" : balance.owes ? "owes \(formatCents(abs(balance.netBalanceCents)))" : "settled")")
     }
 
     // MARK: - Bills This Month
@@ -229,6 +235,7 @@ struct HouseholdDashboardView: View {
                 .foregroundColor(bill.isPaid ? .green : .secondary)
         }
         .padding(.vertical, 4)
+        .accessibilityLabel("\(bill.name), \(bill.formattedAmount), \(bill.isPaid ? "paid" : "unpaid")")
     }
 
     // MARK: - QR Code Sheet
@@ -259,6 +266,8 @@ struct HouseholdDashboardView: View {
                 showQRCode = false
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityLabel("Done")
+            .accessibilityHint("Closes the QR code sheet")
         }
         .padding(32)
     }
@@ -273,15 +282,18 @@ struct HouseholdDashboardView: View {
 
             TextField("Household Name", text: $householdName)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityLabel("Household name")
 
             TextField("Your Name", text: $ownerName)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityLabel("Your name")
 
             HStack {
                 Button("Cancel") {
                     showCreateHousehold = false
                 }
                 .buttonStyle(.bordered)
+                .accessibilityLabel("Cancel")
 
                 Button("Create") {
                     _ = householdService.createHousehold(name: householdName, ownerName: ownerName)
@@ -289,6 +301,7 @@ struct HouseholdDashboardView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(householdName.isEmpty || ownerName.isEmpty)
+                .accessibilityLabel("Create")
             }
         }
         .padding(32)
@@ -305,12 +318,14 @@ struct HouseholdDashboardView: View {
 
             TextField("Invite Code", text: $inviteCode)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityLabel("Invite code")
 
             HStack {
                 Button("Cancel") {
                     showJoinHousehold = false
                 }
                 .buttonStyle(.bordered)
+                .accessibilityLabel("Cancel")
 
                 Button("Join") {
                     if householdService.joinHousehold(code: inviteCode) {
@@ -319,6 +334,7 @@ struct HouseholdDashboardView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(inviteCode.isEmpty)
+                .accessibilityLabel("Join")
             }
         }
         .padding(32)

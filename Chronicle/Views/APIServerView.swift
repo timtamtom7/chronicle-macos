@@ -22,6 +22,8 @@ struct APIServerView: View {
 
                     Toggle("Server", isOn: $isRunning)
                         .toggleStyle(.switch)
+                        .accessibilityLabel("API server toggle")
+                        .accessibilityHint(isRunning ? "Disables the API server" : "Enables the API server")
                         .onChange(of: isRunning) { newValue in
                             Task {
                                 if newValue {
@@ -49,6 +51,8 @@ struct APIServerView: View {
                             .textFieldStyle(.roundedBorder)
                             .frame(width: 100)
                             .disabled(isRunning)
+                            .accessibilityLabel("Port number")
+                            .accessibilityHint("Enter the port number for the API server")
                     }
 
                     HStack {
@@ -59,6 +63,8 @@ struct APIServerView: View {
                         }
                         .buttonStyle(.bordered)
                         .disabled(!isRunning)
+                        .accessibilityLabel("Restart server")
+                        .accessibilityHint("Restarts the API server on the specified port")
                     }
                 }
                 .padding()
@@ -81,9 +87,11 @@ struct APIServerView: View {
                                 Text(apiKey)
                                     .font(.system(.body, design: .monospaced))
                                     .textSelection(.enabled)
+                                    .accessibilityLabel("API key: \(apiKey)")
                             } else {
                                 Text(String(repeating: "•", count: 40))
                                     .font(.system(.body, design: .monospaced))
+                                    .accessibilityLabel("API key hidden")
                             }
 
                             Spacer()
@@ -92,17 +100,22 @@ struct APIServerView: View {
                                 showAPIKey.toggle()
                             }
                             .buttonStyle(.bordered)
+                            .accessibilityLabel(showAPIKey ? "Hide API key" : "Show API key")
 
                             Button("Copy") {
                                 copyAPIKey(apiKey)
                             }
                             .buttonStyle(.bordered)
+                            .accessibilityLabel("Copy API key")
+                            .accessibilityHint("Copies the API key to the clipboard")
                         }
                     } else {
                         Button("Generate API Key") {
                             currentAPIKey = APIService.shared.generateAPIKey()
                         }
                         .buttonStyle(.borderedProminent)
+                        .accessibilityLabel("Generate API key")
+                        .accessibilityHint("Creates a new API key for authentication")
                     }
                 }
                 .padding()

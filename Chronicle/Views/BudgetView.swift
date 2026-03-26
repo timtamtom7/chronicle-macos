@@ -31,6 +31,8 @@ struct BudgetView: View {
                     .cornerRadius(Theme.radiusSmall)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Add budget")
+                .accessibilityHint("Create a new budget for a category")
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
@@ -38,6 +40,8 @@ struct BudgetView: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes the budgets view")
             }
             .padding(Theme.spacing16)
 
@@ -253,6 +257,8 @@ struct BudgetEditorSheet: View {
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close")
+                .accessibilityHint("Closes this sheet without saving")
             }
             .padding(Theme.spacing16)
 
@@ -274,6 +280,8 @@ struct BudgetEditorSheet: View {
                             }
                         }
                         .labelsHidden()
+                        .accessibilityLabel("Category")
+                        .accessibilityHint("Select the category for this budget")
                     }
                 }
 
@@ -286,11 +294,15 @@ struct BudgetEditorSheet: View {
                             .foregroundColor(Theme.textSecondary)
                         TextField("0.00", text: $limitString)
                             .textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Monthly limit amount")
+                            .accessibilityHint("Enter the monthly spending limit for this category")
                     }
                 }
 
                 Toggle("Budget Enabled", isOn: $isEnabled)
                     .toggleStyle(.switch)
+                    .accessibilityLabel("Budget enabled")
+                    .accessibilityHint("Toggle to enable or disable this budget")
 
                 Text("You'll see spending alerts when you approach or exceed this limit.")
                     .font(.system(size: 11))
@@ -307,6 +319,8 @@ struct BudgetEditorSheet: View {
                     .foregroundColor(Theme.textSecondary)
                     .padding(.horizontal, Theme.spacing12)
                     .padding(.vertical, 8)
+                    .accessibilityLabel("Cancel")
+                    .accessibilityHint("Closes this sheet without saving")
 
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Add Budget")
@@ -319,6 +333,8 @@ struct BudgetEditorSheet: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(!isValid)
+                .accessibilityLabel(isEditing ? "Save budget" : "Add budget")
+                .accessibilityHint(isEditing ? "Saves the edited budget" : "Creates a new budget")
             }
             .padding(Theme.spacing16)
         }
