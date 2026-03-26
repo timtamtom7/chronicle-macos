@@ -330,8 +330,10 @@ struct HouseholdDashboardView: View {
     private func getBillsThisMonth() -> [Bill] {
         let calendar = Calendar.current
         let now = Date()
-        let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-        let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart)!
+        guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)),
+              let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else {
+            return []
+        }
 
         return BillStore().bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
     }

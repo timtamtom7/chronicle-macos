@@ -228,17 +228,25 @@ struct AnalyticsView: View {
 
         switch selectedPeriod {
         case .thisMonth:
-            let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-            let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart)!
+            guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)),
+                  let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else {
+                return []
+            }
             return billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
         case .last3Months:
-            let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: now)!
+            guard let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: now) else {
+                return []
+            }
             return billStore.bills.filter { $0.dueDate >= threeMonthsAgo }
         case .last6Months:
-            let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: now)!
+            guard let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: now) else {
+                return []
+            }
             return billStore.bills.filter { $0.dueDate >= sixMonthsAgo }
         case .thisYear:
-            let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now))!
+            guard let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now)) else {
+                return []
+            }
             return billStore.bills.filter { $0.dueDate >= yearStart }
         }
     }
@@ -280,7 +288,7 @@ struct AnalyticsView: View {
             result[monthName] = monthBills.reduce(Decimal(0)) { $0 + $1.amount }
         }
 
-        return result.map { (key: $0.key, value: $0.value) }.sorted { lhs, rhs in
+        return result.map { (month: $0.key, amount: $0.value) }.sorted { lhs, rhs in
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM"
             let lhsDate = formatter.date(from: lhs.month) ?? Date()

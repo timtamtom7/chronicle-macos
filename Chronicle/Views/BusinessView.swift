@@ -380,7 +380,7 @@ struct BusinessView: View {
             Button("Enable Accountant Mode") {
                 // Would show date pickers and enable
                 let now = Date()
-                let twoYearsAgo = Calendar.current.date(byAdding: .year, value: -2, to: now)!
+                guard let twoYearsAgo = Calendar.current.date(byAdding: .year, value: -2, to: now) else { return }
                 businessService.enableAccountantMode(lockedRange: twoYearsAgo...now)
             }
             .buttonStyle(.borderedProminent)

@@ -257,7 +257,6 @@ struct OverviewView: View {
     @ViewBuilder
     private func trendChart(data: [YearMonth: Decimal]) -> some View {
         let sorted = data.keys.sorted()
-        let values = sorted.map { data[$0] ?? 0 }
 
         Chart {
             ForEach(sorted, id: \.self) { month in

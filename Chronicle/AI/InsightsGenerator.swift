@@ -126,8 +126,10 @@ final class InsightsGenerator {
         
         let calendar = Calendar.current
         let now = Date()
-        let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
-        let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart)!
+        guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)),
+              let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else {
+            return insights
+        }
         
         // Current month bills
         let currentMonthBills = bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd && !$0.isPaid }
@@ -201,7 +203,9 @@ final class InsightsGenerator {
         
         // Detect bills that have inconsistent payment patterns (sometimes paid, sometimes not)
         let calendar = Calendar.current
-        let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: Date())!
+        guard let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: Date()) else {
+            return insights
+        }
         
         let recentRecords = paymentRecords.filter { $0.paidAt >= sixMonthsAgo }
         

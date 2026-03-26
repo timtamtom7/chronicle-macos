@@ -3,18 +3,23 @@ import SwiftUI
 enum Theme {
     // MARK: - Colors
 
-    static let background = Color(hex: "faf9f7")
-    static let surface = Color.white
-    static let surfaceSecondary = Color(hex: "f4f2ef")
+    // Use system-adaptive colors for background/surface (respect dark mode)
+    static let background = Color(nsColor: .windowBackgroundColor)
+    static let surface = Color(nsColor: .controlBackgroundColor)
+    static let surfaceSecondary = Color(nsColor: .controlBackgroundColor).opacity(0.8)
+
+    // Brand/accent colors stay consistent
     static let accent = Color(hex: "e07a3a")
     static let accentSecondary = Color(hex: "f4a261")
     static let success = Color(hex: "5a9a6e")
     static let warning = Color(hex: "e09a3a")
     static let danger = Color(hex: "c45a4a")
-    static let textPrimary = Color(hex: "2a2a2a")
-    static let textSecondary = Color(hex: "7a7a7a")
-    static let textTertiary = Color(hex: "a0a0a0")
-    static let border = Color(hex: "e8e5e0")
+
+    // Text colors use system label colors for dark mode support
+    static let textPrimary = Color(nsColor: .labelColor)
+    static let textSecondary = Color(nsColor: .secondaryLabelColor)
+    static let textTertiary = Color(nsColor: .tertiaryLabelColor)
+    static let border = Color(nsColor: .separatorColor)
 
     // MARK: - Spacing
 
