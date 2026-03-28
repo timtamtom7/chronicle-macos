@@ -12,7 +12,7 @@ struct BudgetView: View {
             // Header
             HStack {
                 Text("Budgets")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -72,7 +72,7 @@ struct BudgetView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No budgets set")
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Set spending limits for categories to track your bills")
@@ -154,7 +154,7 @@ struct BudgetCard: View {
         VStack(spacing: Theme.spacing8) {
             HStack {
                 Image(systemName: budget.category.icon)
-                    .font(.system(size: 14))
+                    .font(Theme.fontMediumLabel)
                     .foregroundColor(Theme.accent)
                     .frame(width: 24)
 
@@ -248,7 +248,7 @@ struct BudgetEditorSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text(isEditing ? "Edit Budget" : "Add Budget")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {

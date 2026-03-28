@@ -137,7 +137,7 @@ struct ContentView: View {
                             Image(systemName: "checkmark.circle")
                                 .font(Theme.fontCaption)
                             Text("Pay All Due")
-                                .font(.system(size: 11, weight: .medium))
+                                .font(Theme.fontCaptionMedium)
                         }
                         .foregroundColor(Theme.success)
                     }
@@ -221,7 +221,7 @@ struct ContentView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No upcoming bills")
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Click + to add your first bill")
@@ -246,7 +246,7 @@ struct ContentView: View {
 
             Button(action: openSystemSettings) {
                 Text("Open Settings")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(Theme.fontCaptionMedium)
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
@@ -271,13 +271,13 @@ struct ContentView: View {
         VStack(spacing: Theme.spacing8) {
             HStack {
                 Text("Monthly Overview")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(Theme.fontCaptionSemibold)
                     .foregroundColor(Theme.textTertiary)
                     .textCase(.uppercase)
                 Spacer()
                 Button(action: showMainWindow) {
                     Text("View All")
-                        .font(.system(size: 11, weight: .medium))
+                        .font(Theme.fontCaptionMedium)
                         .foregroundColor(Theme.accent)
                 }
                 .buttonStyle(.plain)
@@ -299,7 +299,7 @@ struct ContentView: View {
                 .font(Theme.fontCaption)
                 .foregroundColor(Theme.textTertiary)
             Text(value)
-                .font(.system(size: 14, weight: .semibold))
+                .font(Theme.fontMediumLabelSemibold)
                 .foregroundColor(color)
         }
     }
@@ -370,7 +370,7 @@ struct BillCardView: View {
 
             // Name
             Text(bill.name)
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
                 .strikethrough(bill.isPaid)
@@ -433,7 +433,7 @@ struct SettingsSheet: View {
             // Header
             HStack {
                 Text("Settings")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
@@ -569,7 +569,7 @@ struct SettingsSheet: View {
     private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text(title)
-                .font(.system(size: 11, weight: .semibold))
+                .font(Theme.fontCaptionSemibold)
                 .foregroundColor(Theme.textTertiary)
                 .tracking(Theme.trackingWide)
 

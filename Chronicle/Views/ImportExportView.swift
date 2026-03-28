@@ -17,7 +17,7 @@ struct ImportExportView: View {
             // Header
             HStack {
                 Text("Import & Export")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
@@ -67,7 +67,7 @@ struct ImportExportView: View {
                     .font(.system(size: 16))
                     .foregroundColor(Theme.accent)
                 Text("Import Bills")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(Theme.fontMediumLabelSemibold)
                     .foregroundColor(Theme.textPrimary)
             }
 
@@ -94,7 +94,7 @@ struct ImportExportView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("CSV Format:")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(Theme.fontCaptionMedium)
                     .foregroundColor(Theme.textSecondary)
                 Text("name, amount, currency, due_date, due_day, recurrence, category, notes")
                     .font(.system(size: 11, design: .monospaced))
@@ -111,7 +111,7 @@ struct ImportExportView: View {
                     .font(.system(size: 16))
                     .foregroundColor(Theme.accent)
                 Text("Export Data")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(Theme.fontMediumLabelSemibold)
                     .foregroundColor(Theme.textPrimary)
             }
 
@@ -149,7 +149,7 @@ struct ImportExportView: View {
         Button(action: action) {
             HStack {
                 Image(systemName: icon)
-                    .font(.system(size: 14))
+                    .font(Theme.fontMediumLabel)
                     .foregroundColor(Theme.accent)
                     .frame(width: 24)
 
@@ -241,7 +241,7 @@ struct ImportResultSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Import Result")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {

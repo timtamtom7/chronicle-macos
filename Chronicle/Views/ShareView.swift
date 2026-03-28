@@ -12,7 +12,7 @@ struct ShareView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Share Bills")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {

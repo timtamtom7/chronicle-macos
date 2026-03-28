@@ -42,7 +42,7 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Business Expense Categories")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(Theme.fontLarge)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Tag bills as tax-deductible or business expenses to track for tax season.")
@@ -139,7 +139,7 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Reimbursable Expenses")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(Theme.fontLarge)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Track expenses that need to be reimbursed by your employer or clients.")
@@ -244,7 +244,7 @@ struct BusinessView: View {
             VStack(alignment: .leading, spacing: 24) {
                 HStack {
                     Text("Tax Preparation Report")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(Theme.fontLarge)
                         .foregroundColor(Theme.textPrimary)
 
                     Spacer()
@@ -338,7 +338,7 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Accountant Mode")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(Theme.fontLarge)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Enable read-only mode with a locked date range for accountant access.")

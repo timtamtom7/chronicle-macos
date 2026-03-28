@@ -16,7 +16,7 @@ struct TemplatesView: View {
             // Header
             HStack {
                 Text("Bill Templates")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -99,7 +99,7 @@ struct TemplatesView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No templates yet")
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Templates let you quickly create similar bills")
@@ -173,7 +173,7 @@ struct TemplateCard: View {
                     .frame(width: 36, height: 36)
 
                 Image(systemName: template.category.icon)
-                    .font(.system(size: 14))
+                    .font(Theme.fontMediumLabel)
                     .foregroundColor(Theme.accent)
             }
 
@@ -255,7 +255,7 @@ struct TemplateEditorSheet: View {
             // Header
             HStack {
                 Text(isEditing ? "Edit Template" : "New Template")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
@@ -487,7 +487,7 @@ struct CreateBillFromTemplateSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Create Bill from Template")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {

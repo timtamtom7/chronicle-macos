@@ -208,7 +208,7 @@ struct AddBillSheet: View {
     private var header: some View {
         HStack {
             Text(isEditing ? "Edit Bill" : "Add Bill")
-                .font(.system(size: 16, weight: .semibold))
+                .font(Theme.fontHeadline)
                 .foregroundColor(Theme.textPrimary)
             Spacer()
             Button(action: { isPresented = false }) {

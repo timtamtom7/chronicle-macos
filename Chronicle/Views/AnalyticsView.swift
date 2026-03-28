@@ -10,7 +10,7 @@ struct AnalyticsView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Analytics")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -110,7 +110,7 @@ struct AnalyticsView: View {
     private var categoryBreakdownSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Spending by Category")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             VStack(spacing: Theme.spacing8) {
@@ -170,7 +170,7 @@ struct AnalyticsView: View {
     private var monthlyTrendSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Monthly Trend")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             SimpleTrendChart(data: monthlyTrendData)
@@ -190,7 +190,7 @@ struct AnalyticsView: View {
     private var yearlyOverviewSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Yearly Overview")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             HStack(spacing: Theme.spacing8) {

@@ -80,7 +80,7 @@ struct BillListView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("BILLS")
-                .font(.system(size: 11, weight: .semibold))
+                .font(Theme.fontCaptionSemibold)
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
                 .padding(.top, Theme.spacing16)
@@ -92,7 +92,7 @@ struct BillListView: View {
             }
 
             Text("CATEGORIES")
-                .font(.system(size: 11, weight: .semibold))
+                .font(Theme.fontCaptionSemibold)
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
                 .padding(.top, Theme.spacing24)
@@ -349,7 +349,7 @@ struct BillListView: View {
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(Theme.textTertiary)
                     Text("PAID")
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(Theme.fontCaptionSemibold)
                         .foregroundColor(Theme.textTertiary)
                     Text("(\(paidBills.count))")
                         .font(Theme.fontCaption)
@@ -398,7 +398,7 @@ struct BillListView: View {
     private func billSection(title: String, bills: [Bill], accentColor: Color) -> some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text(title.uppercased())
-                .font(.system(size: 11, weight: .semibold))
+                .font(Theme.fontCaptionSemibold)
                 .foregroundColor(Theme.textTertiary)
                 .tracking(Theme.trackingWide)
 
@@ -488,7 +488,7 @@ struct BillRowView: View {
             // Bill info
             VStack(alignment: .leading, spacing: 2) {
                 Text(bill.name)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(Theme.fontMediumLabel)
                     .foregroundColor(bill.isPaid ? Theme.textTertiary : Theme.textPrimary)
                     .strikethrough(bill.isPaid)
                     .accessibilityLabel("\(bill.name), \(bill.formattedAmount)")

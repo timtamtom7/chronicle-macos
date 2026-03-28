@@ -116,7 +116,7 @@ struct HouseholdDashboardView: View {
     private func membersSection(_ members: [HouseholdMember]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Members")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
@@ -159,7 +159,7 @@ struct HouseholdDashboardView: View {
     private var balancesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Balances")
-                .font(.system(size: 13, weight: .semibold))
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             if householdService.balances.isEmpty {
@@ -211,7 +211,7 @@ struct HouseholdDashboardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Bills This Month")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(Theme.fontBodySemibold)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -248,7 +248,7 @@ struct HouseholdDashboardView: View {
                 .foregroundColor(Theme.textPrimary)
 
             Image(systemName: bill.isPaid ? "checkmark.circle.fill" : "circle")
-                .font(.system(size: 14))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(bill.isPaid ? Theme.success : Theme.textTertiary)
         }
         .padding(.vertical, 4)
@@ -260,7 +260,7 @@ struct HouseholdDashboardView: View {
     private func qrCodeSheet(_ household: Household) -> some View {
         VStack(spacing: 24) {
             Text("Invite to \(household.name)")
-                .font(.system(size: 18, weight: .bold))
+                .font(Theme.fontLarge)
                 .foregroundColor(Theme.textPrimary)
 
             if let qrImage = householdService.generateInviteQRCode(for: household) {
@@ -295,7 +295,7 @@ struct HouseholdDashboardView: View {
     private var createHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Create Household")
-                .font(.system(size: 18, weight: .bold))
+                .font(Theme.fontLarge)
                 .foregroundColor(Theme.textPrimary)
 
             TextField("Household Name", text: $householdName)
@@ -331,7 +331,7 @@ struct HouseholdDashboardView: View {
     private var joinHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Join Household")
-                .font(.system(size: 18, weight: .bold))
+                .font(Theme.fontLarge)
                 .foregroundColor(Theme.textPrimary)
 
             TextField("Invite Code", text: $inviteCode)

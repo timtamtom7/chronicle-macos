@@ -135,7 +135,7 @@ struct OverviewView: View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             HStack {
                 Text("Month Progress")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(Theme.fontSubheadlineSemibold)
                     .foregroundColor(Theme.textSecondary)
                 Spacer()
                 let pct = progressPercentage
@@ -173,7 +173,7 @@ struct OverviewView: View {
     private var categoryBreakdown: some View {
         VStack(alignment: .leading, spacing: Theme.spacing12) {
             Text("Category Breakdown")
-                .font(.system(size: 12, weight: .semibold))
+                .font(Theme.fontSubheadlineSemibold)
                 .foregroundColor(Theme.textSecondary)
 
             let categoryData = billStore.spendingByCategory(for: selectedMonth)
@@ -230,7 +230,7 @@ struct OverviewView: View {
     private var spendingTrends: some View {
         VStack(alignment: .leading, spacing: Theme.spacing12) {
             Text("Spending Trends")
-                .font(.system(size: 12, weight: .semibold))
+                .font(Theme.fontSubheadlineSemibold)
                 .foregroundColor(Theme.textSecondary)
 
             let trend = billStore.monthlyTrend(months: 6)

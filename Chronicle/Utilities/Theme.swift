@@ -59,8 +59,15 @@ enum Theme {
     static let fontTitle: Font = .system(size: 22, weight: .bold)
     static let fontHeadline: Font = .system(size: 16, weight: .semibold)
     static let fontBody: Font = .system(size: 13, weight: .regular)
+    static let fontBodySemibold: Font = .system(size: 13, weight: .semibold)
     static let fontSubheadline: Font = .system(size: 12, weight: .medium)
+    static let fontSubheadlineSemibold: Font = .system(size: 12, weight: .semibold)
+    static let fontMediumLabel: Font = .system(size: 14, weight: .medium)
+    static let fontMediumLabelSemibold: Font = .system(size: 14, weight: .semibold)
+    static let fontLarge: Font = .system(size: 18, weight: .bold)  // empty state / emphasis
     static let fontCaption: Font = .system(size: 11, weight: .regular)
+    static let fontCaptionSemibold: Font = .system(size: 11, weight: .semibold)
+    static let fontCaptionMedium: Font = .system(size: 11, weight: .medium)
     static let fontSmall: Font = .system(size: 11, weight: .regular)
     static let fontLabel: Font = .system(size: 12, weight: .medium)
 

@@ -102,7 +102,7 @@ struct HistoryView: View {
     private func monthSectionHeader(_ month: YearMonth) -> some View {
         HStack {
             Text(month.displayString)
-                .font(.system(size: 12, weight: .semibold))
+                .font(Theme.fontSubheadlineSemibold)
                 .foregroundColor(Theme.textSecondary)
 
             Spacer()
@@ -131,7 +131,7 @@ struct HistoryView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No payments recorded yet")
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Mark a bill as paid to see it here")
@@ -164,7 +164,7 @@ struct HistoryView: View {
         HStack(spacing: Theme.spacing12) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(Theme.success)
-                .font(.system(size: 14))
+                .font(Theme.fontMediumLabel)
 
             Text("Payment for \(toast.billName) undone")
                 .font(Theme.fontBody)
@@ -198,7 +198,7 @@ struct HistoryRowView: View {
         HStack(spacing: Theme.spacing12) {
             // Bill name
             Text(billName)
-                .font(.system(size: 14, weight: .medium))
+                .font(Theme.fontMediumLabel)
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
                 .accessibilityLabel("\(billName), paid \(record.formattedAmount)")
