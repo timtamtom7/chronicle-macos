@@ -25,8 +25,6 @@ enum Theme {
     // Brand/accent colors (WCAG AA compliant: 4.5:1+ for normal text)
     // accent: warm amber — trustworthy not urgent, finance-appropriate
     static let accent = Color(hex: "d4920a")           // Was #c8602a terracotta — now warm amber
-    // accentSecondary: dark amber, passes WCAG AA in dark mode
-    static let accentSecondary = Color(hex: "a06820")  // Was #d4884a — darkened for dark mode
     // success: bright celebratory green for PAID moments
     static let success = Color(hex: "2e9e58")          // Was #4a8a5e — brightened for emotional impact
     // warning: dark amber, passes WCAG AA in dark mode

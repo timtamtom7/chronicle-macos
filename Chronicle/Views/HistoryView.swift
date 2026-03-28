@@ -131,7 +131,7 @@ struct HistoryView: View {
     private var emptyState: some View {
         VStack(spacing: Theme.spacing12) {
             Image(systemName: "clock.badge.checkmark")
-                .font(.system(size: 36))
+                .font(.system(size: Theme.emptyStateIconSize))
                 .foregroundColor(Theme.textTertiary)
 
             Text("No payments recorded yet")

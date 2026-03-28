@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AddBillSheet: View {
     @EnvironmentObject var billStore: BillStore
-    @Binding var isPresented: Bool
+    @Environment(\.dismiss) private var dismiss
 
     var editingBill: Bill?
 
@@ -211,7 +211,7 @@ struct AddBillSheet: View {
                 .font(.headline)
                 .foregroundColor(Theme.textPrimary)
             Spacer()
-            Button(action: { isPresented = false }) {
+            Button(action: { dismiss() }) {
                 Image(systemName: "xmark")
                     .font(.footnote)
                     .foregroundColor(Theme.textTertiary)

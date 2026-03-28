@@ -32,6 +32,18 @@ enum SheetDestination: Identifiable {
     }
 }
 
+
+
+// MARK: - Bill Groups
+
+/// Precomputed bill groups - computed once per filter pass instead of 4x per render.
+struct BillGroups {
+    let dueThisWeek: [Bill]
+    let upcoming: [Bill]
+    let pastDue: [Bill]
+    let paid: [Bill]
+}
+
 struct BillListView: View {
     @EnvironmentObject var billStore: BillStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -111,7 +123,7 @@ struct BillListView: View {
                 selectedCategory = nil
             }
 
-            Text("CATEGORIES")
+            Text("Categories")
                 .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
@@ -301,22 +313,22 @@ struct BillListView: View {
         ScrollView {
             VStack(spacing: Theme.spacing24) {
                 // Due this week
-                if !dueThisWeekBills.isEmpty {
-                    billSection(title: "Due This Week", bills: dueThisWeekBills, accentColor: Theme.accent)
+                if !billGroups.dueThisWeek.isEmpty {
+                    billSection(title: "Due This Week", bills: billGroups.dueThisWeek, accentColor: Theme.accent)
                 }
 
                 // Upcoming
-                if !upcomingBills.isEmpty {
-                    billSection(title: "Upcoming", bills: upcomingBills, accentColor: Theme.textTertiary)
+                if !billGroups.upcoming.isEmpty {
+                    billSection(title: "Upcoming", bills: billGroups.upcoming, accentColor: Theme.textTertiary)
                 }
 
                 // Past due
-                if !pastDueBills.isEmpty {
-                    billSection(title: "Past Due", bills: pastDueBills, accentColor: Theme.danger)
+                if !billGroups.pastDue.isEmpty {
+                    billSection(title: "Past Due", bills: billGroups.pastDue, accentColor: Theme.danger)
                 }
 
                 // Past Bills (recurring paid - collapsible)
-                if !paidBills.isEmpty {
+                if !billGroups.paid.isEmpty {
                     pastBillsSection
                 }
 
@@ -325,13 +337,9 @@ struct BillListView: View {
                 }
             }
             .padding(Theme.spacing16)
-            .onAppear {
+            .task(id: searchText + (selectedCategory?.rawValue ?? "") + sortOrder.rawValue + String(billStore.bills.count)) {
                 updateFilteredBills()
             }
-            .onChange(of: searchText) { _ in updateFilteredBills() }
-            .onChange(of: selectedCategory) { _ in updateFilteredBills() }
-            .onChange(of: sortOrder) { _ in updateFilteredBills() }
-            .onChange(of: billStore.bills) { _ in updateFilteredBills() }
         }
     }
 
@@ -360,6 +368,17 @@ struct BillListView: View {
         }
     }
 
+    /// Bill groups — single 4-way filter over cachedFilteredBills instead of 4x per access.
+    private var billGroups: BillGroups {
+        let filtered = cachedFilteredBills
+        return BillGroups(
+            dueThisWeek: filtered.filter { $0.status() == .dueToday || $0.status() == .dueSoon },
+            upcoming: filtered.filter { $0.status() == .upcoming },
+            pastDue: filtered.filter { $0.status() == .overdue },
+            paid: filtered.filter { $0.status() == .paid }
+        )
+    }
+
     private var pastBillsSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Button {
@@ -374,19 +393,19 @@ struct BillListView: View {
                     Text("PAID")
                         .font(.caption)
                         .foregroundColor(Theme.textTertiary)
-                    Text("(\(paidBills.count))")
+                    Text("(\(billGroups.paid.count))")
                         .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                     Spacer()
                 }
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Paid bills section, \(paidBills.count) paid bills")
+            .accessibilityLabel("Paid bills section, \(billGroups.paid.count) paid bills")
             .accessibilityHint(showPastBills ? "Collapses paid bills list" : "Expands paid bills list")
 
             if showPastBills {
                 VStack(spacing: Theme.spacing8) {
-                    ForEach(paidBills) { bill in
+                    ForEach(billGroups.paid) { bill in
                         BillRowView(
                             bill: bill,
                             onTogglePaid: { billStore.markPaid(bill, paid: !bill.isPaid) },
@@ -400,22 +419,6 @@ struct BillListView: View {
                 }
             }
         }
-    }
-
-    private var dueThisWeekBills: [Bill] {
-        cachedFilteredBills.filter { $0.status() == .dueToday || $0.status() == .dueSoon }
-    }
-
-    private var upcomingBills: [Bill] {
-        cachedFilteredBills.filter { $0.status() == .upcoming }
-    }
-
-    private var pastDueBills: [Bill] {
-        cachedFilteredBills.filter { $0.status() == .overdue }
-    }
-
-    private var paidBills: [Bill] {
-        cachedFilteredBills.filter { $0.status() == .paid }
     }
 
     private func billSection(title: String, bills: [Bill], accentColor: Color) -> some View {
