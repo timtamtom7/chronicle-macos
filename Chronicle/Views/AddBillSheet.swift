@@ -268,7 +268,7 @@ struct AddBillSheet: View {
             Button(action: save) {
                 Text(isEditing ? "Save Changes" : "Add Bill")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
                     .background(isValid ? Theme.accent : Theme.textTertiary)

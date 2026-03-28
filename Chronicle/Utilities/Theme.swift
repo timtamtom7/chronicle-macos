@@ -1,4 +1,7 @@
 import SwiftUI
+import AppKit
+
+// MARK: - Theme
 
 enum Theme {
     // MARK: - Colors
@@ -7,6 +10,11 @@ enum Theme {
     static let background = Color(nsColor: .windowBackgroundColor)
     static let surface = Color(nsColor: .controlBackgroundColor)
     static let surfaceSecondary = Color(nsColor: .controlBackgroundColor).opacity(0.8)
+
+    // Background levels for Liquid Glass depth
+    static let backgroundLevel0 = Color(nsColor: .windowBackgroundColor)
+    static let backgroundLevel1 = Color(nsColor: .controlBackgroundColor)
+    static let backgroundLevel2 = Color(nsColor: .underPageBackgroundColor)
 
     // Brand/accent colors stay consistent
     static let accent = Color(hex: "e07a3a")
@@ -19,7 +27,16 @@ enum Theme {
     static let textPrimary = Color(nsColor: .labelColor)
     static let textSecondary = Color(nsColor: .secondaryLabelColor)
     static let textTertiary = Color(nsColor: .tertiaryLabelColor)
+    static let textQuaternary = Color(nsColor: .quaternaryLabelColor)
+
+    // Separator color
+    static let separator = Color(nsColor: .separatorColor)
+
+    // Border color
     static let border = Color(nsColor: .separatorColor)
+
+    // Primary text on accent backgrounds (white)
+    static let textOnAccent = Color.white
 
     // MARK: - Spacing
 
@@ -27,19 +44,122 @@ enum Theme {
     static let spacing8: CGFloat = 8
     static let spacing12: CGFloat = 12
     static let spacing16: CGFloat = 16
+    static let spacing20: CGFloat = 20
     static let spacing24: CGFloat = 24
     static let spacing32: CGFloat = 32
 
-    // MARK: - Radius
+    // MARK: - Corner Radius
 
-    static let radiusSmall: CGFloat = 6
-    static let radiusMedium: CGFloat = 12
-    static let radiusLarge: CGFloat = 16
+    // iOS 26 / macOS Liquid Glass design tokens
+    static let cornerRadius4: CGFloat = 4
+    static let cornerRadius8: CGFloat = 8
+    static let cornerRadius10: CGFloat = 10
+    static let cornerRadius12: CGFloat = 12
+    static let cornerRadius14: CGFloat = 14
+    static let cornerRadius16: CGFloat = 16
+    static let cornerRadius20: CGFloat = 20
+
+    // Named radius aliases
+    static let radiusSmall: CGFloat = 8      // cornerRadiusSmall
+    static let radiusMedium: CGFloat = 12     // cornerRadiusMedium
+    static let radiusLarge: CGFloat = 16      // cornerRadiusLarge
+    static let radiusPill: CGFloat = 20       // cornerRadiusPill
 
     // MARK: - Shadows
 
     static func cardShadow() -> some View {
         Color.black.opacity(0.05)
+    }
+}
+
+// MARK: - Haptic Feedback
+
+enum HapticFeedback {
+    /// Light impact for subtle interactions (toggles, selections)
+    static func light() {
+        NSSound(named: .init("Pop"))?.play()
+    }
+
+    /// Medium impact for standard interactions (button taps)
+    static func medium() {
+        NSSound(named: .init("Pop"))?.play()
+    }
+
+    /// Heavy impact for significant actions (delete, important confirmations)
+    static func heavy() {
+        NSSound(named: .init("Blow"))?.play()
+    }
+
+    /// Success feedback for successful operations
+    static func success() {
+        NSSound(named: .init("Fanfare"))?.play()
+    }
+
+    /// Warning feedback
+    static func warning() {
+        NSSound(named: .init("Alert"))?.play()
+    }
+
+    /// Error feedback
+    static func error() {
+        NSSound(named: .init("Basso"))?.play()
+    }
+
+    /// Selection changed feedback
+    static func selection() {
+        NSSound(named: .init("Pop"))?.play()
+    }
+}
+
+// MARK: - Button Styles
+
+/// Primary button style for main actions
+struct PrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 13, weight: .medium))
+            .foregroundColor(Theme.textOnAccent)
+            .padding(.horizontal, Theme.spacing16)
+            .padding(.vertical, Theme.spacing8)
+            .background(isEnabled ? Theme.accent : Theme.textTertiary)
+            .cornerRadius(Theme.radiusSmall)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+/// Secondary button style for secondary actions
+struct SecondaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 13, weight: .medium))
+            .foregroundColor(isEnabled ? Theme.textPrimary : Theme.textTertiary)
+            .padding(.horizontal, Theme.spacing16)
+            .padding(.vertical, Theme.spacing8)
+            .background(Theme.surface)
+            .cornerRadius(Theme.radiusSmall)
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.radiusSmall)
+                    .stroke(Theme.border, lineWidth: 1)
+            )
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+/// Icon button style for toolbar actions
+struct IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(Theme.textSecondary)
+            .opacity(configuration.isPressed ? 0.6 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 

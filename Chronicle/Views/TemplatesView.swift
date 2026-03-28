@@ -44,7 +44,7 @@ struct TemplatesView: View {
                             Text("New")
                                 .font(.system(size: 12))
                         }
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
                         .background(Theme.accent)
@@ -109,7 +109,7 @@ struct TemplatesView: View {
             Button(action: { showAddTemplate = true }) {
                 Text("Create Template")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
                     .background(Theme.accent)
@@ -379,7 +379,7 @@ struct TemplateEditorSheet: View {
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Create Template")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)
                         .background(isValid ? Theme.accent : Theme.textTertiary)
@@ -555,7 +555,7 @@ struct CreateBillFromTemplateSheet: View {
                 Button(action: createBill) {
                     Text("Create Bill")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)
                         .background(Theme.accent)

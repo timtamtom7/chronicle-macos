@@ -24,7 +24,7 @@ struct BudgetView: View {
                         Text("Add")
                         .font(.system(size: 12))
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Theme.accent)
@@ -84,7 +84,7 @@ struct BudgetView: View {
             Button(action: { showAddBudget = true }) {
                 Text("Add Budget")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
                     .background(Theme.accent)
@@ -192,7 +192,7 @@ struct BudgetCard: View {
                 if progress >= 1.0 {
                     HStack(spacing: 2) {
                         Image(systemName: "exclamationmark.triangle.fill")
-                            .font(.system(size: 10))
+                            .font(.caption2)
                         Text("Over budget")
                             .font(.system(size: 11))
                     }
@@ -200,7 +200,7 @@ struct BudgetCard: View {
                 } else if progress >= 0.9 {
                     HStack(spacing: 2) {
                         Image(systemName: "exclamationmark.circle.fill")
-                            .font(.system(size: 10))
+                            .font(.caption2)
                         Text("Near limit")
                             .font(.system(size: 11))
                     }
@@ -325,7 +325,7 @@ struct BudgetEditorSheet: View {
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Add Budget")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.white)
+                        .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)
                         .background(isValid ? Theme.accent : Theme.textTertiary)

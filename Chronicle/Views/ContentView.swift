@@ -254,7 +254,7 @@ struct ContentView: View {
 
             Button(action: { showPermissionBanner = false }) {
                 Image(systemName: "xmark")
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundColor(Theme.textTertiary)
             }
             .buttonStyle(.plain)

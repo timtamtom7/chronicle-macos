@@ -218,7 +218,7 @@ struct AnalyticsView: View {
                 .fill(isCurrentMonth ? Theme.accent : Theme.accent.opacity(0.4))
                 .frame(height: max(4, 60 * heightRatio))
             Text(month)
-                .font(.system(size: 9))
+                .font(.caption2)
                 .foregroundColor(isCurrentMonth ? Theme.textPrimary : Theme.textTertiary)
         }
         .frame(maxWidth: .infinity)
@@ -390,7 +390,7 @@ struct SimpleTrendChart: View {
                 HStack(spacing: 0) {
                     ForEach(Array(data.enumerated()), id: \.offset) { i, point in
                         Text(point.month)
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundColor(Theme.textTertiary)
                         if i < data.count - 1 {
                             Spacer()

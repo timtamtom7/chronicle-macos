@@ -82,7 +82,7 @@ struct ImportExportView: View {
                     Text("Choose CSV File")
                         .font(.system(size: 13, weight: .medium))
                 }
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textOnAccent)
                 .padding(.horizontal, Theme.spacing16)
                 .padding(.vertical, 8)
                 .background(Theme.accent)
@@ -308,7 +308,7 @@ struct ImportResultSheet: View {
                 Spacer()
                 Button("Done") { isPresented = false }
                     .buttonStyle(.plain)
-                    .foregroundColor(.white)
+                    .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
                     .background(Theme.accent)

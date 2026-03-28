@@ -255,7 +255,7 @@ struct BillListView: View {
                     Text("Add Bill")
                 }
                 .font(.system(size: 13, weight: .medium))
-                .foregroundColor(.white)
+                .foregroundColor(Theme.textOnAccent)
                 .padding(.horizontal, Theme.spacing12)
                 .padding(.vertical, 6)
                 .background(Theme.accent)

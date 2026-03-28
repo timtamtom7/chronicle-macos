@@ -288,7 +288,7 @@ struct OverviewView: View {
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisValueLabel()
-                    .font(.system(size: 10))
+                    .font(.caption2)
                     .foregroundStyle(Theme.textTertiary)
             }
         }
@@ -299,7 +299,7 @@ struct OverviewView: View {
                 AxisValueLabel {
                     if let v = value.as(Double.self) {
                         Text(formatShortCurrency(Decimal(v)))
-                            .font(.system(size: 9))
+                            .font(.caption2)
                             .foregroundColor(Theme.textTertiary)
                     }
                 }
