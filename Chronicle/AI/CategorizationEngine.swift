@@ -43,13 +43,26 @@ final class CategorizationEngine {
     
     /// Suggest a category for a bill based on its name/vendor
     func suggestCategory(for billName: String) -> Category {
+        // First check user corrections stored in UserDefaults
+        let corrections = UserDefaults.standard.dictionary(forKey: "categoryCorrections") as? [String: String] ?? [:]
+        let normalizedName = billName.lowercased()
+
+        for (pattern, categoryRaw) in corrections {
+            if normalizedName.localizedCaseInsensitiveContains(pattern) {
+                if let category = Category(rawValue: categoryRaw) {
+                    return category
+                }
+            }
+        }
+
+        // Fall back to ML model
         guard let queryEmbedding = embedder.embedding(for: billName) else {
             return .other
         }
-        
+
         var bestCategory: Category = .other
         var bestSimilarity: Double = 0.0
-        
+
         for (category, categoryEmbedding) in categoryEmbeddings {
             let similarity = cosineSimilarity(queryEmbedding, categoryEmbedding)
             if similarity > bestSimilarity {
@@ -57,17 +70,18 @@ final class CategorizationEngine {
                 bestCategory = category
             }
         }
-        
+
         // Threshold: if similarity is too low, default to .other
         return bestSimilarity > 0.3 ? bestCategory : .other
     }
-    
-    /// Learn from user corrections to improve future suggestions
+
+    /// Learn from user corrections to improve future suggestions.
+    /// Stores bill name patterns → category mappings in UserDefaults.
     func learnFromCorrection(billName: String, correctedCategory: Category) {
-        // In a production system, we would update the embedding model here
-        // For now, this is a placeholder for future ML model fine-tuning
-        // The NaturalLanguage framework doesn't support fine-tuning on-device
-        // so we use a rule-based approach with keyword boosting
+        var corrections = UserDefaults.standard.dictionary(forKey: "categoryCorrections") as? [String: String] ?? [:]
+        // Store a lowercase pattern for case-insensitive matching
+        corrections[billName.lowercased()] = correctedCategory.rawValue
+        UserDefaults.standard.set(corrections, forKey: "categoryCorrections")
     }
     
     // MARK: - Embedding Helpers

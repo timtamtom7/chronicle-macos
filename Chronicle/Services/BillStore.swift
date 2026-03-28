@@ -392,6 +392,16 @@ final class BillStore: ObservableObject {
         }
     }
 
+    /// Returns true if there are any payment records for this bill.
+    func hasPaymentHistory(for bill: Bill) -> Bool {
+        do {
+            let records = try db.fetchPaymentRecords(for: bill.id)
+            return !records.isEmpty
+        } catch {
+            return false
+        }
+    }
+
     // MARK: - Monthly Stats
 
     func totalSpentThisMonth() -> Decimal {
