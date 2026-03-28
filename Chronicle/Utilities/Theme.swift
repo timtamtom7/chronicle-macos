@@ -272,3 +272,20 @@ extension View {
         modifier(CardStyle(status: status))
     }
 }
+
+// MARK: - Category Colors
+
+/// Design token for category colors — centralized here alongside other design tokens.
+/// These colors should be WCAG AA compliant for their intended use.
+enum ThemeCategoryColors {
+    static let map: [Category: Color] = [
+        .housing: Color(hex: "6b8cae"),
+        .utilities: Color(hex: "f4a261"),
+        .subscriptions: Color(hex: "9b7ede"),
+        .insurance: Color(hex: "5a9a6e"),
+        .phoneInternet: Color(hex: "4ecdc4"),
+        .transportation: Color(hex: "e07a3a"),
+        .health: Color(hex: "e86868"),
+        .other: Color(hex: "8a8a8a")
+    ]
+}

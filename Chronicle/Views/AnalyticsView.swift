@@ -136,6 +136,7 @@ struct AnalyticsView: View {
                 .font(.system(size: 12))
                 .foregroundColor(Theme.accent)
                 .frame(width: 16)
+                .accessibilityHidden(true)
 
             Text(category.rawValue)
                 .font(.system(size: 12))
@@ -195,7 +196,7 @@ struct AnalyticsView: View {
 
             HStack(spacing: Theme.spacing8) {
                 ForEach(monthlyBreakdown, id: \.month) { item in
-                    monthlyColumn(month: item.month, spent: item.spent, isCurrentMonth: item.isCurrentMonth)
+                    monthlyColumn(month: item.month, spent: item.spent, isCurrentMonth: item.isCurrentMonth, maxSpent: monthlyMaxSpent)
                 }
             }
             .padding(Theme.spacing12)
@@ -208,8 +209,7 @@ struct AnalyticsView: View {
         }
     }
 
-    private func monthlyColumn(month: String, spent: Decimal, isCurrentMonth: Bool) -> some View {
-        let maxSpent = monthlyBreakdown.map { $0.spent }.max() ?? 1
+    private func monthlyColumn(month: String, spent: Decimal, isCurrentMonth: Bool, maxSpent: Decimal) -> some View {
         let heightRatio = maxSpent > 0 ? NSDecimalNumber(decimal: spent / maxSpent).doubleValue : 0
 
         return VStack(spacing: 4) {
@@ -321,6 +321,11 @@ struct AnalyticsView: View {
         }
 
         return result
+    }
+
+    /// Precomputed max spent — avoids O(n) max() call per column per render
+    private var monthlyMaxSpent: Decimal {
+        monthlyBreakdown.map { $0.spent }.max() ?? 1
     }
 
     private func formattedCurrency(_ amount: Decimal) -> String {

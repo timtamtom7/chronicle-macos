@@ -103,6 +103,7 @@ struct OverviewView: View {
                 Image(systemName: icon)
                     .font(.system(size: 12))
                     .foregroundColor(color)
+                    .accessibilityHidden(true)
                 Text(title)
                     .font(Theme.fontCaption)
                     .foregroundColor(Theme.textTertiary)
@@ -205,6 +206,7 @@ struct OverviewView: View {
                 .font(Theme.fontCaption)
                 .foregroundColor(Theme.textTertiary)
                 .frame(width: 16)
+                .accessibilityHidden(true)
 
             Text(category.rawValue)
                 .font(.system(size: 12))
@@ -213,7 +215,7 @@ struct OverviewView: View {
 
             GeometryReader { geo in
                 RoundedRectangle(cornerRadius: Theme.radiusSmall)
-                    .fill(CategoryColor.map[category] ?? .gray)
+                    .fill(ThemeCategoryColors.map[category] ?? .gray)
                     .frame(width: geo.size.width * ratio, height: 16)
             }
             .frame(height: 16)
@@ -323,19 +325,4 @@ struct OverviewView: View {
         }
         return "$\(dollars)"
     }
-}
-
-// MARK: - Category Color
-
-enum CategoryColor {
-    static let map: [Category: Color] = [
-        .housing: Color(hex: "6b8cae"),
-        .utilities: Color(hex: "f4a261"),
-        .subscriptions: Color(hex: "9b7ede"),
-        .insurance: Color(hex: "5a9a6e"),
-        .phoneInternet: Color(hex: "4ecdc4"),
-        .transportation: Color(hex: "e07a3a"),
-        .health: Color(hex: "e86868"),
-        .other: Color(hex: "8a8a8a")
-    ]
 }

@@ -16,11 +16,26 @@ enum BillSortOrder: String, CaseIterable {
     }
 }
 
+// MARK: - Sheet Destination
+
+/// Single enum-driven sheet to avoid SwiftUI discarding simultaneous sheets.
+/// Replace separate .sheet(isPresented:) and .sheet(item:) modifiers.
+enum SheetDestination: Identifiable {
+    case addBill
+    case editBill(Bill)
+
+    var id: String {
+        switch self {
+        case .addBill: return "add"
+        case .editBill(let bill): return "edit-\(bill.id)"
+        }
+    }
+}
+
 struct BillListView: View {
     @EnvironmentObject var billStore: BillStore
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var showingAddSheet = false
-    @State private var selectedBill: Bill?
+    @State private var activeSheet: SheetDestination?
     @State private var searchText = ""
     @State private var selectedCategory: Category?
     @State private var showDeleteAlert = false
@@ -52,14 +67,19 @@ struct BillListView: View {
         }
         .frame(minWidth: 560, minHeight: 400)
         .background(Theme.background)
-        .sheet(isPresented: $showingAddSheet) {
-            AddBillSheet(isPresented: $showingAddSheet)
-        }
-        .sheet(item: $selectedBill) { bill in
-            AddBillSheet(isPresented: Binding(
-                get: { selectedBill != nil },
-                set: { if !$0 { selectedBill = nil } }
-            ), editingBill: bill)
+        .sheet(item: $activeSheet) { destination in
+            switch destination {
+            case .addBill:
+                AddBillSheet(isPresented: Binding(
+                    get: { activeSheet != nil },
+                    set: { if !$0 { activeSheet = nil } }
+                ))
+            case .editBill(let bill):
+                AddBillSheet(isPresented: Binding(
+                    get: { activeSheet != nil },
+                    set: { if !$0 { activeSheet = nil } }
+                ), editingBill: bill)
+            }
         }
         .alert("Delete Bill?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
@@ -106,7 +126,7 @@ struct BillListView: View {
                         icon: cat.icon,
                         count: count,
                         selected: selectedCategory == cat,
-                        color: CategoryColor.map[cat]
+                        color: ThemeCategoryColors.map[cat]
                     ) {
                         selectedCategory = cat
                     }
@@ -255,7 +275,7 @@ struct BillListView: View {
             .accessibilityHint("Opens menu to change sort order")
 
             // Add button
-            Button(action: { showingAddSheet = true }) {
+            Button(action: { activeSheet = .addBill }) {
                 HStack(spacing: 4) {
                     Image(systemName: "plus")
                     Text("Add Bill")
@@ -367,7 +387,7 @@ struct BillListView: View {
                         BillRowView(
                             bill: bill,
                             onTogglePaid: { billStore.markPaid(bill, paid: !bill.isPaid) },
-                            onEdit: { selectedBill = bill },
+                            onEdit: { activeSheet = .editBill(bill) },
                             onDelete: {
                                 billToDelete = bill
                                 showDeleteAlert = true
@@ -407,7 +427,7 @@ struct BillListView: View {
                     BillRowView(
                         bill: bill,
                         onTogglePaid: { billStore.markPaid(bill, paid: !bill.isPaid) },
-                        onEdit: { selectedBill = bill },
+                        onEdit: { activeSheet = .editBill(bill) },
                         onDelete: {
                             billToDelete = bill
                             showDeleteAlert = true
@@ -564,6 +584,7 @@ struct BillRowView: View {
         .overlay(
             RoundedRectangle(cornerRadius: Theme.radiusMedium)
                 .stroke(leftBorderColor.opacity(0.3), lineWidth: 1)
+                .accessibilityHidden(true)
         )
         .onHover { hovering in
             isHovering = hovering
@@ -580,7 +601,7 @@ struct BillRowView: View {
         }
         switch bill.status() {
         case .dueToday, .dueSoon: return Theme.accent
-        case .upcoming: return CategoryColor.map[bill.category] ?? Theme.border
+        case .upcoming: return ThemeCategoryColors.map[bill.category] ?? Theme.border
         case .overdue: return Theme.danger
         case .paid: return Theme.success
         }

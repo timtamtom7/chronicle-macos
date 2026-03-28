@@ -7,6 +7,8 @@ struct HistoryView: View {
     @State private var groupedRecords: [YearMonth: [PaymentRecord]] = [:]
     @State private var selectedMonth: YearMonth?
     @State private var undoToast: UndoToastData?
+    /// O(1) bill name lookup cache — built in loadData() to avoid O(n²) per-record search
+    @State private var billNameCache: [UUID: String] = [:]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -81,6 +83,8 @@ struct HistoryView: View {
 
     private func loadData() {
         groupedRecords = billStore.paymentRecordsGroupedByMonth()
+        // Build O(1) lookup cache — avoids O(n) .first(where:) per record per render
+        billNameCache = Dictionary(uniqueKeysWithValues: billStore.bills.map { ($0.id, $0.name) })
     }
 
     private var sortedMonths: [YearMonth] {
@@ -88,7 +92,7 @@ struct HistoryView: View {
     }
 
     private func billName(for record: PaymentRecord) -> String {
-        billStore.bills.first(where: { $0.id == record.billId })?.name ?? "Unknown Bill"
+        billNameCache[record.billId] ?? "Unknown Bill"
     }
 
     private func filteredRecords(for month: YearMonth) -> [PaymentRecord] {

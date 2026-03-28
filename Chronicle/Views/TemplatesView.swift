@@ -125,11 +125,15 @@ struct TemplatesView: View {
         ScrollView {
             LazyVStack(spacing: Theme.spacing8) {
                 ForEach(billStore.templates) { template in
-                    TemplateCard(template: template)
-                        .onTapGesture {
-                            templateForCreateBill = template
-                            showCreateBillSheet = true
-                        }
+                    Button(action: {
+                        templateForCreateBill = template
+                        showCreateBillSheet = true
+                    }) {
+                        TemplateCard(template: template)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("\(template.name), \(template.formattedAmount), \(template.recurrence.shortName)")
+                    .accessibilityHint("Double tap to use this template")
                         .contextMenu {
                             Button(action: {
                                 templateForCreateBill = template
