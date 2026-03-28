@@ -26,7 +26,7 @@ struct AnalyticsView: View {
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -92,7 +92,7 @@ struct AnalyticsView: View {
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(Theme.textPrimary)
             Text(title)
-                .font(.system(size: 11))
+                .font(Theme.fontCaption)
                 .foregroundColor(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)

@@ -13,10 +13,10 @@ struct HistoryView: View {
             // Search bar
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textTertiary)
                 TextField("Search by bill name", text: $searchText)
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .textFieldStyle(.plain)
                     .accessibilityLabel("Search payment history")
                     .accessibilityHint("Type to filter payment records by bill name")
@@ -167,7 +167,7 @@ struct HistoryView: View {
                 .font(.system(size: 14))
 
             Text("Payment for \(toast.billName) undone")
-                .font(.system(size: 13))
+                .font(Theme.fontBody)
                 .foregroundColor(Theme.textPrimary)
         }
         .padding(.horizontal, Theme.spacing16)

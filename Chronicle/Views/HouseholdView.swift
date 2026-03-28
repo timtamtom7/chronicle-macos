@@ -77,7 +77,7 @@ struct HouseholdDashboardView: View {
                             .font(.system(size: 22, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                         Text("\(household.members.count) members")
-                            .font(.system(size: 13))
+                            .font(Theme.fontBody)
                             .foregroundColor(Theme.textSecondary)
                     }
 
@@ -138,12 +138,12 @@ struct HouseholdDashboardView: View {
                 .accessibilityHidden(true)
 
             Text(member.name)
-                .font(.system(size: 13, weight: .medium))
+                .font(Theme.fontLabel)
                 .foregroundColor(Theme.textPrimary)
 
             if member.isOwner {
                 Text("Owner")
-                    .font(.system(size: 11))
+                    .font(Theme.fontCaption)
                     .foregroundColor(Theme.textSecondary)
             }
         }
@@ -164,7 +164,7 @@ struct HouseholdDashboardView: View {
 
             if householdService.balances.isEmpty {
                 Text("No outstanding balances")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
@@ -182,22 +182,22 @@ struct HouseholdDashboardView: View {
     private func balanceRow(_ balance: MemberBalance) -> some View {
         HStack {
             Text(balance.memberName)
-                .font(.system(size: 13))
+                .font(Theme.fontBody)
                 .foregroundColor(Theme.textPrimary)
 
             Spacer()
 
             if balance.isOwed {
                 Text("+\(formatCents(balance.netBalanceCents))")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(Theme.success)
             } else if balance.owes {
                 Text("-\(formatCents(abs(balance.netBalanceCents)))")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(Theme.danger)
             } else {
                 Text("Settled")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
             }
         }
@@ -234,17 +234,17 @@ struct HouseholdDashboardView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(bill.name)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(Theme.textPrimary)
                 Text(bill.category.rawValue)
-                    .font(.system(size: 11))
+                    .font(Theme.fontCaption)
                     .foregroundColor(Theme.textSecondary)
             }
 
             Spacer()
 
             Text(bill.formattedAmount)
-                .font(.system(size: 13, weight: .medium))
+                .font(Theme.fontLabel)
                 .foregroundColor(Theme.textPrimary)
 
             Image(systemName: bill.isPaid ? "checkmark.circle.fill" : "circle")

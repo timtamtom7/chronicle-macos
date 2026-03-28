@@ -46,7 +46,7 @@ struct BusinessView: View {
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Tag bills as tax-deductible or business expenses to track for tax season.")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 16) {
@@ -85,7 +85,7 @@ struct BusinessView: View {
                 .accessibilityHidden(true)
 
             Text(category.rawValue)
-                .font(.system(size: 13))
+                .font(Theme.fontBody)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Theme.textPrimary)
         }
@@ -99,7 +99,7 @@ struct BusinessView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(bill.name)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(Theme.textPrimary)
                 HStack(spacing: 8) {
                     if info.isTaxDeductible {
@@ -118,11 +118,11 @@ struct BusinessView: View {
             Spacer()
 
             Text(bill.formattedAmount)
-                .font(.system(size: 13, weight: .medium))
+                .font(Theme.fontLabel)
                 .foregroundColor(Theme.textPrimary)
 
             Text(info.businessCategory.rawValue)
-                .font(.system(size: 11))
+                .font(Theme.fontCaption)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Theme.accent.opacity(0.2))
@@ -143,7 +143,7 @@ struct BusinessView: View {
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Track expenses that need to be reimbursed by your employer or clients.")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
 
                 if businessService.reimbursableBills.isEmpty {
@@ -168,7 +168,7 @@ struct BusinessView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Theme.textPrimary)
             Text("Mark bills as reimbursable from the bill detail view.")
-                .font(.system(size: 13))
+                .font(Theme.fontBody)
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
@@ -180,7 +180,7 @@ struct BusinessView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Bill \(reimbursable.billId.uuidString.prefix(8))")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textPrimary)
                 Text(reimbursable.status.rawValue)
                     .font(.system(size: 12))
@@ -190,7 +190,7 @@ struct BusinessView: View {
             Spacer()
 
             Text(formatCents(reimbursable.amountCents))
-                .font(.system(size: 13, weight: .medium))
+                .font(Theme.fontLabel)
                 .foregroundColor(Theme.textPrimary)
 
             statusButton(reimbursable)
@@ -258,7 +258,7 @@ struct BusinessView: View {
                 }
 
                 Text("Generate a tax report for your accountant or bookkeeper.")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
 
                 Button("Generate Report") {
@@ -305,7 +305,7 @@ struct BusinessView: View {
             Divider()
 
             Text("By Category")
-                .font(.system(size: 13, weight: .medium))
+                .font(Theme.fontLabel)
                 .foregroundColor(Theme.textPrimary)
 
             ForEach(Array(report.categories.keys.sorted(by: { $0.rawValue < $1.rawValue })), id: \.self) { category in
@@ -315,7 +315,7 @@ struct BusinessView: View {
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
                     Text(formatDecimal(report.categories[category] ?? 0))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textPrimary)
                 }
             }
@@ -342,7 +342,7 @@ struct BusinessView: View {
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Enable read-only mode with a locked date range for accountant access.")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
 
                 if businessService.accountantMode.isEnabled {
@@ -367,7 +367,7 @@ struct BusinessView: View {
 
             if let range = businessService.accountantMode.lockedDateRange {
                 Text("Locked Period: \(formatDate(range.lowerBound)) - \(formatDate(range.upperBound))")
-                    .font(.system(size: 13))
+                    .font(Theme.fontBody)
                     .foregroundColor(Theme.textSecondary)
             }
 
@@ -388,7 +388,7 @@ struct BusinessView: View {
     private var disabledAccountantMode: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Accountant Mode is currently disabled.")
-                .font(.system(size: 13))
+                .font(Theme.fontBody)
                 .foregroundColor(Theme.textSecondary)
 
             DatePicker("Start Date", selection: .constant(Date()), displayedComponents: .date)

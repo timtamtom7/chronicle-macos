@@ -17,7 +17,7 @@ struct ShareView: View {
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -31,7 +31,7 @@ struct ShareView: View {
             VStack(spacing: Theme.spacing16) {
                 VStack(alignment: .leading, spacing: Theme.spacing8) {
                     Text("Share Range")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textSecondary)
 
                     Picker("", selection: $selectedRange) {
@@ -93,10 +93,10 @@ struct ShareView: View {
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textPrimary)
                     Text(subtitle)
-                        .font(.system(size: 11))
+                        .font(Theme.fontCaption)
                         .foregroundColor(Theme.textTertiary)
                 }
 

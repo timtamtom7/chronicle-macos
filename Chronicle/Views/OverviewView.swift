@@ -38,7 +38,7 @@ struct OverviewView: View {
         HStack {
             Button(action: { selectedMonth = selectedMonth.previous() }) {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
@@ -55,7 +55,7 @@ struct OverviewView: View {
 
             Button(action: { selectedMonth = selectedMonth.next() }) {
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(Theme.fontLabel)
                     .foregroundColor(canGoNext ? Theme.accent : Theme.textTertiary)
             }
             .buttonStyle(.plain)
@@ -104,7 +104,7 @@ struct OverviewView: View {
                     .font(.system(size: 12))
                     .foregroundColor(color)
                 Text(title)
-                    .font(.system(size: 11))
+                    .font(Theme.fontCaption)
                     .foregroundColor(Theme.textTertiary)
             }
             Text(value)
@@ -202,7 +202,7 @@ struct OverviewView: View {
 
         return HStack(spacing: Theme.spacing8) {
             Image(systemName: category.icon)
-                .font(.system(size: 11))
+                .font(Theme.fontCaption)
                 .foregroundColor(Theme.textTertiary)
                 .frame(width: 16)
 

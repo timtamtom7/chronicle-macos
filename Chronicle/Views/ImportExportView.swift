@@ -22,7 +22,7 @@ struct ImportExportView: View {
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -80,7 +80,7 @@ struct ImportExportView: View {
                     Image(systemName: "doc.badge.plus")
                         .font(.system(size: 12))
                     Text("Choose CSV File")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(Theme.fontLabel)
                 }
                 .foregroundColor(Theme.textOnAccent)
                 .padding(.horizontal, Theme.spacing16)
@@ -155,10 +155,10 @@ struct ImportExportView: View {
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textPrimary)
                     Text(subtitle)
-                        .font(.system(size: 11))
+                        .font(Theme.fontCaption)
                         .foregroundColor(Theme.textTertiary)
                 }
 
@@ -246,7 +246,7 @@ struct ImportResultSheet: View {
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -284,7 +284,7 @@ struct ImportResultSheet: View {
                     if !result.errors.isEmpty {
                         VStack(alignment: .leading, spacing: Theme.spacing4) {
                             Text("Warnings:")
-                                .font(.system(size: 12, weight: .medium))
+                                .font(Theme.fontLabel)
                                 .foregroundColor(Theme.textSecondary)
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 2) {
