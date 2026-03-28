@@ -82,15 +82,9 @@ struct BillListView: View {
         .sheet(item: $activeSheet) { destination in
             switch destination {
             case .addBill:
-                AddBillSheet(isPresented: Binding(
-                    get: { activeSheet != nil },
-                    set: { if !$0 { activeSheet = nil } }
-                ))
+                AddBillSheet()
             case .editBill(let bill):
-                AddBillSheet(isPresented: Binding(
-                    get: { activeSheet != nil },
-                    set: { if !$0 { activeSheet = nil } }
-                ), editingBill: bill)
+                AddBillSheet(editingBill: bill)
             }
         }
         .alert("Delete Bill?", isPresented: $showDeleteAlert) {

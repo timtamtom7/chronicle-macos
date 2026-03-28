@@ -256,7 +256,7 @@ struct AddBillSheet: View {
             }
 
             Button("Cancel") {
-                isPresented = false
+                dismiss()
             }
             .buttonStyle(.plain)
             .foregroundColor(Theme.textSecondary)
@@ -318,6 +318,6 @@ struct AddBillSheet: View {
         }
 
         NotificationCenter.default.post(name: NSNotification.Name("ChronicleDataDidChange"), object: nil)
-        isPresented = false
+        dismiss()
     }
 }

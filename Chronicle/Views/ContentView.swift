@@ -78,11 +78,11 @@ struct ContentView: View {
         .frame(width: 480, height: 400)
         .background(Theme.background)
         .sheet(isPresented: $showingAddSheet) {
-            AddBillSheet(isPresented: $showingAddSheet)
+            AddBillSheet()
                 .environmentObject(billStore)
         }
         .sheet(item: $selectedBill) { bill in
-            AddBillSheet(isPresented: .constant(true), editingBill: bill)
+            AddBillSheet(editingBill: bill)
                 .environmentObject(billStore)
         }
         .sheet(isPresented: $showSettingsSheet) {
