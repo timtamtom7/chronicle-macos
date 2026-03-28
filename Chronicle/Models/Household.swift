@@ -28,15 +28,19 @@ struct HouseholdMember: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
     var avatarName: String
+    /// Light mode avatar color (hex)
     var colorHex: String
+    /// Dark mode avatar color (hex) — falls back to colorHex if nil
+    var colorHexDark: String?
     var isOwner: Bool
     var joinedAt: Date
 
-    init(id: UUID = UUID(), name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF", isOwner: Bool = false) {
+    init(id: UUID = UUID(), name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF", colorHexDark: String? = nil, isOwner: Bool = false) {
         self.id = id
         self.name = name
         self.avatarName = avatarName
         self.colorHex = colorHex
+        self.colorHexDark = colorHexDark
         self.isOwner = isOwner
         self.joinedAt = Date()
     }
