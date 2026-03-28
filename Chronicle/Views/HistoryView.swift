@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var searchText = ""
     @State private var groupedRecords: [YearMonth: [PaymentRecord]] = [:]
     @State private var selectedMonth: YearMonth?
@@ -148,12 +149,12 @@ struct HistoryView: View {
         billStore.undoPayment(record: record)
         loadData()
 
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
             undoToast = UndoToastData(billName: billName)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
                 undoToast = nil
             }
         }

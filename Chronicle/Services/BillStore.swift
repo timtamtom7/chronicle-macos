@@ -136,46 +136,66 @@ final class BillStore: ObservableObject {
     // MARK: - Load
 
     func loadBills() {
-        do {
-            var allBills = try db.fetchAllBills()
+        Task.detached(priority: .userInitiated) { [weak self] in
+            guard let self = self else { return }
+            let fetchedBills: [Bill]
+            do {
+                fetchedBills = try await Task.detached(priority: .userInitiated) {
+                    try DatabaseService.shared.fetchAllBills()
+                }.value
+            } catch {
+                fetchedBills = []
+            }
 
             let today = Date()
-            allBills = allBills.map { bill in
-                if bill.recurrence != .none {
-                    let nextDue = calculateNextDueDate(bill: bill, from: today)
-                    var updatedBill = bill
-                    updatedBill = Bill(
-                        id: bill.id,
-                        name: bill.name,
-                        amountCents: bill.amountCents,
-                        currency: bill.currency,
-                        dueDay: bill.dueDay,
-                        dueDate: nextDue,
-                        recurrence: bill.recurrence,
-                        category: bill.category,
-                        notes: bill.notes,
-                        reminderTimings: bill.reminderTimings,
-                        autoMarkPaid: bill.autoMarkPaid,
-                        isActive: bill.isActive,
-                        isPaid: bill.isPaid,
-                        createdAt: bill.createdAt
-                    )
-                    return updatedBill
-                }
-                return bill
-            }
+            let allBills = Self.computeNextDueDatesStatic(for: fetchedBills, from: today)
 
-            allBills.sort { b1, b2 in
-                if b1.isPaid != b2.isPaid {
-                    return !b1.isPaid
-                }
-                return b1.dueDate < b2.dueDate
+            await MainActor.run {
+                self.bills = allBills
+                self.upcomingBills = allBills.filter { !$0.isPaid }
+                self.sortBillsIfNeeded()
+                NotificationCenter.default.post(name: .billsDidChange, object: nil)
             }
+        }
+    }
 
-            self.bills = allBills
-            self.upcomingBills = allBills.filter { !$0.isPaid }
-        } catch {
-            print("Failed to load bills: \(error)")
+    /// Compute next due dates for recurring bills — nonisolated so it can be called from detached tasks
+    private static nonisolated func computeNextDueDatesStatic(for bills: [Bill], from today: Date) -> [Bill] {
+        bills.map { bill in
+            if bill.recurrence != .none {
+                let nextDue = calculateNextDueDate(bill: bill, from: today)
+                return Bill(
+                    id: bill.id,
+                    name: bill.name,
+                    amountCents: bill.amountCents,
+                    currency: bill.currency,
+                    dueDay: bill.dueDay,
+                    dueDate: nextDue,
+                    recurrence: bill.recurrence,
+                    category: bill.category,
+                    notes: bill.notes,
+                    reminderTimings: bill.reminderTimings,
+                    autoMarkPaid: bill.autoMarkPaid,
+                    isActive: bill.isActive,
+                    isPaid: bill.isPaid,
+                    createdAt: bill.createdAt
+                )
+            }
+            return bill
+        }
+    }
+
+    private func updateUpcomingBills() {
+        upcomingBills = bills.filter { !$0.isPaid }
+    }
+
+    private func sortBillsIfNeeded() {
+        // Sort: unpaid first, then by due date
+        bills.sort { b1, b2 in
+            if b1.isPaid != b2.isPaid {
+                return !b1.isPaid
+            }
+            return b1.dueDate < b2.dueDate
         }
     }
 

@@ -338,69 +338,95 @@ struct SimpleTrendChart: View {
 
     var body: some View {
         GeometryReader { geo in
-            let maxAmount = data.map { $0.amount }.max() ?? 1
-            let width = geo.size.width
-            let height = geo.size.height - 20
-            let stepX = width / CGFloat(max(data.count - 1, 1))
+            chartContent(geo: geo)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityDescription)
+    }
 
-            ZStack(alignment: .bottomLeading) {
-                // Grid lines
-                VStack(spacing: 0) {
-                    ForEach(0..<4, id: \.self) { i in
-                        Divider()
-                            .background(Theme.border.opacity(0.5))
-                        if i < 3 {
-                            Spacer()
-                        }
+    private func chartContent(geo: GeometryProxy) -> some View {
+        let maxAmount = data.map { $0.amount }.max() ?? 1
+        let width = geo.size.width
+        let height = geo.size.height - 20
+        let stepX = width / CGFloat(max(data.count - 1, 1))
+
+        return ZStack(alignment: .bottomLeading) {
+            // Grid lines
+            VStack(spacing: 0) {
+                ForEach(0..<4, id: \.self) { i in
+                    Divider()
+                        .background(Theme.border.opacity(0.5))
+                    if i < 3 {
+                        Spacer()
                     }
                 }
-                .frame(height: height)
+            }
+            .frame(height: height)
 
-                // Line chart
-                if data.count > 1 {
-                    Path { path in
-                        for (i, point) in data.enumerated() {
-                            let x = stepX * CGFloat(i)
-                            let ratio = NSDecimalNumber(decimal: point.amount / maxAmount).doubleValue
-                            let y = height - (height * ratio)
-
-                            if i == 0 {
-                                path.move(to: CGPoint(x: x, y: y))
-                            } else {
-                                path.addLine(to: CGPoint(x: x, y: y))
-                            }
-                        }
-                    }
-                    .stroke(Theme.accent, lineWidth: 2)
-
-                    // Points
-                    ForEach(Array(data.enumerated()), id: \.offset) { i, point in
+            // Line chart
+            if data.count > 1 {
+                Path { path in
+                    for (i, point) in data.enumerated() {
                         let x = stepX * CGFloat(i)
                         let ratio = NSDecimalNumber(decimal: point.amount / maxAmount).doubleValue
                         let y = height - (height * ratio)
 
-                        Circle()
-                            .fill(Theme.accent)
-                            .frame(width: 6, height: 6)
-                            .position(x: x, y: y)
-                    }
-                }
-
-                // Month labels
-                HStack(spacing: 0) {
-                    ForEach(Array(data.enumerated()), id: \.offset) { i, point in
-                        Text(point.month)
-                            .font(.caption2)
-                            .foregroundColor(Theme.textTertiary)
-                        if i < data.count - 1 {
-                            Spacer()
+                        if i == 0 {
+                            path.move(to: CGPoint(x: x, y: y))
+                        } else {
+                            path.addLine(to: CGPoint(x: x, y: y))
                         }
                     }
                 }
-                .frame(width: width, height: 20)
-                .offset(y: height + 2)
+                .stroke(Theme.accent, lineWidth: 2)
+
+                // Points
+                ForEach(Array(data.enumerated()), id: \.offset) { i, point in
+                    let x = stepX * CGFloat(i)
+                    let ratio = NSDecimalNumber(decimal: point.amount / maxAmount).doubleValue
+                    let y = height - (height * ratio)
+
+                    Circle()
+                        .fill(Theme.accent)
+                        .frame(width: 6, height: 6)
+                        .position(x: x, y: y)
+                }
             }
+
+            // Month labels
+            HStack(spacing: 0) {
+                ForEach(Array(data.enumerated()), id: \.offset) { i, point in
+                    Text(point.month)
+                        .font(.caption2)
+                        .foregroundColor(Theme.textTertiary)
+                    if i < data.count - 1 {
+                        Spacer()
+                    }
+                }
+            }
+            .frame(width: width, height: 20)
+            .offset(y: height + 2)
         }
+    }
+
+    private var accessibilityDescription: String {
+        guard !data.isEmpty else { return "Spending trend chart with no data" }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+
+        var description = "Spending trend for \(data.count) months: "
+        for point in data {
+            let amountStr = formatter.string(from: NSDecimalNumber(decimal: point.amount)) ?? "$0"
+            description += "\(point.month) \(amountStr), "
+        }
+
+        if let maxPoint = data.max(by: { $0.amount < $1.amount }),
+           let maxAmount = formatter.string(from: NSDecimalNumber(decimal: maxPoint.amount)) {
+            description += "Peak in \(maxPoint.month) at \(maxAmount)"
+        }
+
+        return description
     }
 }
 

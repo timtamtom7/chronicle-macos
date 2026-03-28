@@ -543,7 +543,7 @@ struct BillRowView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Edit \(bill.name)")
                 .accessibilityHint("Opens the edit sheet for this bill")
-                .opacity(isHovering ? 1 : 0)
+                .opacity(isHovering ? 1 : 0.3)  // Always visible at 30% for keyboard/VoiceOver users
                 .focusable()
 
                 Button(action: onDelete) {
@@ -554,7 +554,7 @@ struct BillRowView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Delete \(bill.name)")
                 .accessibilityHint("Permanently deletes this bill")
-                .opacity(isHovering ? 1 : 0)
+                .opacity(isHovering ? 1 : 0.3)  // Always visible at 30% for keyboard/VoiceOver users
                 .focusable()
             }
         }

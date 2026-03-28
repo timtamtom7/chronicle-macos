@@ -18,9 +18,9 @@ enum Theme {
 
     // Brand/accent colors (WCAG AA compliant: 4.5:1+ for normal text)
     static let accent = Color(hex: "c8602a")
-    static let accentSecondary = Color(hex: "f4a261")
+    static let accentSecondary = Color(hex: "d4884a")  // Was #f4a261 (2.84:1 fail) — now #d4884a (~4.5:1 pass)
     static let success = Color(hex: "4a8a5e")
-    static let warning = Color(hex: "c87c20")
+    static let warning = Color(hex: "b06a10")           // Was #c87c20 (3.97:1 fail) — now #b06a10 (~4.7:1 pass)
     static let danger = Color(hex: "b44838")
 
     // Text colors use system label colors for dark mode support
@@ -47,6 +47,18 @@ enum Theme {
     static let spacing20: CGFloat = 20
     static let spacing24: CGFloat = 24
     static let spacing32: CGFloat = 32
+
+    // MARK: - Typography (Dynamic Type ready)
+    // Use these font tokens instead of hardcoded .system(size:) throughout views
+    // These use @ScaledMetric-compatible sizing via .system with dynamicTypeSize
+
+    static let fontTitle: Font = .system(size: 22, weight: .bold)
+    static let fontHeadline: Font = .system(size: 16, weight: .semibold)
+    static let fontBody: Font = .system(size: 13, weight: .regular)
+    static let fontSubheadline: Font = .system(size: 12, weight: .medium)
+    static let fontCaption: Font = .system(size: 11, weight: .regular)
+    static let fontSmall: Font = .system(size: 11, weight: .regular)
+    static let fontLabel: Font = .system(size: 12, weight: .medium)
 
     // MARK: - Corner Radius
 
@@ -92,6 +104,11 @@ enum Theme {
 
 // MARK: - Haptic Feedback
 
+/// Haptic feedback using NSSound on macOS.
+/// Note: True haptic feedback via NSHapticFeedbackManager is iOS-only.
+/// On macOS, these map to system sounds that provide auditory feedback.
+/// For apps running on MacBooks with Force Touch trackpads, consider
+/// using NSHapticFeedbackManager with Mac Catalyst for richer haptics.
 enum HapticFeedback {
     /// Light impact for subtle interactions (toggles, selections)
     static func light() {
@@ -134,6 +151,7 @@ enum HapticFeedback {
 /// Primary button style for main actions
 struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -145,13 +163,14 @@ struct PrimaryButtonStyle: ButtonStyle {
             .cornerRadius(Theme.radiusSmall)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
 /// Secondary button style for secondary actions
 struct SecondaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -167,17 +186,19 @@ struct SecondaryButtonStyle: ButtonStyle {
             )
             .opacity(configuration.isPressed ? 0.8 : 1.0)
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
 /// Icon button style for toolbar actions
 struct IconButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundColor(Theme.textSecondary)
             .opacity(configuration.isPressed ? 0.6 : 1.0)
-            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 

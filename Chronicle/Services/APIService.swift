@@ -31,7 +31,10 @@ final class APIService: ObservableObject {
         params.allowLocalEndpointReuse = true
 
         let portValue = port
-        listener = try NWListener(using: params, on: NWEndpoint.Port(rawValue: portValue)!)
+        guard let port = NWEndpoint.Port(rawValue: portValue) else {
+            return  // Invalid port — silently ignore
+        }
+        listener = try NWListener(using: params, on: port)
         listener?.stateUpdateHandler = { [weak self] state in
             Task { @MainActor in
                 self?.isRunning = (state == .ready)

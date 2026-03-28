@@ -240,9 +240,9 @@ struct AddBillSheet: View {
 
     private func reminderToggle(timing: ReminderTiming, label: String, isOn: Binding<Bool>) -> some View {
         HStack(spacing: Theme.spacing8) {
-            Toggle(label, isOn: isOn)
+            Toggle("", isOn: isOn)
                 .toggleStyle(.switch)
-                .labelsHidden()
+                .accessibilityLabel("Remind me \(label)")
             Text(label)
                 .font(.system(size: 13))
                 .foregroundColor(Theme.textPrimary)
