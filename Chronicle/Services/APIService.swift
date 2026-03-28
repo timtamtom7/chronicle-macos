@@ -1,6 +1,5 @@
 import Foundation
 import Network
-import Security
 
 // MARK: - REST API Service
 
@@ -22,9 +21,6 @@ final class APIService: ObservableObject {
     private let rateLimitMax = 60
     private var rateLimitWindow: [String: [Date]] = [:]
     private let rateLimitLock = NSLock()
-
-    private let keychainService = "com.chronicle.api"
-    private let keychainAccount = "api-key"
 
     // MARK: - init
 
@@ -65,7 +61,7 @@ final class APIService: ObservableObject {
             self?.handleConnection(connection)
         }
 
-        listener?.start(queue: queue)
+        listener?.start(queue: self.queue)
         isRunning = true
     }
 
@@ -75,40 +71,16 @@ final class APIService: ObservableObject {
         isRunning = false
     }
 
-    func restart(port newPort: UInt16) throws {
-        stop()
-        self.port = newPort
-        try start()
-    }
-
-    // MARK: - API Key
-
-    var apiKey: String? {
-        APIKeyService.shared.storedKey
-    }
-
-    var hasAPIKey: Bool {
-        APIKeyService.shared.hasKey
-    }
-
-    @discardableResult
-    func regenerateAPIKey() -> String {
-        APIKeyService.shared.deleteKey()
-        return APIKeyService.shared.generateKey()
-    }
-
-    // MARK: - Connection Handling
-
-    private func handleConnection(_ connection: NWConnection) {
+    nonisolated private func handleConnection(_ connection: NWConnection) {
         connection.stateUpdateHandler = { state in
             if case .ready = state {
                 self.receiveRequest(on: connection)
             }
         }
-        connection.start(queue: queue)
+        connection.start(queue: self.queue)
     }
 
-    private func receiveRequest(on connection: NWConnection) {
+    nonisolated private func receiveRequest(on connection: NWConnection) {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self] data, _, isComplete, error in
             guard let self = self,
                   let data = data,
@@ -125,6 +97,22 @@ final class APIService: ObservableObject {
                 connection.cancel()
             }
         }
+    }
+
+    // MARK: - API Key
+
+    nonisolated var apiKey: String? {
+        APIKeyService.shared.storedKey
+    }
+
+    nonisolated var hasAPIKey: Bool {
+        APIKeyService.shared.hasKey
+    }
+
+    @discardableResult
+    func regenerateAPIKey() -> String {
+        APIKeyService.shared.deleteKey()
+        return APIKeyService.shared.generateKey()
     }
 
     // MARK: - Request Processing
@@ -169,7 +157,7 @@ final class APIService: ObservableObject {
         }
 
         // Rate limiting
-        let clientIP = extractClientIP(from: connection)
+        let clientIP = connection.endpoint.debugDescription
         if !checkRateLimit(for: clientIP) {
             sendError(status: .tooManyRequests, message: "Rate limit exceeded. 60 requests/minute.", connection: connection)
             return
@@ -193,12 +181,6 @@ final class APIService: ObservableObject {
 
         // Route
         route(method: method, path: path, body: body, connection: connection)
-    }
-
-    private func extractClientIP(from connection: NWConnection) -> String {
-        // Use the endpoint's address description as a stable client identifier
-        let endpoint = connection.endpoint
-        return endpoint.debugDescription
     }
 
     // MARK: - Routing
@@ -231,35 +213,33 @@ final class APIService: ObservableObject {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             do {
-                var bill = try decoder.decode(Bill.self, from: jsonData)
-                // Assign a new ID and createdAt if not provided
-                if bill.id == UUID(uuidString: "00000000-0000-0000-0000-000000000000") ?? UUID() {
-                    bill = Bill(
-                        id: UUID(),
-                        name: bill.name,
-                        amountCents: bill.amountCents,
-                        currency: bill.currency,
-                        dueDay: bill.dueDay,
-                        dueDate: bill.dueDate,
-                        recurrence: bill.recurrence,
-                        category: bill.category,
-                        notes: bill.notes,
-                        reminderTimings: bill.reminderTimings,
-                        autoMarkPaid: bill.autoMarkPaid,
-                        isActive: bill.isActive,
-                        isPaid: bill.isPaid,
-                        ownerId: bill.ownerId,
-                        createdAt: Date(),
-                        isTaxDeductible: bill.isTaxDeductible,
-                        businessTag: bill.businessTag,
-                        isReimbursable: bill.isReimbursable,
-                        invoiceReference: bill.invoiceReference,
-                        attachedInvoiceURL: bill.attachedInvoiceURL,
-                        originalAmount: bill.originalAmount,
-                        originalCurrency: bill.originalCurrency,
-                        receiptURL: bill.receiptURL
-                    )
-                }
+                let newBill = try decoder.decode(Bill.self, from: jsonData)
+                // Create bill with fresh ID and timestamp
+                let bill = Bill(
+                    id: UUID(),
+                    name: newBill.name,
+                    amountCents: newBill.amountCents,
+                    currency: newBill.currency,
+                    dueDay: newBill.dueDay,
+                    dueDate: newBill.dueDate,
+                    recurrence: newBill.recurrence,
+                    category: newBill.category,
+                    notes: newBill.notes,
+                    reminderTimings: newBill.reminderTimings,
+                    autoMarkPaid: newBill.autoMarkPaid,
+                    isActive: newBill.isActive,
+                    isPaid: newBill.isPaid,
+                    ownerId: newBill.ownerId,
+                    createdAt: Date(),
+                    isTaxDeductible: newBill.isTaxDeductible,
+                    businessTag: newBill.businessTag,
+                    isReimbursable: newBill.isReimbursable,
+                    invoiceReference: newBill.invoiceReference,
+                    attachedInvoiceURL: newBill.attachedInvoiceURL,
+                    originalAmount: newBill.originalAmount,
+                    originalCurrency: newBill.originalCurrency,
+                    receiptURL: newBill.receiptURL
+                )
                 billStore.addBill(bill)
                 let encoder = JSONEncoder()
                 encoder.dateEncodingStrategy = .iso8601
@@ -361,7 +341,13 @@ final class APIService: ObservableObject {
         case ("GET", "/household"):
             if let household = householdService.household {
                 let balances = householdService.balances
-                let response = HouseholdAPIResponse(household: household, balances: balances)
+                let balanceDTOs = balances.map { CodableMemberBalance(
+                    id: $0.id,
+                    memberId: $0.memberId,
+                    memberName: $0.memberName,
+                    netBalanceCents: $0.netBalanceCents
+                )}
+                let response = HouseholdAPIResponseDTO(household: household, balances: balanceDTOs)
                 let encoder = JSONEncoder()
                 encoder.dateEncodingStrategy = .iso8601
                 encoder.outputFormatting = .prettyPrinted
@@ -389,73 +375,8 @@ final class APIService: ObservableObject {
 
         // ---- OpenAPI ----
         case ("GET", "/openapi.json"):
-            let spec = OpenAPISpecLoader.load()
+            let spec = OpenAPISpecLoader.load(port: Int(self.port))
             sendJSON(status: .ok, body: spec, connection: connection)
-
-        // ---- Webhooks (Zapier/Make) ----
-        case ("POST", "/webhooks/zapier"):
-            let zapierService = ZapierService.shared
-            guard let jsonData = body.data(using: .utf8) else {
-                sendError(status: .badRequest, message: "Invalid body", connection: connection)
-                return
-            }
-            let result = zapierService.processWebhook(data: jsonData)
-            let response: [String: Any] = [
-                "success": result.success,
-                "message": result.message
-            ]
-            if let data = try? JSONSerialization.data(withJSONObject: response),
-               let json = String(data: data, encoding: .utf8) {
-                sendJSON(status: result.success ? .ok : .badRequest, body: json, connection: connection)
-            } else {
-                sendSuccess(status: .ok, message: result.message, connection: connection)
-            }
-
-        case ("POST", "/webhooks/bill/create"):
-            let zapierService = ZapierService.shared
-            guard let jsonData = body.data(using: .utf8) else {
-                sendError(status: .badRequest, message: "Invalid JSON body", connection: connection)
-                return
-            }
-            let result = zapierService.createBillFromWebhook(data: jsonData)
-            if result.success {
-                if let billId = result.data?["billId"] {
-                    let response: [String: Any] = [
-                        "success": true,
-                        "message": result.message,
-                        "billId": billId
-                    ]
-                    if let data = try? JSONSerialization.data(withJSONObject: response),
-                       let json = String(data: data, encoding: .utf8) {
-                        sendJSON(status: .created, body: json, connection: connection)
-                    } else {
-                        sendSuccess(status: .created, message: result.message, connection: connection)
-                    }
-                } else {
-                    sendSuccess(status: .created, message: result.message, connection: connection)
-                }
-            } else {
-                sendError(status: .badRequest, message: result.message, connection: connection)
-            }
-
-        // ---- IFTTT ----
-        case ("GET", "/ifttt/bills/due"):
-            let zapierService = ZapierService.shared
-            if let data = zapierService.getIFTTTBillsDue(),
-               let json = String(data: data, encoding: .utf8) {
-                sendJSON(status: .ok, body: json, connection: connection)
-            } else {
-                sendJSON(status: .ok, body: "{\"count\":0,\"bills\":[]}", connection: connection)
-            }
-
-        case ("POST", "/ifttt/bill/create"):
-            let zapierService = ZapierService.shared
-            let result = zapierService.createBillFromIFTTT(body)
-            if result.success {
-                sendSuccess(status: .created, message: result.message, connection: connection)
-            } else {
-                sendError(status: .badRequest, message: result.message, connection: connection)
-            }
 
         // ---- Not Found ----
         default:
@@ -471,8 +392,8 @@ final class APIService: ObservableObject {
         let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now))!
         let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart)!
 
-        let yearStart = calendar.date(from, calendar.dateComponents([.year], from: now))!
-        let yearEnd = calendar.date(byAdding(DateComponents(year: 1, day: -1), to: yearStart))!
+        let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now))!
+        let yearEnd = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: yearStart)!
 
         let monthlyBills = billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
         let monthlyPaid = monthlyBills.filter { $0.isPaid }
@@ -525,7 +446,7 @@ final class APIService: ObservableObject {
         sendResponse(status: status, contentType: "application/json", body: body, connection: connection)
     }
 
-    private func sendResponse(status: HTTPStatus, contentType: String, body: String, connection: NWConnection) {
+    nonisolated private func sendResponse(status: HTTPStatus, contentType: String, body: String, connection: NWConnection) {
         let response = "HTTP/1.1 \(status.code) \(status.text)\r\nContent-Type: \(contentType)\r\nContent-Length: \(body.utf8.count)\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Headers: Authorization, X-API-Key, Content-Type\r\nAccess-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\nConnection: close\r\n\r\n\(body)"
 
         let data = response.data(using: .utf8) ?? Data()
@@ -553,6 +474,16 @@ final class APIService: ObservableObject {
         timestamps.append(now)
         rateLimitWindow[clientId] = timestamps
         return true
+    }
+
+    // MARK: - Restart (nonisolated safe)
+
+    nonisolated func restart(port newPort: UInt16) throws {
+        Task { @MainActor in
+            self.stop()
+            self.port = newPort
+            try? self.start()
+        }
     }
 }
 
@@ -635,29 +566,37 @@ struct PeriodSummary: Codable {
     let count: Int
 }
 
-struct HouseholdAPIResponse: Codable {
+// Codable version of MemberBalance for API responses
+private struct CodableMemberBalance: Codable {
+    let id: UUID
+    let memberId: UUID
+    let memberName: String
+    let netBalanceCents: Int
+}
+
+private struct HouseholdAPIResponseDTO: Codable {
     let household: Household
-    let balances: [MemberBalance]
+    let balances: [CodableMemberBalance]
 }
 
 // MARK: - OpenAPI Spec Loader
 
 /// Loads openapi.json from the app bundle or falls back to the embedded spec.
 enum OpenAPISpecLoader {
-    static func load() -> String {
+    static func load(port: Int) -> String {
         // Try to load from bundle first
         if let url = Bundle.main.url(forResource: "openapi", withExtension: "json"),
            let data = try? Data(contentsOf: url),
            let string = String(data: data, encoding: .utf8) {
-            return string
+            // Substitute the port in the server URL
+            return string.replacingOccurrences(of: "localhost:8765", with: "localhost:\(port)")
         }
         // Fall back to the embedded minimal spec
-        return embeddedSpec
+        return embeddedSpec(port: port)
     }
 
-    private static var embeddedSpec: String {
-        let port = APIService.shared.port
-        return """
+    private static func embeddedSpec(port: Int) -> String {
+        """
         {
           "openapi": "3.0.0",
           "info": {
@@ -672,10 +611,7 @@ enum OpenAPISpecLoader {
                 "summary": "List all bills",
                 "security": [{ "bearerAuth": [] }],
                 "responses": {
-                  "200": {
-                    "description": "Array of bills",
-                    "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Bill" } } } }
-                  }
+                  "200": { "description": "Array of bills" }
                 }
               },
               "post": {
@@ -705,7 +641,6 @@ enum OpenAPISpecLoader {
                 "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BillUpdate" } } } },
                 "responses": {
                   "200": { "description": "Bill updated" },
-                  "400": { "description": "Invalid JSON body" },
                   "404": { "description": "Bill not found" }
                 }
               },
@@ -761,7 +696,7 @@ enum OpenAPISpecLoader {
                 "type": "http",
                 "scheme": "bearer",
                 "bearerFormat": "API key",
-                "description": "Enter your Chronicle API key. Pass it as \\"Authorization: Bearer <key>\\" or \\"X-API-Key: <key>\\"."
+                "description": "Enter your Chronicle API key as \\"Authorization: Bearer <key>\\" or \\"X-API-Key: <key>\\"."
               }
             },
             "schemas": {
@@ -771,17 +706,14 @@ enum OpenAPISpecLoader {
                   "id": { "type": "string", "format": "uuid" },
                   "name": { "type": "string" },
                   "amountCents": { "type": "integer" },
-                  "currency": { "type": "string", "example": "USD" },
+                  "currency": { "type": "string" },
                   "dueDay": { "type": "integer" },
                   "dueDate": { "type": "string", "format": "date-time" },
-                  "recurrence": { "type": "string", "enum": ["None","Weekly","Biweekly","Monthly","Quarterly","Semi-annually","Annually"] },
-                  "category": { "type": "string", "enum": ["Housing","Utilities","Subscriptions","Insurance","Phone/Internet","Transportation","Health","Other"] },
+                  "recurrence": { "type": "string" },
+                  "category": { "type": "string" },
                   "notes": { "type": "string", "nullable": true },
                   "isPaid": { "type": "boolean" },
                   "isActive": { "type": "boolean" },
-                  "isTaxDeductible": { "type": "boolean" },
-                  "isReimbursable": { "type": "boolean" },
-                  "invoiceReference": { "type": "string", "nullable": true },
                   "createdAt": { "type": "string", "format": "date-time" }
                 }
               },
@@ -790,13 +722,10 @@ enum OpenAPISpecLoader {
                 "properties": {
                   "name": { "type": "string" },
                   "amountCents": { "type": "integer" },
-                  "currency": { "type": "string" },
                   "dueDate": { "type": "string", "format": "date-time" },
                   "recurrence": { "type": "string" },
                   "category": { "type": "string" },
-                  "notes": { "type": "string", "nullable": true },
-                  "isPaid": { "type": "boolean" },
-                  "isActive": { "type": "boolean" }
+                  "isPaid": { "type": "boolean" }
                 }
               },
               "SummaryResponse": {
@@ -804,10 +733,7 @@ enum OpenAPISpecLoader {
                 "properties": {
                   "monthly": { "$ref": "#/components/schemas/PeriodSummary" },
                   "yearly": { "$ref": "#/components/schemas/PeriodSummary" },
-                  "byCategory": {
-                    "type": "object",
-                    "additionalProperties": { "type": "number" }
-                  }
+                  "byCategory": { "type": "object", "additionalProperties": { "type": "number" } }
                 }
               },
               "PeriodSummary": {

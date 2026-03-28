@@ -1,0 +1,429 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Chronicle API",
+    "version": "1.0.0",
+    "description": "REST API for Chronicle Bill Tracker macOS app. Manage bills, track spending, and access household data programmatically.",
+    "contact": {
+      "name": "Chronicle",
+      "url": "https://chronicle.app"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8765",
+      "description": "Local development server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/bills": {
+      "get": {
+        "summary": "List all bills",
+        "description": "Returns every bill in the household, including paid, unpaid, and archived bills.",
+        "operationId": "listBills",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of bills",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Bill" }
+                },
+                "example": [
+                  {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "name": "Electric Bill",
+                    "amountCents": 12345,
+                    "currency": "USD",
+                    "dueDay": 15,
+                    "dueDate": "2026-04-15T00:00:00Z",
+                    "recurrence": "Monthly",
+                    "category": "Utilities",
+                    "notes": null,
+                    "isPaid": false,
+                    "isActive": true,
+                    "isTaxDeductible": false,
+                    "isReimbursable": false,
+                    "invoiceReference": "EB-2026-04",
+                    "createdAt": "2026-01-01T00:00:00Z"
+                  }
+                ]
+              }
+            }
+          },
+          "401": { "description": "Invalid or missing API key" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      },
+      "post": {
+        "summary": "Create a bill",
+        "description": "Creates a new bill and schedules notifications.",
+        "operationId": "createBill",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Bill" },
+              "example": {
+                "name": "Internet",
+                "amountCents": 7999,
+                "currency": "USD",
+                "dueDay": 20,
+                "dueDate": "2026-04-20T00:00:00Z",
+                "recurrence": "Monthly",
+                "category": "Utilities",
+                "notes": "Comcast 1Gbps",
+                "isPaid": false,
+                "isActive": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bill created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Bill" }
+              }
+            }
+          },
+          "400": { "description": "Invalid JSON body or missing required fields" },
+          "401": { "description": "Invalid or missing API key" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      }
+    },
+    "/bills/{id}": {
+      "get": {
+        "summary": "Get bill by ID",
+        "description": "Returns a single bill by its UUID.",
+        "operationId": "getBill",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Bill UUID",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bill object",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Bill" }
+              }
+            }
+          },
+          "401": { "description": "Invalid or missing API key" },
+          "404": { "description": "Bill not found" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      },
+      "put": {
+        "summary": "Update a bill",
+        "description": "Partially updates a bill. Only include fields you want to change.",
+        "operationId": "updateBill",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Bill UUID",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BillUpdate" },
+              "example": {
+                "amountCents": 8999,
+                "isPaid": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated bill object",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Bill" }
+              }
+            }
+          },
+          "400": { "description": "Invalid JSON body" },
+          "401": { "description": "Invalid or missing API key" },
+          "404": { "description": "Bill not found" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a bill",
+        "description": "Permanently deletes a bill and cancels its scheduled notifications.",
+        "operationId": "deleteBill",
+        "tags": ["Bills"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Bill UUID",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Bill deleted" },
+          "401": { "description": "Invalid or missing API key" },
+          "404": { "description": "Bill not found" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      }
+    },
+    "/summary": {
+      "get": {
+        "summary": "Get spending summary",
+        "description": "Returns monthly and yearly spending summaries with totals, paid/unpaid breakdowns, and spending by category.",
+        "operationId": "getSummary",
+        "tags": ["Analytics"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Summary object",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SummaryResponse" },
+                "example": {
+                  "monthly": { "total": 1234.56, "paid": 1000.00, "unpaid": 234.56, "count": 5 },
+                  "yearly": { "total": 15000.00, "paid": 12000.00, "unpaid": 3000.00, "count": 42 },
+                  "byCategory": { "utilities": 500.00, "subscriptions": 300.00 }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid or missing API key" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      }
+    },
+    "/household": {
+      "get": {
+        "summary": "Get household info and member balances",
+        "description": "Returns the household object with all members and their current running balances.",
+        "operationId": "getHousehold",
+        "tags": ["Household"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Household response with members and balances",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HouseholdResponse" }
+              }
+            }
+          },
+          "401": { "description": "Invalid or missing API key" },
+          "404": { "description": "No household found" },
+          "429": { "description": "Rate limit exceeded" }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Server health check",
+        "description": "Returns server status. No authentication required.",
+        "operationId": "health",
+        "tags": ["System"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Server is healthy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" },
+                "example": {
+                  "status": "ok",
+                  "timestamp": "2026-03-28T15:00:00Z",
+                  "version": "1.0.0",
+                  "billsCount": 42,
+                  "household": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "OpenAPI 3.0 specification",
+        "description": "Returns this OpenAPI specification document. No authentication required.",
+        "operationId": "openapiSpec",
+        "tags": ["System"],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OpenAPI 3.0 JSON document",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API key",
+        "description": "Your Chronicle API key. Pass as `Authorization: Bearer <key>` header, or `X-API-Key: <key>`."
+      }
+    },
+    "schemas": {
+      "Bill": {
+        "type": "object",
+        "required": ["id", "name", "amountCents", "dueDate"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "Unique bill identifier" },
+          "name": { "type": "string", "description": "Display name of the bill" },
+          "amountCents": { "type": "integer", "description": "Amount in cents (e.g. 12345 = $123.45)" },
+          "currency": { "type": "string", "enum": ["USD","EUR","GBP","CAD","AUD","JPY","CHF","INR","BRL","MXN"], "default": "USD" },
+          "dueDay": { "type": "integer", "minimum": 1, "maximum": 31, "description": "Day of month the bill is due" },
+          "dueDate": { "type": "string", "format": "date-time", "description": "Next due date (ISO 8601)" },
+          "recurrence": { "type": "string", "enum": ["None","Weekly","Biweekly","Monthly","Quarterly","Semi-annually","Annually"], "default": "None" },
+          "category": { "type": "string", "enum": ["Housing","Utilities","Subscriptions","Insurance","Phone/Internet","Transportation","Health","Other"], "default": "Other" },
+          "notes": { "type": "string", "nullable": true, "description": "Optional notes" },
+          "autoMarkPaid": { "type": "boolean", "default": false },
+          "reminderTimings": { "type": "array", "items": { "type": "string" } },
+          "isTaxDeductible": { "type": "boolean", "default": false },
+          "businessTag": { "type": "string", "nullable": true },
+          "isReimbursable": { "type": "boolean", "default": false },
+          "invoiceReference": { "type": "string", "nullable": true },
+          "attachedInvoiceURL": { "type": "string", "format": "uri", "nullable": true },
+          "isActive": { "type": "boolean", "default": true },
+          "isPaid": { "type": "boolean", "default": false },
+          "ownerId": { "type": "string", "format": "uuid", "nullable": true, "description": "Member UUID if personal bill, null if household bill" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "BillUpdate": {
+        "type": "object",
+        "description": "Partial bill update. Include only fields to change.",
+        "properties": {
+          "name": { "type": "string" },
+          "amountCents": { "type": "integer" },
+          "currency": { "type": "string" },
+          "dueDay": { "type": "integer" },
+          "dueDate": { "type": "string", "format": "date-time" },
+          "recurrence": { "type": "string" },
+          "category": { "type": "string" },
+          "notes": { "type": "string", "nullable": true },
+          "autoMarkPaid": { "type": "boolean" },
+          "isTaxDeductible": { "type": "boolean" },
+          "isReimbursable": { "type": "boolean" },
+          "invoiceReference": { "type": "string", "nullable": true },
+          "isActive": { "type": "boolean" },
+          "isPaid": { "type": "boolean" }
+        }
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "monthly": { "$ref": "#/components/schemas/PeriodSummary" },
+          "yearly": { "$ref": "#/components/schemas/PeriodSummary" },
+          "byCategory": {
+            "type": "object",
+            "additionalProperties": { "type": "number" },
+            "description": "Spending totals by category key (lowercase, e.g. 'utilities', 'subscriptions')"
+          }
+        }
+      },
+      "PeriodSummary": {
+        "type": "object",
+        "properties": {
+          "total": { "type": "number", "description": "Total amount due in the period" },
+          "paid": { "type": "number", "description": "Total amount paid in the period" },
+          "unpaid": { "type": "number", "description": "Total amount still unpaid" },
+          "count": { "type": "integer", "description": "Number of bills in the period" }
+        }
+      },
+      "HouseholdResponse": {
+        "type": "object",
+        "properties": {
+          "household": { "$ref": "#/components/schemas/Household" },
+          "balances": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MemberBalance" }
+          }
+        }
+      },
+      "Household": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "members": { "type": "array", "items": { "$ref": "#/components/schemas/HouseholdMember" } },
+          "inviteCode": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "HouseholdMember": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "role": { "type": "string", "enum": ["admin", "member", "viewer"] },
+          "joinedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "MemberBalance": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "memberId": { "type": "string", "format": "uuid" },
+          "memberName": { "type": "string" },
+          "netBalanceCents": { "type": "integer", "description": "Positive = others owe them, negative = they owe others" }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["ok"] },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "version": { "type": "string" },
+          "billsCount": { "type": "integer" },
+          "household": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "Bills", "description": "Bill CRUD operations" },
+    { "name": "Analytics", "description": "Spending summaries and reports" },
+    { "name": "Household", "description": "Household and member management" },
+    { "name": "System", "description": "Health and specification endpoints" }
+  ]
+}

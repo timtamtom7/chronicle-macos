@@ -53,7 +53,7 @@ final class ZapierService: ObservableObject {
             return handleReminderEvent(eventId: payload.eventId)
         default:
             // Zapier webhooks can carry arbitrary data
-            return WebhookResult(success: true, message: "Webhook received", data: payload)
+            return WebhookResult(success: true, message: "Webhook received")
         }
     }
 
@@ -113,11 +113,14 @@ final class ZapierService: ObservableObject {
 
     private func handleBillDueEvent(eventId: String?) -> WebhookResult {
         // When Zapier detects a bill is due (e.g., via calendar integration),
-        // trigger a local notification in Chronicle
+        // trigger a local notification in Chronicle for any matching overdue bills.
         let notificationScheduler = NotificationScheduler.shared
+        let overdueBills = BillStore.shared.pastDue
 
         Task {
-            await notificationScheduler.sendBillDueNotification(eventId: eventId)
+            for bill in overdueBills.prefix(5) {
+                notificationScheduler.sendOverdueNotification(for: bill)
+            }
         }
 
         return WebhookResult(
