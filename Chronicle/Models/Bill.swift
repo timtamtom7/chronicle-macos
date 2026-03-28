@@ -68,6 +68,14 @@ struct Bill: Identifiable, Equatable, Codable {
     var notes: String?
     var reminderTimings: [ReminderTiming]
     var autoMarkPaid: Bool
+    var isTaxDeductible: Bool
+    var businessTag: BusinessTag?
+    var isReimbursable: Bool
+    var invoiceReference: String?
+    var attachedInvoiceURL: URL?
+    var originalAmount: Decimal?       // amount in original currency (if converted)
+    var originalCurrency: Currency?    // original currency before conversion
+    var receiptURL: URL?               // local path to receipt image
     var isActive: Bool
     var isPaid: Bool
     var ownerId: UUID? // nil = belongs to household
@@ -88,7 +96,15 @@ struct Bill: Identifiable, Equatable, Codable {
         isActive: Bool = true,
         isPaid: Bool = false,
         ownerId: UUID? = nil,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        isTaxDeductible: Bool = false,
+        businessTag: BusinessTag? = nil,
+        isReimbursable: Bool = false,
+        invoiceReference: String? = nil,
+        attachedInvoiceURL: URL? = nil,
+        originalAmount: Decimal? = nil,
+        originalCurrency: Currency? = nil,
+        receiptURL: URL? = nil
     ) {
         self.id = id
         self.name = name
@@ -105,6 +121,14 @@ struct Bill: Identifiable, Equatable, Codable {
         self.isPaid = isPaid
         self.ownerId = ownerId
         self.createdAt = createdAt
+        self.isTaxDeductible = isTaxDeductible
+        self.businessTag = businessTag
+        self.isReimbursable = isReimbursable
+        self.invoiceReference = invoiceReference
+        self.attachedInvoiceURL = attachedInvoiceURL
+        self.originalAmount = originalAmount
+        self.originalCurrency = originalCurrency
+        self.receiptURL = receiptURL
     }
 
     var amount: Decimal {
@@ -149,6 +173,25 @@ struct Bill: Identifiable, Equatable, Codable {
         formatter.numberStyle = .currency
         formatter.currencyCode = baseCurrency.rawValue
         return formatter.string(from: NSDecimalNumber(decimal: converted)) ?? "\(baseCurrency.symbol)0.00"
+    }
+
+    /// Returns a display string like "$150.00 (€138.50)" when the bill's currency differs from baseCurrency.
+    func formattedAmountWithOriginal(baseCurrency: Currency, rates: [String: Double]) -> String {
+        let baseFormatted = formattedAmount
+        if currency == baseCurrency {
+            return baseFormatted
+        }
+        if let orig = originalAmount, let origCurr = originalCurrency {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = origCurr.rawValue
+            let origFormatted = formatter.string(from: NSDecimalNumber(decimal: orig)) ?? "\(origCurr.symbol)0.00"
+            return "\(baseFormatted) (\(origFormatted))"
+        }
+        if let converted = formattedAmountInBaseCurrency(baseCurrency: baseCurrency, rates: rates) {
+            return "\(baseFormatted) (\(converted))"
+        }
+        return baseFormatted
     }
 }
 

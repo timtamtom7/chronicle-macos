@@ -54,7 +54,7 @@ final class ExportService {
         var csvLines: [String] = []
 
         // Header
-        csvLines.append("name,amount,currency,due_date,due_day,recurrence,category,is_paid,notes")
+        csvLines.append("name,amount,currency,due_date,due_day,recurrence,category,is_paid,invoice_number,notes")
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -64,8 +64,9 @@ final class ExportService {
 
             let dueDate = dateFormatter.string(from: bill.dueDate)
             let notes = (bill.notes ?? "").replacingOccurrences(of: "\"", with: "\"\"")
+            let invoiceNum = bill.invoiceReference ?? ""
 
-            let line = "\"\(bill.name)\",\(bill.amountCents),\(bill.currency.rawValue),\(dueDate),\(bill.dueDay),\(bill.recurrence.rawValue),\(bill.category.rawValue),\(bill.isPaid ? "yes" : "no"),\"\(notes)\""
+            let line = "\"\(bill.name)\",\(bill.amountCents),\(bill.currency.rawValue),\(dueDate),\(bill.dueDay),\(bill.recurrence.rawValue),\(bill.category.rawValue),\(bill.isPaid ? "yes" : "no"),\"\(invoiceNum)\",\"\(notes)\""
             csvLines.append(line)
         }
 

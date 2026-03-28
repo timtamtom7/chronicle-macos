@@ -82,23 +82,22 @@ final class BusinessService: ObservableObject {
         endComponents.day = 31
         let endDate = calendar.date(from: endComponents)!
 
-        var categoryTotals: [BusinessCategory: Decimal] = [:]
+        var categoryTotals: [BusinessTag: Decimal] = [:]
         var totalDeductible: Decimal = 0
         var totalReimbursable: Decimal = 0
         var billIds: [UUID] = []
 
         for bill in bills {
             guard bill.dueDate >= startDate && bill.dueDate <= endDate else { continue }
-            guard let businessInfo = businessBills[bill.id] else { continue }
 
-            if businessInfo.isTaxDeductible {
+            if bill.isTaxDeductible {
                 billIds.append(bill.id)
                 let amount = bill.amount
-                categoryTotals[businessInfo.businessCategory, default: 0] += amount
+                categoryTotals[bill.businessTag ?? .other, default: 0] += amount
                 totalDeductible += amount
             }
 
-            if businessInfo.isReimbursable {
+            if bill.isReimbursable {
                 totalReimbursable += bill.amount
             }
         }
@@ -115,18 +114,38 @@ final class BusinessService: ObservableObject {
     }
 
     func exportTaxReportCSV(_ report: TaxReport, bills: [Bill]) -> URL? {
-        var csv = "Category,Amount\n"
-        for (category, amount) in report.categories.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
-            csv += "\(category.rawValue),\(amount)\n"
-        }
-        csv += "\nTotal Deductible,\(report.totalDeductible)\n"
-        csv += "Total Reimbursable,\(report.totalReimbursable)\n"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
 
-        let tempDir = FileManager.default.temporaryDirectory
-        let fileName = "Chronicle_TaxReport_\(report.year).csv"
-        let fileURL = tempDir.appendingPathComponent(fileName)
+        var csvLines: [String] = []
+        // TurboTax/QuickBooks compatible header
+        csvLines.append("date,vendor,amount,category,tax_deductible,reimbursable,tag,notes")
+
+        let yearBills = bills.filter { bill in
+            bill.dueDate >= report.startDate && bill.dueDate <= report.endDate && bill.isTaxDeductible
+        }
+
+        for bill in yearBills {
+            let date = dateFormatter.string(from: bill.dueDate)
+            let vendor = bill.name.replacingOccurrences(of: "\"", with: "\"\"")
+            let amount = String(format: "%.2f", NSDecimalNumber(decimal: bill.amount).doubleValue)
+            let category = bill.category.rawValue.replacingOccurrences(of: "\"", with: "\"\"")
+            let tag = (bill.businessTag ?? .other).rawValue.replacingOccurrences(of: "\"", with: "\"\"")
+            let notes = (bill.notes ?? "").replacingOccurrences(of: "\"", with: "\"\"")
+
+            let line = "\(date),\"\(vendor)\",\(amount),\(category),yes,\(bill.isReimbursable ? "yes" : "no"),\"\(tag)\",\"\(notes)\""
+            csvLines.append(line)
+        }
+
+        let csv = csvLines.joined(separator: "\n")
+
+        let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let exportDir = documentsDir.appendingPathComponent("Chronicle/Tax Exports/\(report.year)", isDirectory: true)
 
         do {
+            try FileManager.default.createDirectory(at: exportDir, withIntermediateDirectories: true)
+            let fileName = "Chronicle_TaxReport_\(report.year).csv"
+            let fileURL = exportDir.appendingPathComponent(fileName)
             try csv.write(to: fileURL, atomically: true, encoding: .utf8)
             return fileURL
         } catch {

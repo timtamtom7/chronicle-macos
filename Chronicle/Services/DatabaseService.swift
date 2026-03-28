@@ -6,7 +6,7 @@ final class DatabaseService {
 
     private var db: Connection?
     private let schemaVersionKey = "chronicleSchemaVersion"
-    private let currentSchemaVersion = 2
+    private let currentSchemaVersion = 3
 
     // MARK: - Table Definitions
 
@@ -25,6 +25,14 @@ final class DatabaseService {
     private let isActive = Expression<Bool>("is_active")
     private let isPaid = Expression<Bool>("is_paid")
     private let createdAt = Expression<Date>("created_at")
+    private let isTaxDeductible = Expression<Bool>("is_tax_deductible")
+    private let businessTag = Expression<String?>("business_tag")
+    private let isReimbursable = Expression<Bool>("is_reimbursable")
+    private let invoiceReference = Expression<String?>("invoice_reference")
+    private let attachedInvoicePath = Expression<String?>("attached_invoice_path")
+    private let originalAmount = Expression<Double?>("original_amount")
+    private let originalCurrency = Expression<String?>("original_currency")
+    private let receiptPath = Expression<String?>("receipt_path")
 
     private let paymentRecords = Table("payment_records")
     private let prId = Expression<String>("id")
@@ -75,6 +83,14 @@ final class DatabaseService {
             t.column(isActive)
             t.column(isPaid)
             t.column(createdAt)
+            t.column(isTaxDeductible)
+            t.column(businessTag)
+            t.column(isReimbursable)
+            t.column(invoiceReference)
+            t.column(attachedInvoicePath)
+            t.column(originalAmount)
+            t.column(originalCurrency)
+            t.column(receiptPath)
         })
 
         try db.run(paymentRecords.create(ifNotExists: true) { t in
@@ -92,6 +108,10 @@ final class DatabaseService {
 
         if savedVersion < 2 {
             migrateToV2()
+        }
+
+        if savedVersion < 3 {
+            migrateToV3()
         }
 
         UserDefaults.standard.set(currentSchemaVersion, forKey: schemaVersionKey)
@@ -116,6 +136,46 @@ final class DatabaseService {
         }
     }
 
+    private func migrateToV3() {
+        guard let db = db else { return }
+
+        do {
+            var columnNames: [String] = []
+            for row in try db.prepare("PRAGMA table_info(bills)") {
+                if let name = row[0] as? String {
+                    columnNames.append(name)
+                }
+            }
+
+            if !columnNames.contains("is_tax_deductible") {
+                try db.execute("ALTER TABLE bills ADD COLUMN is_tax_deductible INTEGER NOT NULL DEFAULT 0")
+            }
+            if !columnNames.contains("business_tag") {
+                try db.execute("ALTER TABLE bills ADD COLUMN business_tag TEXT")
+            }
+            if !columnNames.contains("is_reimbursable") {
+                try db.execute("ALTER TABLE bills ADD COLUMN is_reimbursable INTEGER NOT NULL DEFAULT 0")
+            }
+            if !columnNames.contains("invoice_reference") {
+                try db.execute("ALTER TABLE bills ADD COLUMN invoice_reference TEXT")
+            }
+            if !columnNames.contains("attached_invoice_path") {
+                try db.execute("ALTER TABLE bills ADD COLUMN attached_invoice_path TEXT")
+            }
+            if !columnNames.contains("original_amount") {
+                try db.execute("ALTER TABLE bills ADD COLUMN original_amount REAL")
+            }
+            if !columnNames.contains("original_currency") {
+                try db.execute("ALTER TABLE bills ADD COLUMN original_currency TEXT")
+            }
+            if !columnNames.contains("receipt_path") {
+                try db.execute("ALTER TABLE bills ADD COLUMN receipt_path TEXT")
+            }
+        } catch {
+            print("Migration V3 failed: \(error)")
+        }
+    }
+
     // MARK: - Bill CRUD
 
     func insertBill(_ bill: Bill) throws {
@@ -137,7 +197,15 @@ final class DatabaseService {
             autoMarkPaid <- bill.autoMarkPaid,
             isActive <- bill.isActive,
             isPaid <- bill.isPaid,
-            createdAt <- bill.createdAt
+            createdAt <- bill.createdAt,
+            isTaxDeductible <- bill.isTaxDeductible,
+            businessTag <- bill.businessTag?.rawValue,
+            isReimbursable <- bill.isReimbursable,
+            invoiceReference <- bill.invoiceReference,
+            attachedInvoicePath <- bill.attachedInvoiceURL?.path,
+            originalAmount <- bill.originalAmount.map { NSDecimalNumber(decimal: $0).doubleValue },
+            originalCurrency <- bill.originalCurrency?.rawValue,
+            receiptPath <- bill.receiptURL?.path
         ))
     }
 
@@ -159,7 +227,15 @@ final class DatabaseService {
             reminderTimings <- reminderTimingsJson,
             autoMarkPaid <- bill.autoMarkPaid,
             isActive <- bill.isActive,
-            isPaid <- bill.isPaid
+            isPaid <- bill.isPaid,
+            isTaxDeductible <- bill.isTaxDeductible,
+            businessTag <- bill.businessTag?.rawValue,
+            isReimbursable <- bill.isReimbursable,
+            invoiceReference <- bill.invoiceReference,
+            attachedInvoicePath <- bill.attachedInvoiceURL?.path,
+            originalAmount <- bill.originalAmount.map { NSDecimalNumber(decimal: $0).doubleValue },
+            originalCurrency <- bill.originalCurrency?.rawValue,
+            receiptPath <- bill.receiptURL?.path
         ))
     }
 
@@ -214,6 +290,16 @@ final class DatabaseService {
         let currencyStr = row[currency]
         let currencyEnum = Currency(rawValue: currencyStr) ?? .usd
 
+        let tagStr = row[businessTag]
+        let businessTagEnum: BusinessTag? = tagStr.flatMap { BusinessTag(rawValue: $0) }
+
+        let invoicePath = row[attachedInvoicePath]
+        let invoiceURL: URL? = invoicePath.flatMap { URL(fileURLWithPath: $0) }
+
+        let origAmount: Decimal? = row[originalAmount].map { Decimal($0) }
+        let origCurrency: Currency? = row[originalCurrency].flatMap { Currency(rawValue: $0) }
+        let receiptURL: URL? = row[receiptPath].flatMap { URL(fileURLWithPath: $0) }
+
         return Bill(
             id: UUID(uuidString: row[id]) ?? UUID(),
             name: row[name],
@@ -228,7 +314,15 @@ final class DatabaseService {
             autoMarkPaid: row[autoMarkPaid],
             isActive: row[isActive],
             isPaid: row[isPaid],
-            createdAt: row[createdAt]
+            createdAt: row[createdAt],
+            isTaxDeductible: row[isTaxDeductible],
+            businessTag: businessTagEnum,
+            isReimbursable: row[isReimbursable],
+            invoiceReference: row[invoiceReference],
+            attachedInvoiceURL: invoiceURL,
+            originalAmount: origAmount,
+            originalCurrency: origCurrency,
+            receiptURL: receiptURL
         )
     }
 

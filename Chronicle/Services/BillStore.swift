@@ -179,7 +179,12 @@ final class BillStore: ObservableObject {
                     isActive: bill.isActive,
                     isPaid: bill.isPaid,
                     ownerId: bill.ownerId,
-                    createdAt: bill.createdAt
+                    createdAt: bill.createdAt,
+                    isTaxDeductible: bill.isTaxDeductible,
+                    businessTag: bill.businessTag,
+                    isReimbursable: bill.isReimbursable,
+                    invoiceReference: bill.invoiceReference,
+                    attachedInvoiceURL: bill.attachedInvoiceURL
                 )
             }
             return bill
@@ -256,7 +261,10 @@ final class BillStore: ObservableObject {
 
     var filteredBills: [Bill] {
         guard !searchText.isEmpty else { return bills }
-        return bills.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        return bills.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            ($0.invoiceReference?.localizedCaseInsensitiveContains(searchText) ?? false)
+        }
     }
 
     var dueThisWeek: [Bill] {

@@ -60,6 +60,7 @@
 		CC9DE3500293D58E7A980D57 /* InsightsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F897D66648A68A31D19D4750 /* InsightsGenerator.swift */; };
 		CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */; };
 		D656609B74141CE8B9D0A7F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD415074FFD7AFFF8CDD10A /* Assets.xcassets */; };
+		D7EE12ACF4CC5410A5150845 /* ChronicleWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6B2D6F3AF5F7C21AEFC933 /* ChronicleWidget.swift */; };
 		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
 		DCB0AAB3A025CC6B08C085D3 /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */; };
 		DF014D7936F43ED17E9CDDB0 /* BillPredictionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */; };
@@ -94,9 +95,11 @@
 		3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
 		3C87FDABB54E8ADB5C810324 /* SettleUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpView.swift; sourceTree = "<group>"; };
 		3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateService.swift; sourceTree = "<group>"; };
+		3E6B2D6F3AF5F7C21AEFC933 /* ChronicleWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronicleWidget.swift; sourceTree = "<group>"; };
 		4703964B35A2FA6CD82E068F /* SubscriptionTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTier.swift; sourceTree = "<group>"; };
 		4A702C7340372E907FA8D658 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetService.swift; sourceTree = "<group>"; };
+		4D4A35C4610BCFD052A18665 /* ChronicleWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ChronicleWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		50FF1A53B2AB62D7CC290BF8 /* AppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntents.swift; sourceTree = "<group>"; };
 		5246250499B2D3CCC2F4D3CD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		52B8AFD3830B8788DA4E0BCF /* Chronicle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chronicle.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +126,7 @@
 		B3BB7091737C20A247D738FE /* ImportExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportView.swift; sourceTree = "<group>"; };
 		BCD415074FFD7AFFF8CDD10A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BF4D2954E3920762B29E0874 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
+		C7EB3578A12A555DA3472AB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C968C21BC0E4F53AF622D865 /* BusinessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessService.swift; sourceTree = "<group>"; };
 		CA645E7B2DF2A104A62C052F /* AuditLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditLogService.swift; sourceTree = "<group>"; };
 		CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillListView.swift; sourceTree = "<group>"; };
@@ -140,6 +144,7 @@
 		FC7B10996FCFA28B1CC6FE29 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 		FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		FC8B8EE689291D4150502293 /* AIInsightsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIInsightsService.swift; sourceTree = "<group>"; };
+		FDDA449BF2C96F2164854CF2 /* ChronicleWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChronicleWidget.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				52B8AFD3830B8788DA4E0BCF /* Chronicle.app */,
+				4D4A35C4610BCFD052A18665 /* ChronicleWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -293,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				41428680DDF240E2D9CB8C4A /* Chronicle */,
+				DB83C92DFAD31728A31F056C /* ChronicleWidget */,
 				50990BF7E9F1B73EC0DCD24D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -303,6 +310,16 @@
 				7ED96943CB6DF55D67205470 /* Localizable.strings */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		DB83C92DFAD31728A31F056C /* ChronicleWidget */ = {
+			isa = PBXGroup;
+			children = (
+				FDDA449BF2C96F2164854CF2 /* ChronicleWidget.entitlements */,
+				3E6B2D6F3AF5F7C21AEFC933 /* ChronicleWidget.swift */,
+				C7EB3578A12A555DA3472AB7 /* Info.plist */,
+			);
+			path = ChronicleWidget;
 			sourceTree = "<group>";
 		};
 		F451426EFF9E56E35A144635 /* Intents */ = {
@@ -317,6 +334,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A018B32EA42008EF30368608 /* ChronicleWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88F4E01E672F4F0684B9839E /* Build configuration list for PBXNativeTarget "ChronicleWidget" */;
+			buildPhases = (
+				A6EFF50F49EC4CBB8CAE7A7A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChronicleWidget;
+			productName = ChronicleWidget;
+			productReference = 4D4A35C4610BCFD052A18665 /* ChronicleWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		FC064724D5EDA918DD477092 /* Chronicle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF1FB7537C1C33931B3B7AC8 /* Build configuration list for PBXNativeTarget "Chronicle" */;
@@ -346,6 +378,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					A018B32EA42008EF30368608 = {
+						ProvisioningStyle = Manual;
+					};
 					FC064724D5EDA918DD477092 = {
 						ProvisioningStyle = Manual;
 					};
@@ -367,6 +402,7 @@
 			projectRoot = "";
 			targets = (
 				FC064724D5EDA918DD477092 /* Chronicle */,
+				A018B32EA42008EF30368608 /* ChronicleWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -385,6 +421,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A6EFF50F49EC4CBB8CAE7A7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7EE12ACF4CC5410A5150845 /* ChronicleWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F1293B4F39803351D001064C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -593,6 +637,36 @@
 			};
 			name = Debug;
 		};
+		7CABF836C55BC33176A5AEBC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ChronicleWidget/ChronicleWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ChronicleWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicle.macos.widget;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		935C57FDE2698C5FB23F6D0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ChronicleWidget/ChronicleWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ChronicleWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chronicle.macos.widget;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
 		D9F7522069B7874143B03E8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -609,6 +683,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		88F4E01E672F4F0684B9839E /* Build configuration list for PBXNativeTarget "ChronicleWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				935C57FDE2698C5FB23F6D0A /* Debug */,
+				7CABF836C55BC33176A5AEBC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		EA0659AF456C2C634A2EE55C /* Build configuration list for PBXProject "Chronicle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

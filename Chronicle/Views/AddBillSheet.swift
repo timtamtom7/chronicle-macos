@@ -18,6 +18,17 @@ struct AddBillSheet: View {
     @State private var reminderDueDate: Bool = false
     @State private var autoMarkPaid: Bool = false
 
+    // Business fields
+    @State private var showBusinessSection: Bool = false
+    @State private var isTaxDeductible: Bool = false
+    @State private var isReimbursable: Bool = false
+    @State private var businessTag: BusinessTag = .other
+    @State private var invoiceReference: String = ""
+    @State private var attachedInvoiceURL: URL? = nil
+    @State private var showInvoicePanel: Bool = false
+    @State private var receiptURL: URL? = nil
+    @State private var showReceiptPanel: Bool = false
+
     // Split with household
     @State private var splitWithHousehold: Bool = false
     @State private var shareAmounts: [UUID: String] = [:]  // memberId -> amount string
@@ -209,6 +220,9 @@ struct AddBillSheet: View {
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                     }
+
+                    // Business Section
+                    businessSection
                 }
                 .padding(Theme.spacing16)
             }
@@ -241,6 +255,15 @@ struct AddBillSheet: View {
                         shareAmounts[share.memberId] = String(format: "%.2f", Double(share.amountCents) / 100.0)
                     }
                 }
+
+                // Load business fields
+                isTaxDeductible = bill.isTaxDeductible
+                isReimbursable = bill.isReimbursable
+                businessTag = bill.businessTag ?? .other
+                invoiceReference = bill.invoiceReference ?? ""
+                attachedInvoiceURL = bill.attachedInvoiceURL
+                receiptURL = bill.receiptURL
+                showBusinessSection = isTaxDeductible || isReimbursable || bill.businessTag != nil || bill.invoiceReference != nil || bill.attachedInvoiceURL != nil || bill.receiptURL != nil
             } else {
                 currency = Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
             }
@@ -309,7 +332,149 @@ struct AddBillSheet: View {
         }
     }
 
-    private func memberShareRow(_ member: HouseholdMember) -> some View {
+    private var businessSection: some View {
+        VStack(alignment: .leading, spacing: Theme.spacing12) {
+            // Section toggle
+            HStack {
+                Text("Business")
+                    .font(.headline)
+                    .foregroundColor(Theme.textPrimary)
+                Spacer()
+                Toggle("", isOn: $showBusinessSection)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .accessibilityLabel("Business section")
+                    .accessibilityHint("Toggle to show business-related fields for this bill")
+            }
+
+            if showBusinessSection {
+                VStack(alignment: .leading, spacing: Theme.spacing12) {
+                    // Tax Deductible
+                    Toggle("Tax Deductible", isOn: $isTaxDeductible)
+                        .toggleStyle(.switch)
+                        .accessibilityLabel("Tax deductible")
+                        .accessibilityHint("Mark this bill as tax deductible for tax reporting")
+
+                    // Reimbursable
+                    Toggle("Reimbursable", isOn: $isReimbursable)
+                        .toggleStyle(.switch)
+                        .accessibilityLabel("Reimbursable")
+                        .accessibilityHint("Mark this bill as reimbursable for expense tracking")
+
+                    // Business Tag
+                    VStack(alignment: .leading, spacing: Theme.spacing4) {
+                        Text("Business Tag")
+                            .font(.footnote)
+                            .foregroundColor(Theme.textSecondary)
+                        Picker("", selection: $businessTag) {
+                            ForEach(BusinessTag.allCases) { tag in
+                                HStack {
+                                    Image(systemName: tag.icon)
+                                    Text(tag.rawValue)
+                                }
+                                .tag(tag)
+                            }
+                        }
+                        .labelsHidden()
+                        .accessibilityLabel("Business tag")
+                    }
+
+                    // Invoice Reference
+                    VStack(alignment: .leading, spacing: Theme.spacing4) {
+                        Text("Invoice #")
+                            .font(.footnote)
+                            .foregroundColor(Theme.textSecondary)
+                        TextField("e.g. INV-2024-001", text: $invoiceReference)
+                            .textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Invoice number")
+                            .accessibilityHint("Enter the vendor invoice number")
+                    }
+
+                    // Attach Invoice
+                    HStack {
+                        Button(action: { showInvoicePanel = true }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "paperclip")
+                                Text(attachedInvoiceURL != nil ? "Change Invoice" : "Attach Invoice (PDF)")
+                            }
+                            .font(.footnote)
+                        }
+                        .buttonStyle(.bordered)
+                        .accessibilityLabel("Attach invoice PDF")
+                        .accessibilityHint("Opens a file picker to attach a PDF invoice")
+
+                        if let url = attachedInvoiceURL {
+                            Text(url.lastPathComponent)
+                                .font(.caption)
+                                .foregroundColor(Theme.textSecondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+
+                            Button(action: { attachedInvoiceURL = nil }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textTertiary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Remove attached invoice")
+                        }
+                    }
+                    .fileImporter(
+                        isPresented: $showInvoicePanel,
+                        allowedContentTypes: [.pdf],
+                        allowsMultipleSelection: false
+                    ) { result in
+                        if case .success(let urls) = result, let url = urls.first {
+                            attachedInvoiceURL = url
+                        }
+                    }
+
+                    // Attach Receipt
+                    HStack {
+                        Button(action: { showReceiptPanel = true }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "photo")
+                                Text(receiptURL != nil ? "Change Receipt" : "Attach Receipt (Image)")
+                            }
+                            .font(.footnote)
+                        }
+                        .buttonStyle(.bordered)
+                        .accessibilityLabel("Attach receipt image")
+                        .accessibilityHint("Opens a file picker to attach a receipt image")
+
+                        if let url = receiptURL {
+                            Text(url.lastPathComponent)
+                                .font(.caption)
+                                .foregroundColor(Theme.textSecondary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+
+                            Button(action: { receiptURL = nil }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textTertiary)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Remove attached receipt")
+                        }
+                    }
+                    .fileImporter(
+                        isPresented: $showReceiptPanel,
+                        allowedContentTypes: [.jpeg, .png, .heic],
+                        allowsMultipleSelection: false
+                    ) { result in
+                        if case .success(let urls) = result, let url = urls.first {
+                            receiptURL = url
+                        }
+                    }
+                }
+                .padding(.top, Theme.spacing4)
+            }
+        }
+        .padding(Theme.spacing12)
+        .background(Theme.surface)
+        .cornerRadius(Theme.radiusMedium)
+    }
         HStack(spacing: Theme.spacing8) {
             Image(systemName: member.avatarName)
                 .font(.body)
@@ -354,6 +519,68 @@ struct AddBillSheet: View {
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
+    }
+
+    private func copyInvoiceToDocuments(_ sourceURL: URL?, billId: UUID) -> URL? {
+        guard let sourceURL = sourceURL else { return nil }
+
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let invoicesFolder = documentsPath.appendingPathComponent("Chronicle/Invoices", isDirectory: true)
+
+        do {
+            try FileManager.default.createDirectory(at: invoicesFolder, withIntermediateDirectories: true)
+            let destURL = invoicesFolder.appendingPathComponent("\(billId.uuidString)_\(sourceURL.lastPathComponent)")
+
+            // If file already exists at dest, remove it first
+            if FileManager.default.fileExists(atPath: destURL.path) {
+                try FileManager.default.removeItem(at: destURL)
+            }
+
+            // Start accessing security-scoped resource
+            let accessing = sourceURL.startAccessingSecurityScopedResource()
+            defer {
+                if accessing {
+                    sourceURL.stopAccessingSecurityScopedResource()
+                }
+            }
+
+            try FileManager.default.copyItem(at: sourceURL, to: destURL)
+            return destURL
+        } catch {
+            print("Failed to copy invoice: \(error)")
+            return nil
+        }
+    }
+
+    private func copyReceiptToDocuments(_ sourceURL: URL?, billId: UUID) -> URL? {
+        guard let sourceURL = sourceURL else { return nil }
+
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let receiptsFolder = documentsPath.appendingPathComponent("Chronicle/Receipts", isDirectory: true)
+
+        do {
+            try FileManager.default.createDirectory(at: receiptsFolder, withIntermediateDirectories: true)
+            let destURL = receiptsFolder.appendingPathComponent("\(billId.uuidString)_\(sourceURL.lastPathComponent)")
+
+            // If file already exists at dest, remove it first
+            if FileManager.default.fileExists(atPath: destURL.path) {
+                try FileManager.default.removeItem(at: destURL)
+            }
+
+            // Start accessing security-scoped resource
+            let accessing = sourceURL.startAccessingSecurityScopedResource()
+            defer {
+                if accessing {
+                    sourceURL.stopAccessingSecurityScopedResource()
+                }
+            }
+
+            try FileManager.default.copyItem(at: sourceURL, to: destURL)
+            return destURL
+        } catch {
+            print("Failed to copy receipt: \(error)")
+            return nil
+        }
     }
 
     // MARK: - Subviews
@@ -461,7 +688,13 @@ struct AddBillSheet: View {
             autoMarkPaid: autoMarkPaid,
             isActive: true,
             isPaid: editingBill?.isPaid ?? false,
-            createdAt: editingBill?.createdAt ?? Date()
+            createdAt: editingBill?.createdAt ?? Date(),
+            isTaxDeductible: showBusinessSection ? isTaxDeductible : false,
+            businessTag: showBusinessSection ? businessTag : nil,
+            isReimbursable: showBusinessSection ? isReimbursable : false,
+            invoiceReference: showBusinessSection && !invoiceReference.isEmpty ? invoiceReference : nil,
+            attachedInvoiceURL: showBusinessSection ? copyInvoiceToDocuments(attachedInvoiceURL, billId: editingBill?.id ?? UUID()) : nil,
+            receiptURL: copyReceiptToDocuments(receiptURL, billId: editingBill?.id ?? UUID())
         )
 
         if isEditing {

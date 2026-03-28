@@ -39,3 +39,22 @@ targets:
       - package: SQLite
     entitlements:
       path: Chronicle/Chronicle.entitlements
+
+  ChronicleWidget:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: ChronicleWidget
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chronicle.macos.widget
+        INFOPLIST_FILE: ChronicleWidget/Info.plist
+        CODE_SIGN_ENTITLEMENTS: ChronicleWidget/ChronicleWidget.entitlements
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+        SKIP_INSTALL: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        GENERATE_INFOPLIST_FILE: NO
+    entitlements:
+      path: ChronicleWidget/ChronicleWidget.entitlements

@@ -10,6 +10,7 @@ struct BusinessView: View {
     @State private var selectedTab = 0
     @State private var showTaxReportGenerator = false
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
+    @State private var showTaxExportSheet = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -251,19 +252,17 @@ struct BusinessView: View {
 
                     Spacer()
 
-                    Picker("Year", selection: $selectedYear) {
-                        ForEach((2020...2030).reversed(), id: \.self) { year in
-                            Text(String(year)).tag(year)
-                        }
+                    Button("Open Tax Export") {
+                        showTaxExportSheet = true
                     }
-                    .frame(width: 100)
+                    .buttonStyle(.bordered)
                 }
 
-                Text("Generate a tax report for your accountant or bookkeeper.")
+                Text("Generate tax reports for your accountant or bookkeeper, exportable as CSV or PDF.")
                     .font(.body)
                     .foregroundColor(Theme.textSecondary)
 
-                Button("Generate Report") {
+                Button("Generate & Preview Report") {
                     generateTaxReport()
                 }
                 .buttonStyle(.borderedProminent)
@@ -273,6 +272,10 @@ struct BusinessView: View {
                 }
             }
             .padding()
+        }
+        .sheet(isPresented: $showTaxExportSheet) {
+            TaxExportView()
+                .environmentObject(billStore)
         }
     }
 

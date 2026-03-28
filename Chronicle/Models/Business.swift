@@ -4,7 +4,7 @@ import Foundation
 
 struct BusinessBillInfo: Codable, Equatable {
     var isTaxDeductible: Bool
-    var businessCategory: BusinessCategory
+    var businessTag: BusinessTag
     var isReimbursable: Bool
     var vendorName: String?
     var invoiceNumber: String?
@@ -13,7 +13,7 @@ struct BusinessBillInfo: Codable, Equatable {
 
     init(
         isTaxDeductible: Bool = false,
-        businessCategory: BusinessCategory = .other,
+        businessTag: BusinessTag = .other,
         isReimbursable: Bool = false,
         vendorName: String? = nil,
         invoiceNumber: String? = nil,
@@ -21,7 +21,7 @@ struct BusinessBillInfo: Codable, Equatable {
         fiscalYear: Int? = nil
     ) {
         self.isTaxDeductible = isTaxDeductible
-        self.businessCategory = businessCategory
+        self.businessTag = businessTag
         self.isReimbursable = isReimbursable
         self.vendorName = vendorName
         self.invoiceNumber = invoiceNumber
@@ -30,9 +30,9 @@ struct BusinessBillInfo: Codable, Equatable {
     }
 }
 
-// MARK: - Business Categories
+// MARK: - Business Tag
 
-enum BusinessCategory: String, CaseIterable, Codable, Identifiable {
+enum BusinessTag: String, CaseIterable, Codable, Identifiable {
     case office = "Office"
     case software = "Software"
     case utilities = "Utilities"
@@ -40,7 +40,7 @@ enum BusinessCategory: String, CaseIterable, Codable, Identifiable {
     case meals = "Meals & Entertainment"
     case equipment = "Equipment"
     case marketing = "Marketing"
-    case professional = "Professional Services"
+    case professionalServices = "Professional Services"
     case other = "Other"
 
     var id: String { rawValue }
@@ -54,7 +54,7 @@ enum BusinessCategory: String, CaseIterable, Codable, Identifiable {
         case .meals: return "fork.knife"
         case .equipment: return "wrench.and.screwdriver.fill"
         case .marketing: return "megaphone.fill"
-        case .professional: return "briefcase.fill"
+        case .professionalServices: return "briefcase.fill"
         case .other: return "ellipsis.circle.fill"
         }
     }
@@ -67,7 +67,7 @@ struct TaxReport: Identifiable, Codable {
     var year: Int
     var startDate: Date
     var endDate: Date
-    var categories: [BusinessCategory: Decimal]
+    var categories: [BusinessTag: Decimal]
     var totalDeductible: Decimal
     var totalReimbursable: Decimal
     var bills: [UUID]
@@ -78,7 +78,7 @@ struct TaxReport: Identifiable, Codable {
         year: Int,
         startDate: Date,
         endDate: Date,
-        categories: [BusinessCategory: Decimal] = [:],
+        categories: [BusinessTag: Decimal] = [:],
         totalDeductible: Decimal = 0,
         totalReimbursable: Decimal = 0,
         bills: [UUID] = [],
