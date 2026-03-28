@@ -17,12 +17,12 @@ struct ImportExportView: View {
             // Header
             HStack {
                 Text("Import & Export")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -67,7 +67,7 @@ struct ImportExportView: View {
                     .font(.system(size: 16))
                     .foregroundColor(Theme.accent)
                 Text("Import Bills")
-                    .font(Theme.fontMediumLabelSemibold)
+                    .font(.callout)
                     .foregroundColor(Theme.textPrimary)
             }
 
@@ -80,7 +80,7 @@ struct ImportExportView: View {
                     Image(systemName: "doc.badge.plus")
                         .font(.system(size: 12))
                     Text("Choose CSV File")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                 }
                 .foregroundColor(Theme.textOnAccent)
                 .padding(.horizontal, Theme.spacing16)
@@ -94,7 +94,7 @@ struct ImportExportView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("CSV Format:")
-                    .font(Theme.fontCaptionMedium)
+                    .font(.caption)
                     .foregroundColor(Theme.textSecondary)
                 Text("name, amount, currency, due_date, due_day, recurrence, category, notes")
                     .font(.system(size: 11, design: .monospaced))
@@ -111,7 +111,7 @@ struct ImportExportView: View {
                     .font(.system(size: 16))
                     .foregroundColor(Theme.accent)
                 Text("Export Data")
-                    .font(Theme.fontMediumLabelSemibold)
+                    .font(.callout)
                     .foregroundColor(Theme.textPrimary)
             }
 
@@ -149,16 +149,16 @@ struct ImportExportView: View {
         Button(action: action) {
             HStack {
                 Image(systemName: icon)
-                    .font(Theme.fontMediumLabel)
+                    .font(.callout)
                     .foregroundColor(Theme.accent)
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textPrimary)
                     Text(subtitle)
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                 }
 
@@ -241,12 +241,12 @@ struct ImportResultSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Import Result")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -284,7 +284,7 @@ struct ImportResultSheet: View {
                     if !result.errors.isEmpty {
                         VStack(alignment: .leading, spacing: Theme.spacing4) {
                             Text("Warnings:")
-                                .font(Theme.fontLabel)
+                                .font(.footnote)
                                 .foregroundColor(Theme.textSecondary)
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 2) {

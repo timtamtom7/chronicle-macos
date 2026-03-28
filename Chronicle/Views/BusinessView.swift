@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 struct BusinessView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @StateObject private var businessService = BusinessService.shared
     @State private var selectedTab = 0
     @State private var showTaxReportGenerator = false
@@ -32,6 +33,7 @@ struct BusinessView: View {
                 accountantModeView.tag(3)
             }
             .tabViewStyle(.automatic)
+            .animation(reduceMotion ? .none : .spring(response: 0.25, dampingFraction: 0.8), value: selectedTab)
         }
         .frame(minWidth: 600, minHeight: 400)
     }
@@ -42,11 +44,11 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Business Expense Categories")
-                    .font(Theme.fontLarge)
+                    .font(.title2)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Tag bills as tax-deductible or business expenses to track for tax season.")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 16) {
@@ -85,7 +87,7 @@ struct BusinessView: View {
                 .accessibilityHidden(true)
 
             Text(category.rawValue)
-                .font(Theme.fontBody)
+                .font(.body)
                 .multilineTextAlignment(.center)
                 .foregroundColor(Theme.textPrimary)
         }
@@ -99,7 +101,7 @@ struct BusinessView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(bill.name)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textPrimary)
                 HStack(spacing: 8) {
                     if info.isTaxDeductible {
@@ -118,11 +120,11 @@ struct BusinessView: View {
             Spacer()
 
             Text(bill.formattedAmount)
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
             Text(info.businessCategory.rawValue)
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(Theme.accent.opacity(0.2))
@@ -139,11 +141,11 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Reimbursable Expenses")
-                    .font(Theme.fontLarge)
+                    .font(.title2)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Track expenses that need to be reimbursed by your employer or clients.")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
 
                 if businessService.reimbursableBills.isEmpty {
@@ -168,7 +170,7 @@ struct BusinessView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Theme.textPrimary)
             Text("Mark bills as reimbursable from the bill detail view.")
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
         }
@@ -180,7 +182,7 @@ struct BusinessView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Bill \(reimbursable.billId.uuidString.prefix(8))")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textPrimary)
                 Text(reimbursable.status.rawValue)
                     .font(.system(size: 12))
@@ -190,7 +192,7 @@ struct BusinessView: View {
             Spacer()
 
             Text(formatCents(reimbursable.amountCents))
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
             statusButton(reimbursable)
@@ -244,7 +246,7 @@ struct BusinessView: View {
             VStack(alignment: .leading, spacing: 24) {
                 HStack {
                     Text("Tax Preparation Report")
-                        .font(Theme.fontLarge)
+                        .font(.title2)
                         .foregroundColor(Theme.textPrimary)
 
                     Spacer()
@@ -258,7 +260,7 @@ struct BusinessView: View {
                 }
 
                 Text("Generate a tax report for your accountant or bookkeeper.")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
 
                 Button("Generate Report") {
@@ -305,7 +307,7 @@ struct BusinessView: View {
             Divider()
 
             Text("By Category")
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
             ForEach(Array(report.categories.keys.sorted(by: { $0.rawValue < $1.rawValue })), id: \.self) { category in
@@ -315,7 +317,7 @@ struct BusinessView: View {
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
                     Text(formatDecimal(report.categories[category] ?? 0))
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textPrimary)
                 }
             }
@@ -338,11 +340,11 @@ struct BusinessView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Accountant Mode")
-                    .font(Theme.fontLarge)
+                    .font(.title2)
                     .foregroundColor(Theme.textPrimary)
 
                 Text("Enable read-only mode with a locked date range for accountant access.")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
 
                 if businessService.accountantMode.isEnabled {
@@ -367,7 +369,7 @@ struct BusinessView: View {
 
             if let range = businessService.accountantMode.lockedDateRange {
                 Text("Locked Period: \(formatDate(range.lowerBound)) - \(formatDate(range.upperBound))")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
             }
 
@@ -388,7 +390,7 @@ struct BusinessView: View {
     private var disabledAccountantMode: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Accountant Mode is currently disabled.")
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textSecondary)
 
             DatePicker("Start Date", selection: .constant(Date()), displayedComponents: .date)

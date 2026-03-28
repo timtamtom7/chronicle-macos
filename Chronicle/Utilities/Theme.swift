@@ -174,7 +174,7 @@ struct PrimaryButtonStyle: ButtonStyle {
             .cornerRadius(Theme.radiusSmall)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
             .scaleEffect(configuration.isPressed ? (reduceMotion ? 1.0 : 0.97) : 1.0)
-            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .spring(response: 0.1, dampingFraction: 0.8), value: configuration.isPressed)
     }
 }
 
@@ -197,7 +197,7 @@ struct SecondaryButtonStyle: ButtonStyle {
             )
             .opacity(configuration.isPressed ? 0.8 : 1.0)
             .scaleEffect(configuration.isPressed ? (reduceMotion ? 1.0 : 0.97) : 1.0)
-            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .spring(response: 0.1, dampingFraction: 0.8), value: configuration.isPressed)
     }
 }
 
@@ -209,7 +209,7 @@ struct IconButtonStyle: ButtonStyle {
         configuration.label
             .foregroundColor(Theme.textSecondary)
             .opacity(configuration.isPressed ? 0.6 : 1.0)
-            .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
+            .animation(reduceMotion ? .none : .spring(response: 0.1, dampingFraction: 0.8), value: configuration.isPressed)
     }
 }
 

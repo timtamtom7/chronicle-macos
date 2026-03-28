@@ -12,7 +12,7 @@ struct BudgetView: View {
             // Header
             HStack {
                 Text("Budgets")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -20,7 +20,7 @@ struct BudgetView: View {
                 Button(action: { showAddBudget = true }) {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
-                            .font(Theme.fontCaption)
+                            .font(.caption)
                         Text("Add")
                         .font(.system(size: 12))
                     }
@@ -36,7 +36,7 @@ struct BudgetView: View {
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -72,7 +72,7 @@ struct BudgetView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No budgets set")
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Set spending limits for categories to track your bills")
@@ -83,7 +83,7 @@ struct BudgetView: View {
 
             Button(action: { showAddBudget = true }) {
                 Text("Add Budget")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
@@ -154,12 +154,12 @@ struct BudgetCard: View {
         VStack(spacing: Theme.spacing8) {
             HStack {
                 Image(systemName: budget.category.icon)
-                    .font(Theme.fontMediumLabel)
+                    .font(.callout)
                     .foregroundColor(Theme.accent)
                     .frame(width: 24)
 
                 Text(budget.category.rawValue)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -184,7 +184,7 @@ struct BudgetCard: View {
 
             HStack {
                 Text("\(Int(progress * 100))% used")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(progress >= 1.0 ? Theme.danger : Theme.textTertiary)
 
                 Spacer()
@@ -194,7 +194,7 @@ struct BudgetCard: View {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.caption2)
                         Text("Over budget")
-                            .font(Theme.fontCaption)
+                            .font(.caption)
                     }
                     .foregroundColor(Theme.danger)
                 } else if progress >= 0.9 {
@@ -202,7 +202,7 @@ struct BudgetCard: View {
                         Image(systemName: "exclamationmark.circle.fill")
                             .font(.caption2)
                         Text("Near limit")
-                            .font(Theme.fontCaption)
+                            .font(.caption)
                     }
                     .foregroundColor(Theme.warning)
                 }
@@ -248,12 +248,12 @@ struct BudgetEditorSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text(isEditing ? "Edit Budget" : "Add Budget")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -268,7 +268,7 @@ struct BudgetEditorSheet: View {
                 if !isEditing {
                     VStack(alignment: .leading, spacing: Theme.spacing4) {
                         Text("Category")
-                            .font(Theme.fontLabel)
+                            .font(.footnote)
                             .foregroundColor(Theme.textSecondary)
                         Picker("", selection: $selectedCategory) {
                             ForEach(Category.allCases, id: \.self) { cat in
@@ -287,7 +287,7 @@ struct BudgetEditorSheet: View {
 
                 VStack(alignment: .leading, spacing: Theme.spacing4) {
                     Text("Monthly Limit")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textSecondary)
                     HStack(spacing: 8) {
                         Text("$")
@@ -305,7 +305,7 @@ struct BudgetEditorSheet: View {
                     .accessibilityHint("Toggle to enable or disable this budget")
 
                 Text("You'll see spending alerts when you approach or exceed this limit.")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
             }
             .padding(Theme.spacing16)
@@ -324,7 +324,7 @@ struct BudgetEditorSheet: View {
 
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Add Budget")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)

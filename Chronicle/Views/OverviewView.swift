@@ -3,6 +3,7 @@ import Charts
 
 struct OverviewView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedMonth: YearMonth = YearMonth(date: Date())
 
     var body: some View {
@@ -38,7 +39,7 @@ struct OverviewView: View {
         HStack {
             Button(action: { selectedMonth = selectedMonth.previous() }) {
                 Image(systemName: "chevron.left")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
@@ -55,7 +56,7 @@ struct OverviewView: View {
 
             Button(action: { selectedMonth = selectedMonth.next() }) {
                 Image(systemName: "chevron.right")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(canGoNext ? Theme.accent : Theme.textTertiary)
             }
             .buttonStyle(.plain)
@@ -105,7 +106,7 @@ struct OverviewView: View {
                     .foregroundColor(color)
                     .accessibilityHidden(true)
                 Text(title)
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
             }
             Text(value)
@@ -136,7 +137,7 @@ struct OverviewView: View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             HStack {
                 Text("Month Progress")
-                    .font(Theme.fontSubheadlineSemibold)
+                    .font(.subheadline)
                     .foregroundColor(Theme.textSecondary)
                 Spacer()
                 let pct = progressPercentage
@@ -174,7 +175,7 @@ struct OverviewView: View {
     private var categoryBreakdown: some View {
         VStack(alignment: .leading, spacing: Theme.spacing12) {
             Text("Category Breakdown")
-                .font(Theme.fontSubheadlineSemibold)
+                .font(.subheadline)
                 .foregroundColor(Theme.textSecondary)
 
             let categoryData = billStore.spendingByCategory(for: selectedMonth)
@@ -203,7 +204,7 @@ struct OverviewView: View {
 
         return HStack(spacing: Theme.spacing8) {
             Image(systemName: category.icon)
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .frame(width: 16)
                 .accessibilityHidden(true)
@@ -232,7 +233,7 @@ struct OverviewView: View {
     private var spendingTrends: some View {
         VStack(alignment: .leading, spacing: Theme.spacing12) {
             Text("Spending Trends")
-                .font(Theme.fontSubheadlineSemibold)
+                .font(.subheadline)
                 .foregroundColor(Theme.textSecondary)
 
             let trend = billStore.monthlyTrend(months: 6)
@@ -262,6 +263,7 @@ struct OverviewView: View {
     @ViewBuilder
     private func trendChart(data: [YearMonth: Decimal]) -> some View {
         let sorted = data.keys.sorted()
+        let interpolation: Charts.InterpolationMethod = self.reduceMotion ? .linear : .catmullRom
 
         Chart {
             ForEach(sorted, id: \.self) { month in
@@ -270,7 +272,7 @@ struct OverviewView: View {
                     y: .value("Spent", NSDecimalNumber(decimal: data[month] ?? 0).doubleValue)
                 )
                 .foregroundStyle(Theme.accent.gradient)
-                .interpolationMethod(.catmullRom)
+                .interpolationMethod(interpolation)
 
                 AreaMark(
                     x: .value("Month", month.shortString),
@@ -283,7 +285,7 @@ struct OverviewView: View {
                         endPoint: .bottom
                     )
                 )
-                .interpolationMethod(.catmullRom)
+                .interpolationMethod(interpolation)
             }
         }
         .chartXAxis {

@@ -10,7 +10,7 @@ struct AnalyticsView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Analytics")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -26,7 +26,7 @@ struct AnalyticsView: View {
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -92,7 +92,7 @@ struct AnalyticsView: View {
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(Theme.textPrimary)
             Text(title)
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .foregroundColor(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)
@@ -110,7 +110,7 @@ struct AnalyticsView: View {
     private var categoryBreakdownSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Spending by Category")
-                .font(Theme.fontBodySemibold)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             VStack(spacing: Theme.spacing8) {
@@ -171,7 +171,7 @@ struct AnalyticsView: View {
     private var monthlyTrendSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Monthly Trend")
-                .font(Theme.fontBodySemibold)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             SimpleTrendChart(data: monthlyTrendData)
@@ -191,7 +191,7 @@ struct AnalyticsView: View {
     private var yearlyOverviewSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Yearly Overview")
-                .font(Theme.fontBodySemibold)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             HStack(spacing: Theme.spacing8) {
@@ -339,6 +339,7 @@ struct AnalyticsView: View {
 // MARK: - Simple Trend Chart
 
 struct SimpleTrendChart: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let data: [(month: String, amount: Decimal)]
 
     var body: some View {
@@ -347,6 +348,7 @@ struct SimpleTrendChart: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityDescription)
+        .animation(reduceMotion ? .none : .spring(response: 0.4, dampingFraction: 0.7), value: data.count)
     }
 
     private func chartContent(geo: GeometryProxy) -> some View {

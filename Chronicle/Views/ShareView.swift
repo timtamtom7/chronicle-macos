@@ -12,12 +12,12 @@ struct ShareView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Share Bills")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -31,7 +31,7 @@ struct ShareView: View {
             VStack(spacing: Theme.spacing16) {
                 VStack(alignment: .leading, spacing: Theme.spacing8) {
                     Text("Share Range")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textSecondary)
 
                     Picker("", selection: $selectedRange) {
@@ -93,10 +93,10 @@ struct ShareView: View {
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textPrimary)
                     Text(subtitle)
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                 }
 

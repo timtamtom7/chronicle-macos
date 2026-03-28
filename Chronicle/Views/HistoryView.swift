@@ -15,10 +15,10 @@ struct HistoryView: View {
             // Search bar
             HStack {
                 Image(systemName: "magnifyingglass")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textTertiary)
                 TextField("Search by bill name", text: $searchText)
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .textFieldStyle(.plain)
                     .accessibilityLabel("Search payment history")
                     .accessibilityHint("Type to filter payment records by bill name")
@@ -106,7 +106,7 @@ struct HistoryView: View {
     private func monthSectionHeader(_ month: YearMonth) -> some View {
         HStack {
             Text(month.displayString)
-                .font(Theme.fontSubheadlineSemibold)
+                .font(.subheadline)
                 .foregroundColor(Theme.textSecondary)
 
             Spacer()
@@ -135,7 +135,7 @@ struct HistoryView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No payments recorded yet")
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Mark a bill as paid to see it here")
@@ -153,12 +153,12 @@ struct HistoryView: View {
         billStore.undoPayment(record: record)
         loadData()
 
-        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
+        withAnimation(reduceMotion ? .none : .spring(response: 0.2, dampingFraction: 0.8)) {
             undoToast = UndoToastData(billName: billName)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
+            withAnimation(reduceMotion ? .none : .spring(response: 0.2, dampingFraction: 0.8)) {
                 undoToast = nil
             }
         }
@@ -168,10 +168,10 @@ struct HistoryView: View {
         HStack(spacing: Theme.spacing12) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(Theme.success)
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
 
             Text("Payment for \(toast.billName) undone")
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
         }
         .padding(.horizontal, Theme.spacing16)
@@ -202,7 +202,7 @@ struct HistoryRowView: View {
         HStack(spacing: Theme.spacing12) {
             // Bill name
             Text(billName)
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
                 .accessibilityLabel("\(billName), paid \(record.formattedAmount)")

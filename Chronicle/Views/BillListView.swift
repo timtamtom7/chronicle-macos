@@ -100,7 +100,7 @@ struct BillListView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("BILLS")
-                .font(Theme.fontCaptionSemibold)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
                 .padding(.top, Theme.spacing16)
@@ -112,7 +112,7 @@ struct BillListView: View {
             }
 
             Text("CATEGORIES")
-                .font(Theme.fontCaptionSemibold)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
                 .padding(.top, Theme.spacing24)
@@ -161,7 +161,7 @@ struct BillListView: View {
                         .opacity(selected ? 1 : 0.5)
                 }
                 Text(title)
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(selected ? Theme.textPrimary : Theme.textSecondary)
                 Spacer()
                 Text("\(count)")
@@ -181,31 +181,31 @@ struct BillListView: View {
         VStack(spacing: Theme.spacing4) {
             HStack {
                 Text("Due this month")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
                 Spacer()
                 Text(formatCurrency(billStore.totalDueThisMonth))
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.accent)
                     .accessibilityLabel("Due this month: \(formatCurrency(billStore.totalDueThisMonth))")
             }
             HStack {
                 Text("Paid this month")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
                 Spacer()
                 Text(formatCurrency(billStore.totalPaidThisMonth))
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.success)
                     .accessibilityLabel("Paid this month: \(formatCurrency(billStore.totalPaidThisMonth))")
             }
             HStack {
                 Text("Remaining")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
                 Spacer()
                 Text(formatCurrency(billStore.totalRemainingThisMonth))
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.warning)
                     .accessibilityLabel("Remaining: \(formatCurrency(billStore.totalRemainingThisMonth))")
             }
@@ -222,7 +222,7 @@ struct BillListView: View {
                     .foregroundColor(Theme.textTertiary)
                 TextField("Search bills...", text: $searchText)
                     .textFieldStyle(.plain)
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .frame(width: 200)
                     .accessibilityLabel("Search bills")
                     .accessibilityHint("Type to filter bills by name")
@@ -230,6 +230,7 @@ struct BillListView: View {
                     Button(action: { searchText = "" }) {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(Theme.textTertiary)
+                            .accessibilityHidden(true)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Clear search")
@@ -259,7 +260,7 @@ struct BillListView: View {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.up.arrow.down")
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                     Text(sortOrder.rawValue)
                         .font(.system(size: 12))
                 }
@@ -280,7 +281,7 @@ struct BillListView: View {
                     Image(systemName: "plus")
                     Text("Add Bill")
                 }
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textOnAccent)
                 .padding(.horizontal, Theme.spacing12)
                 .padding(.vertical, 6)
@@ -354,7 +355,9 @@ struct BillListView: View {
             bills.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
 
-        cachedFilteredBills = bills
+        withAnimation(reduceMotion ? .none : .spring(response: 0.25, dampingFraction: 0.7)) {
+            cachedFilteredBills = bills
+        }
     }
 
     private var pastBillsSection: some View {
@@ -369,10 +372,10 @@ struct BillListView: View {
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(Theme.textTertiary)
                     Text("PAID")
-                        .font(Theme.fontCaptionSemibold)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                     Text("(\(paidBills.count))")
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                     Spacer()
                 }
@@ -418,7 +421,7 @@ struct BillListView: View {
     private func billSection(title: String, bills: [Bill], accentColor: Color) -> some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text(title.uppercased())
-                .font(Theme.fontCaptionSemibold)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .tracking(Theme.trackingWide)
 
@@ -449,7 +452,7 @@ struct BillListView: View {
                 .foregroundColor(Theme.textSecondary)
 
             Text("Click + to add your first bill and never miss a payment.")
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textTertiary)
                 .multilineTextAlignment(.center)
         }
@@ -508,7 +511,7 @@ struct BillRowView: View {
             // Bill info
             VStack(alignment: .leading, spacing: 2) {
                 Text(bill.name)
-                    .font(Theme.fontMediumLabel)
+                    .font(.callout)
                     .foregroundColor(bill.isPaid ? Theme.textTertiary : Theme.textPrimary)
                     .strikethrough(bill.isPaid)
                     .accessibilityLabel("\(bill.name), \(bill.formattedAmount)")
@@ -529,7 +532,7 @@ struct BillRowView: View {
                         .foregroundColor(Theme.textTertiary)
 
                     Image(systemName: bill.category.icon)
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
 
                     Text(bill.category.rawValue)
@@ -543,12 +546,12 @@ struct BillRowView: View {
             // Due date
             VStack(alignment: .trailing, spacing: 2) {
                 Text(formattedDueDate)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(dueDateColor)
 
                 if bill.recurrence != .none {
                     Text("Next: \(formattedNextDue)")
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
                 }
             }

@@ -77,7 +77,7 @@ struct HouseholdDashboardView: View {
                             .font(.system(size: 22, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                         Text("\(household.members.count) members")
-                            .font(Theme.fontBody)
+                            .font(.body)
                             .foregroundColor(Theme.textSecondary)
                     }
 
@@ -116,7 +116,7 @@ struct HouseholdDashboardView: View {
     private func membersSection(_ members: [HouseholdMember]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Members")
-                .font(Theme.fontBodySemibold)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
@@ -138,12 +138,12 @@ struct HouseholdDashboardView: View {
                 .accessibilityHidden(true)
 
             Text(member.name)
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
             if member.isOwner {
                 Text("Owner")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textSecondary)
             }
         }
@@ -159,12 +159,12 @@ struct HouseholdDashboardView: View {
     private var balancesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Balances")
-                .font(Theme.fontBodySemibold)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             if householdService.balances.isEmpty {
                 Text("No outstanding balances")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
@@ -182,22 +182,22 @@ struct HouseholdDashboardView: View {
     private func balanceRow(_ balance: MemberBalance) -> some View {
         HStack {
             Text(balance.memberName)
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
 
             Spacer()
 
             if balance.isOwed {
                 Text("+\(formatCents(balance.netBalanceCents))")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.success)
             } else if balance.owes {
                 Text("-\(formatCents(abs(balance.netBalanceCents)))")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.danger)
             } else {
                 Text("Settled")
-                    .font(Theme.fontBody)
+                    .font(.body)
                     .foregroundColor(Theme.textSecondary)
             }
         }
@@ -211,7 +211,7 @@ struct HouseholdDashboardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Bills This Month")
-                    .font(Theme.fontBodySemibold)
+                    .font(.body)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -234,21 +234,21 @@ struct HouseholdDashboardView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(bill.name)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textPrimary)
                 Text(bill.category.rawValue)
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textSecondary)
             }
 
             Spacer()
 
             Text(bill.formattedAmount)
-                .font(Theme.fontLabel)
+                .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
             Image(systemName: bill.isPaid ? "checkmark.circle.fill" : "circle")
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(bill.isPaid ? Theme.success : Theme.textTertiary)
         }
         .padding(.vertical, 4)
@@ -260,7 +260,7 @@ struct HouseholdDashboardView: View {
     private func qrCodeSheet(_ household: Household) -> some View {
         VStack(spacing: 24) {
             Text("Invite to \(household.name)")
-                .font(Theme.fontLarge)
+                .font(.title2)
                 .foregroundColor(Theme.textPrimary)
 
             if let qrImage = householdService.generateInviteQRCode(for: household) {
@@ -295,7 +295,7 @@ struct HouseholdDashboardView: View {
     private var createHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Create Household")
-                .font(Theme.fontLarge)
+                .font(.title2)
                 .foregroundColor(Theme.textPrimary)
 
             TextField("Household Name", text: $householdName)
@@ -331,7 +331,7 @@ struct HouseholdDashboardView: View {
     private var joinHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Join Household")
-                .font(Theme.fontLarge)
+                .font(.title2)
                 .foregroundColor(Theme.textPrimary)
 
             TextField("Invite Code", text: $inviteCode)

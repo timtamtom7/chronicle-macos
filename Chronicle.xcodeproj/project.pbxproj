@@ -52,6 +52,7 @@
 		CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9CA238E99BE3CBAEBA70B5 /* BillStore.swift */; };
 		D656609B74141CE8B9D0A7F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD415074FFD7AFFF8CDD10A /* Assets.xcassets */; };
 		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
+		DCB0AAB3A025CC6B08C085D3 /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */; };
 		E55EC816AD0AFB433A9BDD9B /* AppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FF1A53B2AB62D7CC290BF8 /* AppIntents.swift */; };
 		EAD58D22DE394BED6DBAD32E /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70AF3152ABB26286542EF9A /* Business.swift */; };
 		EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5246250499B2D3CCC2F4D3CD /* MainTabView.swift */; };
@@ -110,6 +111,7 @@
 		D45E31511A397CB0984E4BB1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D70AF3152ABB26286542EF9A /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		D867CBCCDA334646347760CC /* PrivacyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyService.swift; sourceTree = "<group>"; };
+		DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncManager.swift; sourceTree = "<group>"; };
 		F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		F897D66648A68A31D19D4750 /* InsightsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsGenerator.swift; sourceTree = "<group>"; };
@@ -130,6 +132,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F95D81AA1EB1ABC3081C812 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		2643B96B9AF0F27D2445300E /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +189,7 @@
 				6D3BD6F4AF73591CE3722B1F /* Models */,
 				2643B96B9AF0F27D2445300E /* Services */,
 				68E0C20B3DA115DD151E7F61 /* Utilities */,
+				1F95D81AA1EB1ABC3081C812 /* ViewModels */,
 				5ED80C2B716211C0393734D8 /* Views */,
 			);
 			path = Chronicle;
@@ -341,6 +352,7 @@
 				4D5307EDB718CB025AE8F36F /* APIService.swift in Sources */,
 				61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */,
 				5365C689A7C1BDCBD17C2265 /* AnalyticsView.swift in Sources */,
+				DCB0AAB3A025CC6B08C085D3 /* AnalyticsViewModel.swift in Sources */,
 				1E72237D30D5C813395869C4 /* AppIconView.swift in Sources */,
 				E55EC816AD0AFB433A9BDD9B /* AppIntents.swift in Sources */,
 				B3C56EB5050CAA1249C99854 /* AuditLogService.swift in Sources */,

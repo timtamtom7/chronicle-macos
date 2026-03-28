@@ -61,7 +61,7 @@ struct AddBillSheet: View {
                             }
                         if !name.trimmingCharacters(in: .whitespaces).isEmpty {
                             Text("\(name.count)/50")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
                                 .foregroundColor(name.count > 45 ? Theme.warning : Theme.textTertiary)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
@@ -136,7 +136,7 @@ struct AddBillSheet: View {
                             reminderToggle(timing: .oneDay, label: "1 day before", isOn: $reminderOneDay)
                             reminderToggle(timing: .dueDate, label: "On due date", isOn: $reminderDueDate)
                             Text("Reminders are sent at 9:00 AM")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
                                 .foregroundColor(Theme.textTertiary)
                                 .padding(.top, 2)
                         }
@@ -154,7 +154,7 @@ struct AddBillSheet: View {
                     formField(title: "Notes (optional)") {
                         TextEditor(text: $notes)
                             .frame(height: 60)
-                            .font(Theme.fontBody)
+                            .font(.body)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6)
                                     .stroke(Theme.border, lineWidth: 1)
@@ -168,7 +168,7 @@ struct AddBillSheet: View {
                             }
                         if !notes.isEmpty {
                             Text("\(notes.count)/200")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
                                 .foregroundColor(notes.count > 180 ? Theme.warning : Theme.textTertiary)
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
@@ -208,12 +208,12 @@ struct AddBillSheet: View {
     private var header: some View {
         HStack {
             Text(isEditing ? "Edit Bill" : "Add Bill")
-                .font(Theme.fontHeadline)
+                .font(.headline)
                 .foregroundColor(Theme.textPrimary)
             Spacer()
             Button(action: { isPresented = false }) {
                 Image(systemName: "xmark")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textTertiary)
             }
             .buttonStyle(.plain)
@@ -227,7 +227,7 @@ struct AddBillSheet: View {
         VStack(alignment: .leading, spacing: Theme.spacing4) {
             HStack(spacing: 4) {
                 Text(title)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textSecondary)
                 if required {
                     Text("*")
@@ -244,7 +244,7 @@ struct AddBillSheet: View {
                 .toggleStyle(.switch)
                 .accessibilityLabel("Remind me \(label)")
             Text(label)
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
         }
     }
@@ -267,7 +267,7 @@ struct AddBillSheet: View {
 
             Button(action: save) {
                 Text(isEditing ? "Save Changes" : "Add Bill")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)

@@ -54,9 +54,10 @@ struct ContentView: View {
                             Button(action: showMainWindow) {
                                 HStack {
                                     Text("View All Bills")
-                                        .font(Theme.fontLabel)
+                                        .font(.footnote)
                                     Image(systemName: "arrow.right")
-                                        .font(Theme.fontCaption)
+                                        .font(.caption)
+                                        .accessibilityHidden(true)
                                 }
                                 .foregroundColor(Theme.accent)
                             }
@@ -123,7 +124,7 @@ struct ContentView: View {
     private var headerView: some View {
         HStack {
             Text("Chronicle")
-                .font(Theme.fontHeadline)
+                .font(.headline)
                 .foregroundColor(Theme.textPrimary)
 
             Spacer()
@@ -135,9 +136,10 @@ struct ContentView: View {
                     Button(action: payAllDueToday) {
                         HStack(spacing: 2) {
                             Image(systemName: "checkmark.circle")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
+                                .accessibilityHidden(true)
                             Text("Pay All Due")
-                                .font(Theme.fontCaptionMedium)
+                                .font(.caption)
                         }
                         .foregroundColor(Theme.success)
                     }
@@ -148,8 +150,9 @@ struct ContentView: View {
 
                 Button(action: { showSettingsSheet = true }) {
                     Image(systemName: "gearshape")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Settings")
@@ -157,8 +160,9 @@ struct ContentView: View {
 
                 Button(action: { showTemplatesSheet = true }) {
                     Image(systemName: "doc.on.doc")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Templates")
@@ -166,8 +170,9 @@ struct ContentView: View {
 
                 Button(action: { showBudgetSheet = true }) {
                     Image(systemName: "chart.pie")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Budgets")
@@ -175,8 +180,9 @@ struct ContentView: View {
 
                 Button(action: { showImportExportSheet = true }) {
                     Image(systemName: "arrow.up.arrow.down")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Import/Export")
@@ -184,8 +190,9 @@ struct ContentView: View {
 
                 Button(action: { showShareSheet = true }) {
                     Image(systemName: "square.and.arrow.up")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Share")
@@ -193,8 +200,9 @@ struct ContentView: View {
 
                 Button(action: { showAnalyticsSheet = true }) {
                     Image(systemName: "chart.bar.xaxis")
-                        .font(Theme.fontBody)
+                        .font(.body)
                         .foregroundColor(Theme.textSecondary)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Analytics")
@@ -202,7 +210,8 @@ struct ContentView: View {
 
                 Button(action: { showingAddSheet = true }) {
                     Image(systemName: "plus")
-                        .font(Theme.fontBody)
+                        .font(.body)
+                        .accessibilityHidden(true)
                 }
                 .buttonStyle(.plain)
                 .foregroundColor(Theme.accent)
@@ -219,9 +228,10 @@ struct ContentView: View {
             Image(systemName: "calendar.badge.plus")
                 .font(.system(size: 32))
                 .foregroundColor(Theme.textTertiary)
+                .accessibilityHidden(true)
 
             Text("No upcoming bills")
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Click + to add your first bill")
@@ -235,18 +245,18 @@ struct ContentView: View {
     private var permissionBanner: some View {
         HStack(spacing: Theme.spacing8) {
             Image(systemName: "bell.slash.fill")
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.warning)
 
             Text("Notifications are off. Enable in System Settings to get reminders.")
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .foregroundColor(Theme.textSecondary)
 
             Spacer()
 
             Button(action: openSystemSettings) {
                 Text("Open Settings")
-                    .font(Theme.fontCaptionMedium)
+                    .font(.caption)
                     .foregroundColor(Theme.accent)
             }
             .buttonStyle(.plain)
@@ -271,13 +281,13 @@ struct ContentView: View {
         VStack(spacing: Theme.spacing8) {
             HStack {
                 Text("Monthly Overview")
-                    .font(Theme.fontCaptionSemibold)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
                     .textCase(.uppercase)
                 Spacer()
                 Button(action: showMainWindow) {
                     Text("View All")
-                        .font(Theme.fontCaptionMedium)
+                        .font(.caption)
                         .foregroundColor(Theme.accent)
                 }
                 .buttonStyle(.plain)
@@ -296,10 +306,10 @@ struct ContentView: View {
     private func overviewItem(title: String, value: String, color: Color) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(title)
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
             Text(value)
-                .font(Theme.fontMediumLabelSemibold)
+                .font(.callout)
                 .foregroundColor(color)
         }
     }
@@ -370,7 +380,7 @@ struct BillCardView: View {
 
             // Name
             Text(bill.name)
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(1)
                 .strikethrough(bill.isPaid)
@@ -433,12 +443,12 @@ struct SettingsSheet: View {
             // Header
             HStack {
                 Text("Settings")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -467,10 +477,10 @@ struct SettingsSheet: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("Test Notifications")
-                                        .font(Theme.fontBody)
+                                        .font(.body)
                                         .foregroundColor(Theme.textPrimary)
                                     Text("Send a test notification to verify setup")
-                                        .font(Theme.fontCaption)
+                                        .font(.caption)
                                         .foregroundColor(Theme.textTertiary)
                                 }
 
@@ -482,7 +492,7 @@ struct SettingsSheet: View {
                                             .scaleEffect(0.7)
                                     } else {
                                         Text("Send Test")
-                                            .font(Theme.fontLabel)
+                                            .font(.footnote)
                                             .foregroundColor(Theme.accent)
                                     }
                                 }
@@ -496,7 +506,7 @@ struct SettingsSheet: View {
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Reminder Time")
-                                    .font(Theme.fontBody)
+                                    .font(.body)
                                     .foregroundColor(Theme.textPrimary)
                                 Picker("Reminder time", selection: $notificationHour) {
                                     ForEach(6..<22) { hour in
@@ -516,11 +526,11 @@ struct SettingsSheet: View {
                             Button(action: openNotificationSettings) {
                                 HStack {
                                     Text("Open Notification Settings")
-                                        .font(Theme.fontBody)
+                                        .font(.body)
                                         .foregroundColor(Theme.accent)
                                     Spacer()
                                     Image(systemName: "arrow.up.forward.square")
-                                        .font(Theme.fontCaption)
+                                        .font(.caption)
                                         .foregroundColor(Theme.textTertiary)
                                 }
                             }
@@ -539,12 +549,12 @@ struct SettingsSheet: View {
                                     .foregroundColor(Theme.textPrimary)
                                 Spacer()
                                 Text("Never miss a bill.")
-                                    .font(Theme.fontCaption)
+                                    .font(.caption)
                                     .foregroundColor(Theme.textTertiary)
                             }
                             Divider()
                             Text("All data is stored locally on your device. No accounts, no cloud sync (yet).")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
                                 .foregroundColor(Theme.textTertiary)
                         }
                     }
@@ -569,7 +579,7 @@ struct SettingsSheet: View {
     private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text(title)
-                .font(Theme.fontCaptionSemibold)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
                 .tracking(Theme.trackingWide)
 

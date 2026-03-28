@@ -16,7 +16,7 @@ struct TemplatesView: View {
             // Header
             HStack {
                 Text("Bill Templates")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -26,7 +26,7 @@ struct TemplatesView: View {
                         Button(action: importFromBills) {
                             HStack(spacing: 4) {
                                 Image(systemName: "wand.and.stars")
-                                    .font(Theme.fontCaption)
+                                    .font(.caption)
                                 Text("Suggest")
                                     .font(.system(size: 12))
                             }
@@ -40,7 +40,7 @@ struct TemplatesView: View {
                     Button(action: { showAddTemplate = true }) {
                         HStack(spacing: 4) {
                             Image(systemName: "plus")
-                                .font(Theme.fontCaption)
+                                .font(.caption)
                             Text("New")
                                 .font(.system(size: 12))
                         }
@@ -56,7 +56,7 @@ struct TemplatesView: View {
 
                     Button(action: { isPresented = false }) {
                         Image(systemName: "xmark")
-                            .font(Theme.fontLabel)
+                            .font(.footnote)
                             .foregroundColor(Theme.textTertiary)
                     }
                     .buttonStyle(.plain)
@@ -99,7 +99,7 @@ struct TemplatesView: View {
                 .foregroundColor(Theme.textTertiary)
 
             Text("No templates yet")
-                .font(Theme.fontMediumLabel)
+                .font(.callout)
                 .foregroundColor(Theme.textSecondary)
 
             Text("Templates let you quickly create similar bills")
@@ -108,7 +108,7 @@ struct TemplatesView: View {
 
             Button(action: { showAddTemplate = true }) {
                 Text("Create Template")
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textOnAccent)
                     .padding(.horizontal, Theme.spacing16)
                     .padding(.vertical, 8)
@@ -177,13 +177,13 @@ struct TemplateCard: View {
                     .frame(width: 36, height: 36)
 
                 Image(systemName: template.category.icon)
-                    .font(Theme.fontMediumLabel)
+                    .font(.callout)
                     .foregroundColor(Theme.accent)
             }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(template.name)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textPrimary)
                     .lineLimit(1)
 
@@ -196,14 +196,14 @@ struct TemplateCard: View {
                         .foregroundColor(Theme.textTertiary)
 
                     Text(template.recurrence.shortName)
-                        .font(Theme.fontCaption)
+                        .font(.caption)
                         .foregroundColor(Theme.textTertiary)
 
                     if template.dueDay > 0 {
                         Text("•")
                             .foregroundColor(Theme.textTertiary)
                         Text("Day \(template.dueDay)")
-                            .font(Theme.fontCaption)
+                            .font(.caption)
                             .foregroundColor(Theme.textTertiary)
                     }
                 }
@@ -212,7 +212,7 @@ struct TemplateCard: View {
             Spacer()
 
             Image(systemName: "chevron.right")
-                .font(Theme.fontCaption)
+                .font(.caption)
                 .foregroundColor(Theme.textTertiary)
         }
         .padding(Theme.spacing12)
@@ -259,12 +259,12 @@ struct TemplateEditorSheet: View {
             // Header
             HStack {
                 Text(isEditing ? "Edit Template" : "New Template")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -305,7 +305,7 @@ struct TemplateEditorSheet: View {
                     formField(title: "Due Day of Month") {
                         Stepper(value: $dueDay, in: 1...28) {
                             Text("Day \(dueDay)")
-                                .font(Theme.fontBody)
+                                .font(.body)
                         }
                         .accessibilityLabel("Due day of month")
                         .accessibilityValue("Day \(dueDay)")
@@ -356,7 +356,7 @@ struct TemplateEditorSheet: View {
                     formField(title: "Notes") {
                         TextEditor(text: $notes)
                             .frame(height: 60)
-                            .font(Theme.fontBody)
+                            .font(.body)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 6)
                                     .stroke(Theme.border, lineWidth: 1)
@@ -382,7 +382,7 @@ struct TemplateEditorSheet: View {
 
                 Button(action: save) {
                     Text(isEditing ? "Save" : "Create Template")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)
@@ -421,7 +421,7 @@ struct TemplateEditorSheet: View {
         VStack(alignment: .leading, spacing: Theme.spacing4) {
             HStack(spacing: 4) {
                 Text(title)
-                    .font(Theme.fontLabel)
+                    .font(.footnote)
                     .foregroundColor(Theme.textSecondary)
                 if required {
                     Text("*")
@@ -438,7 +438,7 @@ struct TemplateEditorSheet: View {
                 .toggleStyle(.switch)
                 .labelsHidden()
             Text(label)
-                .font(Theme.fontBody)
+                .font(.body)
                 .foregroundColor(Theme.textPrimary)
         }
     }
@@ -491,12 +491,12 @@ struct CreateBillFromTemplateSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Create Bill from Template")
-                    .font(Theme.fontHeadline)
+                    .font(.headline)
                     .foregroundColor(Theme.textPrimary)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -512,7 +512,7 @@ struct CreateBillFromTemplateSheet: View {
                     Text("Template:")
                         .foregroundColor(Theme.textSecondary)
                     Text(template.name)
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
                 }
@@ -521,14 +521,14 @@ struct CreateBillFromTemplateSheet: View {
                     Text("Amount:")
                         .foregroundColor(Theme.textSecondary)
                     Text(template.formattedAmount)
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
                 }
 
                 VStack(alignment: .leading, spacing: Theme.spacing4) {
                     Text("Due Date")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textSecondary)
                     DatePicker("", selection: $dueDate, displayedComponents: .date)
                         .datePickerStyle(.compact)
@@ -538,7 +538,7 @@ struct CreateBillFromTemplateSheet: View {
                 }
 
                 Text("This will create a new bill with the template's settings. The template itself will not be modified.")
-                    .font(Theme.fontCaption)
+                    .font(.caption)
                     .foregroundColor(Theme.textTertiary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -558,7 +558,7 @@ struct CreateBillFromTemplateSheet: View {
 
                 Button(action: createBill) {
                     Text("Create Bill")
-                        .font(Theme.fontLabel)
+                        .font(.footnote)
                         .foregroundColor(Theme.textOnAccent)
                         .padding(.horizontal, Theme.spacing16)
                         .padding(.vertical, 8)
