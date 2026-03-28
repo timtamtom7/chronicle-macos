@@ -21,7 +21,10 @@
 		23FFC883170F2CBBD2B306FB /* TemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */; };
 		2624197315802638F28506D2 /* TemplateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */; };
 		2B15BCAD167F6AE3FDFC488E /* Household.swift in Sources */ = {isa = PBXBuildFile; fileRef = 055165A1C123DDC90AF47CD9 /* Household.swift */; };
+		2F7597BE4A3653ED96FA7852 /* SettleUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C87FDABB54E8ADB5C810324 /* SettleUpView.swift */; };
 		320576ACA2F63671CB41105D /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */; };
+		3CCD807EFF7AF03BF5F7C8D4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7ED96943CB6DF55D67205470 /* Localizable.strings */; };
+		463B3F78C4505B23C5A86A2D /* InviteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D8ECC0ABE185EFE4DAB999 /* InviteService.swift */; };
 		4BAB5ADA7EDA3B622C3EEA5E /* BusinessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C968C21BC0E4F53AF622D865 /* BusinessService.swift */; };
 		4D5307EDB718CB025AE8F36F /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7019ED895E8D2A90FCDF0 /* APIService.swift */; };
 		530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */; };
@@ -33,9 +36,15 @@
 		6FB060FE480769F4FB15DCDE /* ExchangeRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */; };
 		7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C10F679571983C9EC78C7 /* Budget.swift */; };
 		7788134DCB1B68BFA6BB60AC /* AIInsightsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8B8EE689291D4150502293 /* AIInsightsService.swift */; };
+		832F5BAF86E4715E5CCB9423 /* SplitBillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32D643A58AD172A17F02270F /* SplitBillService.swift */; };
+		8747477D7CA7E0347F006BC7 /* HouseholdSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12FFFC2875555279E3320EF /* HouseholdSettingsView.swift */; };
 		88DD80491D9CA3B8E617C3F1 /* APIServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31C6279655F763D956285CC /* APIServerView.swift */; };
 		8C4FD14BD921F2F06988232A /* SubscriptionTier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4703964B35A2FA6CD82E068F /* SubscriptionTier.swift */; };
+		8E3030AC7D890D7FC31B3933 /* SiriSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08B0B1F448DBE69B0BDCB4C /* SiriSuggestions.swift */; };
+		95ED0044187AC74B91B6A6C5 /* InviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4D2954E3920762B29E0874 /* InviteSheet.swift */; };
+		970F591C89F7BD9E97E200FA /* HouseholdDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B45078EEC5D7E769144E37 /* HouseholdDashboardView.swift */; };
 		98DC06937B2D6FDA4C7BC802 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91342124452FB09F9E03DCC5 /* ShareView.swift */; };
+		999F1131A9180C2046659DCF /* HouseholdBillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4C2768C7CE902C801F19A9 /* HouseholdBillListView.swift */; };
 		A562EE2265EF4594FD789926 /* PlatformExpansionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFEDAD7C16FC597942794D1 /* PlatformExpansionService.swift */; };
 		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
 		AB73FA3B86B2E81B82A8F011 /* PrivacyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D867CBCCDA334646347760CC /* PrivacyService.swift */; };
@@ -60,12 +69,14 @@
 		F2138F5BD00D03420B21A396 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E886527619ABE419071F7F /* ContentView.swift */; };
 		F81A567935E2D43E483EBBCB /* BudgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01605D129DE2E5D73DBEB9 /* BudgetService.swift */; };
 		F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */; };
+		FA5A50CEF0177E2142F58D06 /* SplitBillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F19E4BC4BAD31C00BAA85AF /* SplitBillView.swift */; };
 		FC46E845F4F413745F254059 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F7ECEA259D53CB979FA683 /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		010584A744B87C0D76BAF34C /* Bill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bill.swift; sourceTree = "<group>"; };
 		055165A1C123DDC90AF47CD9 /* Household.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Household.swift; sourceTree = "<group>"; };
+		05D8ECC0ABE185EFE4DAB999 /* InviteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteService.swift; sourceTree = "<group>"; };
 		095FE1109841555CC1CAEFDF /* CategorizationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorizationEngine.swift; sourceTree = "<group>"; };
 		14021C37CEB6C6AA4005F91C /* Chronicle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chronicle.entitlements; sourceTree = "<group>"; };
 		170EC9206C6E4962BA34DB74 /* BillTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillTemplate.swift; sourceTree = "<group>"; };
@@ -77,8 +88,11 @@
 		2C9C10F679571983C9EC78C7 /* Budget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Budget.swift; sourceTree = "<group>"; };
 		313C107C411DCE94BDDE84F4 /* BusinessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessView.swift; sourceTree = "<group>"; };
 		326830CC7827278F9CAE4744 /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
+		32D643A58AD172A17F02270F /* SplitBillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitBillService.swift; sourceTree = "<group>"; };
 		34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
+		38B45078EEC5D7E769144E37 /* HouseholdDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseholdDashboardView.swift; sourceTree = "<group>"; };
 		3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
+		3C87FDABB54E8ADB5C810324 /* SettleUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettleUpView.swift; sourceTree = "<group>"; };
 		3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateService.swift; sourceTree = "<group>"; };
 		4703964B35A2FA6CD82E068F /* SubscriptionTier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTier.swift; sourceTree = "<group>"; };
 		4A702C7340372E907FA8D658 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
@@ -96,15 +110,19 @@
 		6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		711160B8C16D16E95C7B3A2F /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChronicleApp.swift; sourceTree = "<group>"; };
+		7ED96943CB6DF55D67205470 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7FE6EFDA2BB4C70F2EC5914E /* DuplicateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateDetector.swift; sourceTree = "<group>"; };
 		8E60BE2909D224FA810173A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8F19E4BC4BAD31C00BAA85AF /* SplitBillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitBillView.swift; sourceTree = "<group>"; };
 		8FF77EB48B31CA1189E2222E /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		91342124452FB09F9E03DCC5 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		B05C5F47DFF873B52C0F0349 /* CSVImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVImportService.swift; sourceTree = "<group>"; };
+		B08B0B1F448DBE69B0BDCB4C /* SiriSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSuggestions.swift; sourceTree = "<group>"; };
 		B31C6279655F763D956285CC /* APIServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServerView.swift; sourceTree = "<group>"; };
 		B3BB7091737C20A247D738FE /* ImportExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportView.swift; sourceTree = "<group>"; };
 		BCD415074FFD7AFFF8CDD10A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BF4D2954E3920762B29E0874 /* InviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteSheet.swift; sourceTree = "<group>"; };
 		C968C21BC0E4F53AF622D865 /* BusinessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessService.swift; sourceTree = "<group>"; };
 		CA645E7B2DF2A104A62C052F /* AuditLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditLogService.swift; sourceTree = "<group>"; };
 		CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillListView.swift; sourceTree = "<group>"; };
@@ -114,9 +132,11 @@
 		D867CBCCDA334646347760CC /* PrivacyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyService.swift; sourceTree = "<group>"; };
 		DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncManager.swift; sourceTree = "<group>"; };
+		F12FFFC2875555279E3320EF /* HouseholdSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseholdSettingsView.swift; sourceTree = "<group>"; };
 		F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillPredictionModel.swift; sourceTree = "<group>"; };
 		F897D66648A68A31D19D4750 /* InsightsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsGenerator.swift; sourceTree = "<group>"; };
+		FB4C2768C7CE902C801F19A9 /* HouseholdBillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseholdBillListView.swift; sourceTree = "<group>"; };
 		FC7B10996FCFA28B1CC6FE29 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 		FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		FC8B8EE689291D4150502293 /* AIInsightsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIInsightsService.swift; sourceTree = "<group>"; };
@@ -157,10 +177,12 @@
 				6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */,
 				5B59DBBC87A4277D369F9A6D /* HouseholdService.swift */,
 				EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */,
+				05D8ECC0ABE185EFE4DAB999 /* InviteService.swift */,
 				34492C3DF74099F89EBDC232 /* NotificationScheduler.swift */,
 				1AFEDAD7C16FC597942794D1 /* PlatformExpansionService.swift */,
 				D867CBCCDA334646347760CC /* PrivacyService.swift */,
 				8FF77EB48B31CA1189E2222E /* ShareService.swift */,
+				32D643A58AD172A17F02270F /* SplitBillService.swift */,
 				F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */,
 				670941E9510F62C3351B0EEB /* TeamService.swift */,
 				5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */,
@@ -190,6 +212,7 @@
 				99C683ACFD684DB66A81A268 /* App */,
 				F451426EFF9E56E35A144635 /* Intents */,
 				6D3BD6F4AF73591CE3722B1F /* Models */,
+				BDF8BD8B7A3ADE3128E5E675 /* Resources */,
 				2643B96B9AF0F27D2445300E /* Services */,
 				68E0C20B3DA115DD151E7F61 /* Utilities */,
 				1F95D81AA1EB1ABC3081C812 /* ViewModels */,
@@ -218,11 +241,17 @@
 				313C107C411DCE94BDDE84F4 /* BusinessView.swift */,
 				17E886527619ABE419071F7F /* ContentView.swift */,
 				64A93815CDE197FADCBF58BB /* HistoryView.swift */,
+				FB4C2768C7CE902C801F19A9 /* HouseholdBillListView.swift */,
+				38B45078EEC5D7E769144E37 /* HouseholdDashboardView.swift */,
+				F12FFFC2875555279E3320EF /* HouseholdSettingsView.swift */,
 				6644F5BC6805A4EE7E9FEAED /* HouseholdView.swift */,
 				B3BB7091737C20A247D738FE /* ImportExportView.swift */,
+				BF4D2954E3920762B29E0874 /* InviteSheet.swift */,
 				5246250499B2D3CCC2F4D3CD /* MainTabView.swift */,
 				FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */,
+				3C87FDABB54E8ADB5C810324 /* SettleUpView.swift */,
 				91342124452FB09F9E03DCC5 /* ShareView.swift */,
+				8F19E4BC4BAD31C00BAA85AF /* SplitBillView.swift */,
 				3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */,
 			);
 			path = Views;
@@ -268,10 +297,19 @@
 			);
 			sourceTree = "<group>";
 		};
+		BDF8BD8B7A3ADE3128E5E675 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7ED96943CB6DF55D67205470 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		F451426EFF9E56E35A144635 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
 				50FF1A53B2AB62D7CC290BF8 /* AppIntents.swift */,
+				B08B0B1F448DBE69B0BDCB4C /* SiriSuggestions.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -339,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D656609B74141CE8B9D0A7F5 /* Assets.xcassets in Resources */,
+				3CCD807EFF7AF03BF5F7C8D4 /* Localizable.strings in Resources */,
 				0EBDF1681C8A84E063F2999A /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,17 +419,26 @@
 				5F1788601B33E55EBF7E29B4 /* ExportService.swift in Sources */,
 				666365061234DEB80713515F /* HistoryView.swift in Sources */,
 				2B15BCAD167F6AE3FDFC488E /* Household.swift in Sources */,
+				999F1131A9180C2046659DCF /* HouseholdBillListView.swift in Sources */,
+				970F591C89F7BD9E97E200FA /* HouseholdDashboardView.swift in Sources */,
 				0A6BE53CCF7ADBA0B9A13533 /* HouseholdService.swift in Sources */,
+				8747477D7CA7E0347F006BC7 /* HouseholdSettingsView.swift in Sources */,
 				B2C6676C4277918077802FAC /* HouseholdView.swift in Sources */,
 				57EEC6DA81BA26C69E9CDD24 /* ImportExportView.swift in Sources */,
 				CC9DE3500293D58E7A980D57 /* InsightsGenerator.swift in Sources */,
+				463B3F78C4505B23C5A86A2D /* InviteService.swift in Sources */,
+				95ED0044187AC74B91B6A6C5 /* InviteSheet.swift in Sources */,
 				EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */,
 				530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */,
 				F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */,
 				A562EE2265EF4594FD789926 /* PlatformExpansionService.swift in Sources */,
 				AB73FA3B86B2E81B82A8F011 /* PrivacyService.swift in Sources */,
+				2F7597BE4A3653ED96FA7852 /* SettleUpView.swift in Sources */,
 				B3628BE4BCD4E49970E6AEF2 /* ShareService.swift in Sources */,
 				98DC06937B2D6FDA4C7BC802 /* ShareView.swift in Sources */,
+				8E3030AC7D890D7FC31B3933 /* SiriSuggestions.swift in Sources */,
+				832F5BAF86E4715E5CCB9423 /* SplitBillService.swift in Sources */,
+				FA5A50CEF0177E2142F58D06 /* SplitBillView.swift in Sources */,
 				320576ACA2F63671CB41105D /* SubscriptionManager.swift in Sources */,
 				8C4FD14BD921F2F06988232A /* SubscriptionTier.swift in Sources */,
 				1862EE300041DADD8039AFEF /* Team.swift in Sources */,

@@ -70,6 +70,7 @@ struct Bill: Identifiable, Equatable, Codable {
     var autoMarkPaid: Bool
     var isActive: Bool
     var isPaid: Bool
+    var ownerId: UUID? // nil = belongs to household
     let createdAt: Date
 
     init(
@@ -86,6 +87,7 @@ struct Bill: Identifiable, Equatable, Codable {
         autoMarkPaid: Bool = false,
         isActive: Bool = true,
         isPaid: Bool = false,
+        ownerId: UUID? = nil,
         createdAt: Date = Date()
     ) {
         self.id = id
@@ -101,6 +103,7 @@ struct Bill: Identifiable, Equatable, Codable {
         self.autoMarkPaid = autoMarkPaid
         self.isActive = isActive
         self.isPaid = isPaid
+        self.ownerId = ownerId
         self.createdAt = createdAt
     }
 

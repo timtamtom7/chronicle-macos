@@ -247,6 +247,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func showAbout() {
         NSApp.orderFrontStandardAboutPanel(nil)
     }
+
+    // MARK: - URL Scheme Handling
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            handleDeepLink(url)
+        }
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "chronicle" else { return }
+
+        if url.host == "join" || url.path.hasPrefix("/join") {
+            // Parse invite code from query or path
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            var inviteCode: String?
+
+            // Check query parameter: chronicle://join?code=XXXXXXXX
+            if let code = components?.queryItems?.first(where: { $0.name == "code" })?.value {
+                inviteCode = code
+            } else {
+                // Check path: chronicle://join/XXXXXXXX
+                let path = url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+                if !path.isEmpty && path.count == 8 {
+                    inviteCode = path
+                }
+            }
+
+            if let code = inviteCode {
+                Task { @MainActor in
+                    let success = InviteService.shared.joinWithCode(code)
+                    if success {
+                        NotificationCenter.default.post(name: .householdDidChange, object: nil)
+                        showMainWindow()
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Notification Names

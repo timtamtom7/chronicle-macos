@@ -249,6 +249,22 @@ final class iCloudSyncManager: ObservableObject {
             name: NSNotification.Name("ChronicleDataDidChange"),
             object: nil
         )
+
+        // Household iCloud sync notifications
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(householdStoreDidChange),
+            name: NSNotification.Name("NSUbiquitousKeyValueStoreDidChangeExternally"),
+            object: Self.householdStore
+        )
+    }
+
+    @objc private func householdStoreDidChange(_ notification: Notification) {
+        if isEnabled {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.handleHouseholdCloudChange(notification)
+            }
+        }
     }
 
     @objc private func storeDidChange(_ notification: Notification) {
@@ -289,4 +305,125 @@ enum SyncError: Error {
     case encryptionFailed
     case decryptionFailed
     case networkError
+}
+
+// MARK: - Household iCloud Sync
+
+extension iCloudSyncManager {
+    private static let householdStore = NSUbiquitousKeyValueStore.default
+    private static let householdMetadataKey = "household_metadata"
+    private static let householdSharedBillsKey = "household_shared_bills"
+    private static let appGroupID = "group.com.chronicle.macos.household"
+
+    /// Syncs household metadata to iCloud via NSUbiquitousKeyValueStore
+    func syncHouseholdToCloud(_ household: Household) {
+        guard isEnabled else { return }
+
+        Task { @MainActor in
+            HouseholdService.shared.syncStatus = .syncing
+        }
+
+        if let data = try? JSONEncoder().encode(HouseholdCloudPayload(
+            id: household.id,
+            name: household.name,
+            members: household.members.map { MemberPayload(id: $0.id, name: $0.name, avatarName: $0.avatarName, colorHex: $0.colorHex, colorHexDark: $0.colorHexDark, role: $0.role.rawValue) },
+            inviteCode: household.inviteCode,
+            sharedBillIds: household.bills,
+            updatedAt: Date()
+        )) {
+            Self.householdStore.set(data, forKey: Self.householdMetadataKey)
+            Self.householdStore.set(household.bills.map { $0.uuidString }, forKey: Self.householdSharedBillsKey)
+            Self.householdStore.synchronize()
+
+            Task { @MainActor in
+                HouseholdService.shared.syncStatus = .idle
+            }
+        } else {
+            Task { @MainActor in
+                HouseholdService.shared.syncStatus = .error("Failed to encode household data")
+            }
+        }
+    }
+
+    /// Loads household metadata from iCloud
+    func loadHouseholdFromCloud() -> HouseholdCloudPayload? {
+        guard isEnabled,
+              let data = Self.householdStore.data(forKey: Self.householdMetadataKey),
+              let payload = try? JSONDecoder().decode(HouseholdCloudPayload.self, from: data) else {
+            return nil
+        }
+        return payload
+    }
+
+    /// Stores shared bill IDs in the App Group suite for cross-device access
+    func syncSharedBillIdsToAppGroup(_ billIds: [UUID]) {
+        guard let defaults = UserDefaults(suiteName: Self.appGroupID) else { return }
+        defaults.set(billIds.map { $0.uuidString }, forKey: Self.householdSharedBillsKey)
+    }
+
+    /// Loads shared bill IDs from App Group suite
+    func loadSharedBillIdsFromAppGroup() -> Set<UUID> {
+        guard let defaults = UserDefaults(suiteName: Self.appGroupID),
+              let strings = defaults.stringArray(forKey: Self.householdSharedBillsKey) else {
+            return []
+        }
+        return Set(strings.compactMap { UUID(uuidString: $0) })
+    }
+
+    /// Handles external iCloud changes to household data
+    @objc func handleHouseholdCloudChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let changeReason = userInfo[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int else {
+            return
+        }
+
+        switch changeReason {
+        case NSUbiquitousKeyValueStoreServerChange,
+             NSUbiquitousKeyValueStoreInitialSyncChange:
+            // Remote household data changed — reload
+            Task { @MainActor in
+                HouseholdService.shared.syncStatus = .idle
+            }
+            if let payload = loadHouseholdFromCloud() {
+                NotificationCenter.default.post(
+                    name: .householdDidChange,
+                    object: nil,
+                    userInfo: ["payload": payload]
+                )
+            }
+        case NSUbiquitousKeyValueStoreQuotaViolationChange:
+            Task { @MainActor in
+                HouseholdService.shared.syncStatus = .error("iCloud quota exceeded")
+            }
+            print("Household sync quota exceeded")
+        case NSUbiquitousKeyValueStoreAccountChange:
+            // iCloud account changed — re-authenticate
+            Task { @MainActor in
+                HouseholdService.shared.syncStatus = .idle
+            }
+            NotificationCenter.default.post(name: .householdDidChange, object: nil)
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - Cloud Payload Types
+
+struct HouseholdCloudPayload: Codable {
+    let id: UUID
+    let name: String
+    let members: [MemberPayload]
+    let inviteCode: String
+    let sharedBillIds: [UUID]
+    let updatedAt: Date
+}
+
+struct MemberPayload: Codable {
+    let id: UUID
+    let name: String
+    let avatarName: String
+    let colorHex: String
+    let colorHexDark: String?
+    let role: String
 }

@@ -178,6 +178,7 @@ final class BillStore: ObservableObject {
                     autoMarkPaid: bill.autoMarkPaid,
                     isActive: bill.isActive,
                     isPaid: bill.isPaid,
+                    ownerId: bill.ownerId,
                     createdAt: bill.createdAt
                 )
             }
@@ -448,6 +449,36 @@ final class BillStore: ObservableObject {
 
     func bills(for category: Category) -> [Bill] {
         return bills.filter { $0.category == category && !$0.isPaid }
+    }
+
+    // MARK: - Bill Ownership Views
+
+    var householdBills: [Bill] {
+        bills.filter { $0.ownerId == nil && billsSharedWithHousehold.contains($0.id) }
+    }
+
+    var personalBills: [Bill] {
+        let sharedIds = billsSharedWithHousehold
+        return bills.filter { bill in
+            guard let ownerId = bill.ownerId else { return !sharedIds.contains(bill.id) }
+            return ownerId == currentUserMemberId && !sharedIds.contains(bill.id)
+        }
+    }
+
+    private var billsSharedWithHousehold: Set<UUID> {
+        HouseholdService.shared.getSharedBillIds()
+    }
+
+    private var currentUserMemberId: UUID? {
+        HouseholdService.shared.currentMember?.id
+    }
+
+    func bills(for ownerId: UUID) -> [Bill] {
+        bills.filter { $0.ownerId == ownerId }
+    }
+
+    func billsSharedWithHousehold(ownerId: UUID) -> [Bill] {
+        bills.filter { billsSharedWithHousehold.contains($0.id) && $0.ownerId == ownerId }
     }
 
     func billsPaidInMonth(_ period: YearMonth) -> [PaymentRecord] {

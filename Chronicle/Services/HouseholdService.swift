@@ -12,6 +12,16 @@ final class HouseholdService: ObservableObject {
     @Published var currentMember: HouseholdMember?
     @Published var balances: [MemberBalance] = []
 
+    // MARK: - Sync Status
+
+    enum SyncStatus: Equatable {
+        case idle
+        case syncing
+        case error(String)
+    }
+
+    @Published var syncStatus: SyncStatus = .idle
+
     private let userDefaultsKey = "chronicle_household"
     private let splitsKey = "chronicle_bill_splits"
 
@@ -22,35 +32,39 @@ final class HouseholdService: ObservableObject {
     // MARK: - Household Management
 
     func createHousehold(name: String, ownerName: String) -> Household {
-        let owner = HouseholdMember(name: ownerName, isOwner: true)
+        let owner = HouseholdMember(name: ownerName, role: .admin)
         let household = Household(name: name, members: [owner])
         self.household = household
         self.currentMember = owner
         saveHousehold()
+        Household.current = household
+        syncHousehold()
         return household
     }
 
     func joinHousehold(code: String) -> Bool {
-        // In production, this would verify against iCloud or a server
-        // For now, we support local household joining via code
         guard var household = loadHouseholdFromStorage() else { return false }
         if household.inviteCode == code {
             if let currentMember = currentMember, !household.members.contains(where: { $0.id == currentMember.id }) {
                 household.members.append(currentMember)
                 self.household = household
                 saveHousehold()
+                Household.current = household
+                syncHousehold()
                 return true
             }
         }
         return false
     }
 
-    func addMember(name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF") -> HouseholdMember? {
+    func addMember(name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF", role: HouseholdMember.Role = .member) -> HouseholdMember? {
         guard var household = household else { return nil }
-        let member = HouseholdMember(name: name, avatarName: avatarName, colorHex: colorHex)
+        let member = HouseholdMember(name: name, avatarName: avatarName, colorHex: colorHex, role: role)
         household.members.append(member)
         self.household = household
         saveHousehold()
+        Household.current = household
+        syncHousehold()
         return member
     }
 
@@ -59,12 +73,114 @@ final class HouseholdService: ObservableObject {
         household.members.removeAll { $0.id == memberId }
         self.household = household
         saveHousehold()
+        Household.current = household
+        syncHousehold()
     }
 
     func leaveHousehold() {
         guard let currentMember = currentMember else { return }
         removeMember(currentMember.id)
         self.currentMember = nil
+        Household.current = nil
+        syncHousehold()
+    }
+
+    // MARK: - Bill Ownership & Sharing
+
+    private let sharedBillsKey = "chronicle_household_shared_bills"
+    private let billOwnerKey = "chronicle_household_bill_owners"
+    private let appGroupID = "group.com.chronicle.macos.household"
+
+    private var sharedDefaults: UserDefaults? {
+        UserDefaults(suiteName: appGroupID)
+    }
+
+    func assignBillOwner(billId: UUID, memberId: UUID) {
+        var owners = loadBillOwners()
+        owners[billId.uuidString] = memberId.uuidString
+        saveBillOwners(owners)
+        syncHousehold()
+    }
+
+    func shareBillWithHousehold(billId: UUID) {
+        guard var household = household else { return }
+        if !household.bills.contains(billId) {
+            household.bills.append(billId)
+            self.household = household
+            saveHousehold()
+        }
+        var shared = loadSharedBillIds()
+        shared.insert(billId)
+        saveSharedBillIds(shared)
+        Household.current = household
+        syncHousehold()
+    }
+
+    func unshareBill(billId: UUID) {
+        guard var household = household else { return }
+        household.bills.removeAll { $0 == billId }
+        self.household = household
+        saveHousehold()
+        var shared = loadSharedBillIds()
+        shared.remove(billId)
+        saveSharedBillIds(shared)
+        Household.current = household
+        syncHousehold()
+    }
+
+    func getSharedBillIds() -> Set<UUID> {
+        loadSharedBillIds()
+    }
+
+    func syncHousehold() {
+        guard let household = household else { return }
+
+        // Store household metadata in NSUbiquitousKeyValueStore for iCloud sync
+        let store = NSUbiquitousKeyValueStore.default
+        if let data = try? JSONEncoder().encode(HouseholdMetadata(
+            id: household.id,
+            name: household.name,
+            memberNames: household.members.map { $0.name },
+            memberIds: household.members.map { $0.id.uuidString },
+            memberRoles: household.members.map { $0.role.rawValue },
+            inviteCode: household.inviteCode
+        )) {
+            store.set(data, forKey: "household_metadata")
+        }
+        store.synchronize()
+
+        // Store shared bill IDs in App Group UserDefaults for cross-device access
+        if let defaults = sharedDefaults {
+            let sharedBillStrings = loadSharedBillIds().map { $0.uuidString }
+            defaults.set(sharedBillStrings, forKey: sharedBillsKey)
+        }
+
+        // Trigger iCloud sync
+        iCloudSyncManager.shared.forceSyncNow()
+
+        // Post notification for UI updates
+        NotificationCenter.default.post(name: .householdDidChange, object: nil)
+    }
+
+    private func loadSharedBillIds() -> Set<UUID> {
+        let strings = sharedDefaults?.stringArray(forKey: sharedBillsKey) ?? UserDefaults.standard.stringArray(forKey: sharedBillsKey) ?? []
+        return Set(strings.compactMap { UUID(uuidString: $0) })
+    }
+
+    private func saveSharedBillIds(_ ids: Set<UUID>) {
+        sharedDefaults?.set(ids.map { $0.uuidString }, forKey: sharedBillsKey)
+        UserDefaults.standard.set(ids.map { $0.uuidString }, forKey: sharedBillsKey)
+    }
+
+    private func loadBillOwners() -> [String: String] {
+        sharedDefaults?.dictionary(forKey: billOwnerKey) as? [String: String]
+            ?? UserDefaults.standard.dictionary(forKey: billOwnerKey) as? [String: String]
+            ?? [:]
+    }
+
+    private func saveBillOwners(_ owners: [String: String]) {
+        sharedDefaults?.set(owners, forKey: billOwnerKey)
+        UserDefaults.standard.set(owners, forKey: billOwnerKey)
     }
 
     // MARK: - Bill Splitting
@@ -207,8 +323,20 @@ final class HouseholdService: ObservableObject {
 
 extension HouseholdService {
     func syncWithiCloud() async {
-        // Placeholder for iCloud sync implementation
-        // Would use NSUbiquitousKeyValueStore for household data
-        // and file coordination for bill splits
+        syncHousehold()
     }
 }
+
+// MARK: - Household Metadata (for NSUbiquitousKeyValueStore)
+
+struct HouseholdMetadata: Codable {
+    let id: UUID
+    let name: String
+    let memberNames: [String]
+    let memberIds: [String]
+    let memberRoles: [String]
+    let inviteCode: String
+}
+
+// MARK: - Notification Names
+// Note: householdDidChange is declared in InviteService.swift

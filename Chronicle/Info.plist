@@ -30,5 +30,16 @@
     <string>NSApplication</string>
     <key>NSMainNibFile</key>
     <string></string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.chronicle.macos</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>chronicle</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>

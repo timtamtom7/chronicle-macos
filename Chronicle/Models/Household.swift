@@ -6,19 +6,38 @@ struct Household: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
     var members: [HouseholdMember]
+    var bills: [UUID] // bill IDs shared with household
     var createdAt: Date
     var inviteCode: String
 
-    init(id: UUID = UUID(), name: String, members: [HouseholdMember] = [], inviteCode: String = UUID().uuidString.prefix(8).uppercased().description) {
+    init(id: UUID = UUID(), name: String, members: [HouseholdMember] = [], bills: [UUID] = [], inviteCode: String = UUID().uuidString.prefix(8).uppercased().description) {
         self.id = id
         self.name = name
         self.members = members
+        self.bills = bills
         self.createdAt = Date()
         self.inviteCode = inviteCode
     }
 
     static func == (lhs: Household, rhs: Household) -> Bool {
         lhs.id == rhs.id
+    }
+
+    static var current: Household? {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: "chronicle_household"),
+                  let household = try? JSONDecoder().decode(Household.self, from: data) else {
+                return nil
+            }
+            return household
+        }
+        set {
+            if let newValue = newValue, let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: "chronicle_household")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "chronicle_household")
+            }
+        }
     }
 }
 
@@ -32,16 +51,26 @@ struct HouseholdMember: Identifiable, Codable, Equatable {
     var colorHex: String
     /// Dark mode avatar color (hex) — falls back to colorHex if nil
     var colorHexDark: String?
-    var isOwner: Bool
+    var role: Role
     var joinedAt: Date
 
-    init(id: UUID = UUID(), name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF", colorHexDark: String? = nil, isOwner: Bool = false) {
+    enum Role: String, Codable, CaseIterable {
+        case admin
+        case member
+        case viewer
+    }
+
+    var isOwner: Bool {
+        role == .admin
+    }
+
+    init(id: UUID = UUID(), name: String, avatarName: String = "person.circle.fill", colorHex: String = "#007AFF", colorHexDark: String? = nil, role: Role = .member) {
         self.id = id
         self.name = name
         self.avatarName = avatarName
         self.colorHex = colorHex
         self.colorHexDark = colorHexDark
-        self.isOwner = isOwner
+        self.role = role
         self.joinedAt = Date()
     }
 
@@ -152,6 +181,37 @@ struct HouseholdBill: Identifiable, Codable {
         self.ownerId = ownerId
         self.split = split
         self.householdId = householdId
+    }
+}
+
+// MARK: - Settlement Record
+
+struct SettlementRecord: Identifiable, Codable {
+    let id: UUID
+    let date: Date
+    let fromMemberId: UUID
+    let toMemberId: UUID
+    let amountCents: Int
+    let note: String?
+
+    init(id: UUID = UUID(), date: Date = Date(), fromMemberId: UUID, toMemberId: UUID, amountCents: Int, note: String? = nil) {
+        self.id = id
+        self.date = date
+        self.fromMemberId = fromMemberId
+        self.toMemberId = toMemberId
+        self.amountCents = amountCents
+        self.note = note
+    }
+
+    var amount: Decimal {
+        Decimal(amountCents) / 100
+    }
+
+    var formattedAmount: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
 }
 
