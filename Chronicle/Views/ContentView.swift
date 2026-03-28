@@ -426,6 +426,7 @@ struct SettingsSheet: View {
     @Binding var isPresented: Bool
     @State private var notificationSoundEnabled = true
     @State private var showingTestNotification = false
+    @State private var notificationHour: Int = 9
 
     var body: some View {
         VStack(spacing: 0) {
@@ -494,12 +495,20 @@ struct SettingsSheet: View {
                             Divider()
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Notification Time")
+                                Text("Reminder Time")
                                     .font(.system(size: 13))
                                     .foregroundColor(Theme.textPrimary)
-                                Text("Reminders are sent at 9:00 AM local time")
-                                    .font(.system(size: 11))
-                                    .foregroundColor(Theme.textTertiary)
+                                Picker("Reminder time", selection: $notificationHour) {
+                                    ForEach(6..<22) { hour in
+                                        Text(formatHour(hour)).tag(hour)
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                .accessibilityLabel("Reminder time")
+                                .accessibilityHint("Set when bill reminders are sent")
+                                .onChange(of: notificationHour) { newValue in
+                                    UserDefaults.standard.set(newValue, forKey: "notificationHour")
+                                }
                             }
 
                             Divider()
@@ -547,7 +556,14 @@ struct SettingsSheet: View {
         .background(Theme.background)
         .onAppear {
             notificationSoundEnabled = UserDefaults.standard.object(forKey: "notificationSoundEnabled") as? Bool ?? true
+            notificationHour = UserDefaults.standard.object(forKey: "notificationHour") as? Int ?? 9
         }
+    }
+
+    private func formatHour(_ hour: Int) -> String {
+        let period = hour >= 12 ? "PM" : "AM"
+        let displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)
+        return "\(displayHour):00 \(period)"
     }
 
     private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {

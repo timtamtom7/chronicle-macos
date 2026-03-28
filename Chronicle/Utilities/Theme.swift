@@ -3,6 +3,10 @@ import AppKit
 
 // MARK: - Theme
 
+/// Design tokens for Chronicle.
+/// Font sizes use Dynamic Type (via @ScaledMetric) — text scales when users
+/// change their system text size preference.
+/// Font tokens are consumed via Theme.font* properties.
 enum Theme {
     // MARK: - Colors
 
@@ -155,14 +159,14 @@ struct PrimaryButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 13, weight: .medium))
+            .font(Theme.fontLabel)
             .foregroundColor(Theme.textOnAccent)
             .padding(.horizontal, Theme.spacing16)
             .padding(.vertical, Theme.spacing8)
             .background(isEnabled ? Theme.accent : Theme.textTertiary)
             .cornerRadius(Theme.radiusSmall)
             .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .scaleEffect(configuration.isPressed ? (reduceMotion ? 1.0 : 0.97) : 1.0)
             .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
@@ -174,7 +178,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 13, weight: .medium))
+            .font(Theme.fontLabel)
             .foregroundColor(isEnabled ? Theme.textPrimary : Theme.textTertiary)
             .padding(.horizontal, Theme.spacing16)
             .padding(.vertical, Theme.spacing8)
@@ -185,7 +189,7 @@ struct SecondaryButtonStyle: ButtonStyle {
                     .stroke(Theme.border, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .scaleEffect(configuration.isPressed ? (reduceMotion ? 1.0 : 0.97) : 1.0)
             .animation(reduceMotion ? .none : .easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }

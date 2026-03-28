@@ -149,12 +149,12 @@ struct HistoryView: View {
         billStore.undoPayment(record: record)
         loadData()
 
-        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
+        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
             undoToast = UndoToastData(billName: billName)
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
                 undoToast = nil
             }
         }

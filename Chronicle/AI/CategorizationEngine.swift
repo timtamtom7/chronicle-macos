@@ -2,6 +2,7 @@ import Foundation
 import NaturalLanguage
 
 /// AI-powered bill categorization engine using NaturalLanguage framework
+@MainActor
 final class CategorizationEngine {
     static let shared = CategorizationEngine()
     

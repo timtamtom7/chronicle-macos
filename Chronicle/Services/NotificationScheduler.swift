@@ -8,7 +8,12 @@ final class NotificationScheduler {
     static let shared = NotificationScheduler()
 
     private let center = UNUserNotificationCenter.current()
-    private let notificationHour = 9 // 9:00 AM
+
+    /// The hour at which notifications are sent (0-23).
+    /// Configurable via UserDefaults key "notificationHour", defaults to 9 (9:00 AM).
+    private var notificationHour: Int {
+        UserDefaults.standard.object(forKey: "notificationHour") as? Int ?? 9
+    }
 
     private init() {}
 
@@ -86,7 +91,7 @@ final class NotificationScheduler {
         let content = UNMutableNotificationContent()
         content.title = "Chronicle"
         content.body = "\(bill.name) is overdue — was due \(formatDate(bill.dueDate))"
-        content.sound = .default
+        content.sound = soundForNotification()
         content.categoryIdentifier = "BILL_REMINDER"
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
@@ -122,7 +127,7 @@ final class NotificationScheduler {
         case .none: daysText = ""
         }
         content.body = "\(bill.name) is due \(daysText) — \(bill.formattedAmount)"
-        content.sound = .default
+        content.sound = soundForNotification()
         content.categoryIdentifier = "BILL_REMINDER"
 
         guard let triggerDate = calendar.date(from: components) else { return }
@@ -142,7 +147,7 @@ final class NotificationScheduler {
         let content = UNMutableNotificationContent()
         content.title = "Chronicle"
         content.body = "Notifications are working! You will receive bill reminders at 9:00 AM."
-        content.sound = .default
+        content.sound = soundForNotification()
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
         let request = UNNotificationRequest(identifier: "test_notification", content: content, trigger: trigger)
@@ -170,7 +175,7 @@ final class NotificationScheduler {
         case .none: daysText = ""
         }
         content.body = "\(bill.name) is due \(daysText) — \(bill.formattedAmount)"
-        content.sound = .default
+        content.sound = soundForNotification()
         content.categoryIdentifier = "BILL_REMINDER"
         content.userInfo = ["billId": bill.id.uuidString, "timing": timing.rawValue]
 
@@ -187,6 +192,13 @@ final class NotificationScheduler {
                 print("Failed to schedule notification: \(error)")
             }
         }
+    }
+
+    /// Returns the notification sound based on user preference.
+    /// Reads notificationSoundEnabled from UserDefaults (default: true).
+    private func soundForNotification() -> UNNotificationSound? {
+        let enabled = UserDefaults.standard.object(forKey: "notificationSoundEnabled") as? Bool ?? true
+        return enabled ? .default : nil
     }
 
     private func calculateFireDate(for bill: Bill, timing: ReminderTiming) -> Date {
