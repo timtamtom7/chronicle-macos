@@ -340,7 +340,7 @@ final class OverdueChecker {
 
     func checkOverdue() {
         DispatchQueue.main.async {
-            let store = BillStore()
+            let store = BillStore.shared
             let overdueBills = store.pastDue
             let count = overdueBills.count
 

@@ -18,6 +18,7 @@ enum BillSortOrder: String, CaseIterable {
 
 struct BillListView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showingAddSheet = false
     @State private var selectedBill: Bill?
     @State private var searchText = ""
@@ -26,6 +27,10 @@ struct BillListView: View {
     @State private var billToDelete: Bill?
     @State private var sortOrder: BillSortOrder = .dueDate
     @State private var showPastBills = false
+    @State private var cachedFilteredBills: [Bill] = []
+    @State private var cachedSearchText: String = ""
+    @State private var cachedCategory: Category?
+    @State private var cachedSortOrder: BillSortOrder = .dueDate
 
     var body: some View {
         HStack(spacing: 0) {
@@ -146,6 +151,7 @@ struct BillListView: View {
             .padding(.horizontal, Theme.spacing16)
             .padding(.vertical, Theme.spacing8)
             .background(selected ? Theme.accent.opacity(0.1) : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.radiusSmall))
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(title), \(count) bills\(selected ? ", selected" : "")")
@@ -293,18 +299,48 @@ struct BillListView: View {
                     pastBillsSection
                 }
 
-                if filteredBills.isEmpty {
+                if cachedFilteredBills.isEmpty {
                     emptyState
                 }
             }
             .padding(Theme.spacing16)
+            .onAppear {
+                updateFilteredBills()
+            }
+            .onChange(of: searchText) { _ in updateFilteredBills() }
+            .onChange(of: selectedCategory) { _ in updateFilteredBills() }
+            .onChange(of: sortOrder) { _ in updateFilteredBills() }
+            .onChange(of: billStore.bills) { _ in updateFilteredBills() }
         }
+    }
+
+    private func updateFilteredBills() {
+        var bills = billStore.bills
+
+        if !searchText.isEmpty {
+            bills = bills.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+
+        if let cat = selectedCategory {
+            bills = bills.filter { $0.category == cat }
+        }
+
+        switch sortOrder {
+        case .dueDate:
+            bills.sort { $0.dueDate < $1.dueDate }
+        case .amountHighToLow:
+            bills.sort { $0.amountCents > $1.amountCents }
+        case .alphabetical:
+            bills.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        }
+
+        cachedFilteredBills = bills
     }
 
     private var pastBillsSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
                     showPastBills.toggle()
                 }
             } label: {
@@ -343,44 +379,20 @@ struct BillListView: View {
         }
     }
 
-    private var filteredBills: [Bill] {
-        var bills = billStore.bills
-
-        if !searchText.isEmpty {
-            bills = bills.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        }
-
-        if let cat = selectedCategory {
-            bills = bills.filter { $0.category == cat }
-        }
-
-        // Sort
-        switch sortOrder {
-        case .dueDate:
-            bills.sort { $0.dueDate < $1.dueDate }
-        case .amountHighToLow:
-            bills.sort { $0.amountCents > $1.amountCents }
-        case .alphabetical:
-            bills.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-        }
-
-        return bills
-    }
-
     private var dueThisWeekBills: [Bill] {
-        filteredBills.filter { $0.status() == .dueToday || $0.status() == .dueSoon }
+        cachedFilteredBills.filter { $0.status() == .dueToday || $0.status() == .dueSoon }
     }
 
     private var upcomingBills: [Bill] {
-        filteredBills.filter { $0.status() == .upcoming }
+        cachedFilteredBills.filter { $0.status() == .upcoming }
     }
 
     private var pastDueBills: [Bill] {
-        filteredBills.filter { $0.status() == .overdue }
+        cachedFilteredBills.filter { $0.status() == .overdue }
     }
 
     private var paidBills: [Bill] {
-        filteredBills.filter { $0.status() == .paid }
+        cachedFilteredBills.filter { $0.status() == .paid }
     }
 
     private func billSection(title: String, bills: [Bill], accentColor: Color) -> some View {
@@ -388,7 +400,7 @@ struct BillListView: View {
             Text(title.uppercased())
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(Theme.textTertiary)
-                .tracking(0.05)
+                .tracking(Theme.trackingWide)
 
             VStack(spacing: Theme.spacing8) {
                 ForEach(bills) { bill in
@@ -443,6 +455,18 @@ struct BillRowView: View {
 
     @State private var isHovering = false
 
+    private static let dueDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MMM d, yyyy"
+        return f
+    }()
+
+    private static let nextDueFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MMM d"
+        return f
+    }()
+
     var body: some View {
         HStack(spacing: Theme.spacing12) {
             // Checkbox
@@ -459,6 +483,7 @@ struct BillRowView: View {
             RoundedRectangle(cornerRadius: 2)
                 .fill(leftBorderColor)
                 .frame(width: 3)
+                .accessibilityHidden(true)
 
             // Bill info
             VStack(alignment: .leading, spacing: 2) {
@@ -508,27 +533,29 @@ struct BillRowView: View {
                 }
             }
 
-            // Actions (visible on hover)
-            if isHovering {
-                HStack(spacing: Theme.spacing4) {
-                    Button(action: onEdit) {
-                        Image(systemName: "pencil")
-                            .font(.system(size: 12))
-                            .foregroundColor(Theme.textSecondary)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Edit \(bill.name)")
-                    .accessibilityHint("Opens the edit sheet for this bill")
-
-                    Button(action: onDelete) {
-                        Image(systemName: "trash")
-                            .font(.system(size: 12))
-                            .foregroundColor(Theme.danger)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Delete \(bill.name)")
-                    .accessibilityHint("Permanently deletes this bill")
+            // Actions (visible on hover, but keyboard-accessible always)
+            HStack(spacing: Theme.spacing4) {
+                Button(action: onEdit) {
+                    Image(systemName: "pencil")
+                        .font(.system(size: 12))
+                        .foregroundColor(Theme.textSecondary)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Edit \(bill.name)")
+                .accessibilityHint("Opens the edit sheet for this bill")
+                .opacity(isHovering ? 1 : 0)
+                .focusable()
+
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 12))
+                        .foregroundColor(Theme.danger)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Delete \(bill.name)")
+                .accessibilityHint("Permanently deletes this bill")
+                .opacity(isHovering ? 1 : 0)
+                .focusable()
             }
         }
         .padding(Theme.spacing12)
@@ -568,14 +595,10 @@ struct BillRowView: View {
     }
 
     private var formattedDueDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        return formatter.string(from: bill.dueDate)
+        Self.dueDateFormatter.string(from: bill.dueDate)
     }
 
     private var formattedNextDue: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        return formatter.string(from: calculateNextDueDate(bill: bill, from: Date()))
+        Self.nextDueFormatter.string(from: calculateNextDueDate(bill: bill, from: Date()))
     }
 }

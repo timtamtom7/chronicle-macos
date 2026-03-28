@@ -16,12 +16,12 @@ enum Theme {
     static let backgroundLevel1 = Color(nsColor: .controlBackgroundColor)
     static let backgroundLevel2 = Color(nsColor: .underPageBackgroundColor)
 
-    // Brand/accent colors stay consistent
-    static let accent = Color(hex: "e07a3a")
+    // Brand/accent colors (WCAG AA compliant: 4.5:1+ for normal text)
+    static let accent = Color(hex: "c8602a")
     static let accentSecondary = Color(hex: "f4a261")
-    static let success = Color(hex: "5a9a6e")
-    static let warning = Color(hex: "e09a3a")
-    static let danger = Color(hex: "c45a4a")
+    static let success = Color(hex: "4a8a5e")
+    static let warning = Color(hex: "c87c20")
+    static let danger = Color(hex: "b44838")
 
     // Text colors use system label colors for dark mode support
     static let textPrimary = Color(nsColor: .labelColor)
@@ -60,16 +60,34 @@ enum Theme {
     static let cornerRadius20: CGFloat = 20
 
     // Named radius aliases
-    static let radiusSmall: CGFloat = 8      // cornerRadiusSmall
-    static let radiusMedium: CGFloat = 12     // cornerRadiusMedium
-    static let radiusLarge: CGFloat = 16      // cornerRadiusLarge
-    static let radiusPill: CGFloat = 20       // cornerRadiusPill
+    static let radiusSmall: CGFloat = 6
+    static let radiusMedium: CGFloat = 12
+    static let radiusLarge: CGFloat = 16
+    static let radiusPill: CGFloat = 20
+
+    // MARK: - Tracking
+
+    static let trackingWide: CGFloat = 0.05
 
     // MARK: - Shadows
 
-    static func cardShadow() -> some View {
-        Color.black.opacity(0.05)
-    }
+    static let cardShadowColor: Color = .black.opacity(0.04)
+    static let cardShadowRadius: CGFloat = 4
+    static let cardShadowY: CGFloat = 2
+
+    static let toastShadowColor: Color = .black.opacity(0.15)
+    static let toastShadowRadius: CGFloat = 8
+    static let toastShadowY: CGFloat = 4
+
+    // MARK: - Sheet Sizes
+
+    static let sheetSmall: CGSize = CGSize(width: 380, height: 340)
+    static let sheetMedium: CGSize = CGSize(width: 480, height: 420)
+    static let sheetLarge: CGSize = CGSize(width: 520, height: 580)
+
+    // MARK: - Empty State
+
+    static let emptyStateIconSize: CGFloat = 32
 }
 
 // MARK: - Haptic Feedback
@@ -200,7 +218,7 @@ struct CardStyle: ViewModifier {
         content
             .background(Theme.surface)
             .cornerRadius(Theme.radiusMedium)
-            .shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2)
+            .shadow(color: Theme.cardShadowColor, radius: Theme.cardShadowRadius, x: 0, y: Theme.cardShadowY)
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.radiusMedium)
                     .stroke(borderColor, lineWidth: 1)

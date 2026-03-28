@@ -118,10 +118,15 @@ struct OverviewView: View {
     }
 
     private var remainingColor: Color {
-        if billStore.totalRemainingThisMonth > 0 {
-            return billStore.totalRemainingThisMonth > 100 ? Theme.warning : Theme.success
+        if billStore.totalRemainingThisMonth <= 0 {
+            return Theme.success
         }
-        return Theme.success
+        let (_, _, status) = billStore.overallBudgetStatus
+        switch status {
+        case .overBudget: return Theme.danger
+        case .atBudget, .approachingBudget: return Theme.warning
+        case .underBudget: return Theme.textSecondary
+        }
     }
 
     // MARK: - Month Progress Bar
@@ -146,13 +151,7 @@ struct OverviewView: View {
                         .frame(height: 8)
 
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.success, Theme.success.opacity(0.7)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
+                        .fill(Theme.success)
                         .frame(width: geo.size.width * progressPercentage, height: 8)
                 }
             }
@@ -213,7 +212,7 @@ struct OverviewView: View {
                 .frame(width: 100, alignment: .leading)
 
             GeometryReader { geo in
-                RoundedRectangle(cornerRadius: 3)
+                RoundedRectangle(cornerRadius: Theme.radiusSmall)
                     .fill(CategoryColor.map[category] ?? .gray)
                     .frame(width: geo.size.width * ratio, height: 16)
             }

@@ -3,6 +3,8 @@ import Combine
 
 @MainActor
 final class BillStore: ObservableObject {
+    static let shared = BillStore()
+
     @Published var bills: [Bill] = []
     @Published var upcomingBills: [Bill] = []
     @Published var searchText: String = ""
@@ -18,7 +20,7 @@ final class BillStore: ObservableObject {
     private let budgetService = BudgetService.shared
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
+    private init() {
         loadBills()
         loadTemplates()
         loadBudgets()

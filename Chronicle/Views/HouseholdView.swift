@@ -3,7 +3,8 @@ import SwiftUI
 // MARK: - Household Dashboard View
 
 struct HouseholdDashboardView: View {
-    @StateObject private var householdService = HouseholdService.shared
+    @EnvironmentObject var billStore: BillStore
+    @ObservedObject private var householdService = HouseholdService.shared
     @State private var showCreateHousehold = false
     @State private var showJoinHousehold = false
     @State private var householdName = ""
@@ -27,15 +28,16 @@ struct HouseholdDashboardView: View {
         VStack(spacing: 24) {
             Image(systemName: "house.fill")
                 .font(.system(size: 64))
-                .foregroundColor(.secondary)
+                .foregroundColor(Theme.textTertiary)
+                .accessibilityHidden(true)
 
             Text("Household Sharing")
-                .font(.title)
-                .fontWeight(.bold)
+                .font(.system(size: 22, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
 
             Text("Share bills with your household, split expenses with roommates, and track who owes whom.")
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
+                .foregroundColor(Theme.textSecondary)
                 .frame(maxWidth: 400)
 
             HStack(spacing: 16) {
@@ -72,10 +74,11 @@ struct HouseholdDashboardView: View {
                 HStack {
                     VStack(alignment: .leading) {
                         Text(household.name)
-                            .font(.title)
-                            .fontWeight(.bold)
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundColor(Theme.textPrimary)
                         Text("\(household.members.count) members")
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 13))
+                            .foregroundColor(Theme.textSecondary)
                     }
 
                     Spacer()
@@ -89,6 +92,7 @@ struct HouseholdDashboardView: View {
                         Image(systemName: "ellipsis.circle")
                             .font(.title2)
                     }
+                    .accessibilityLabel("Household options menu")
                 }
                 .padding()
 
@@ -112,7 +116,8 @@ struct HouseholdDashboardView: View {
     private func membersSection(_ members: [HouseholdMember]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Members")
-                .font(.headline)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(Theme.textPrimary)
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
                 ForEach(members) { member in
@@ -121,8 +126,8 @@ struct HouseholdDashboardView: View {
             }
         }
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(12)
+        .background(Theme.surface)
+        .cornerRadius(Theme.radiusMedium)
     }
 
     private func memberCard(_ member: HouseholdMember) -> some View {
@@ -130,21 +135,22 @@ struct HouseholdDashboardView: View {
             Image(systemName: member.avatarName)
                 .font(.system(size: 32))
                 .foregroundColor(Color(hex: member.colorHex))
+                .accessibilityHidden(true)
 
             Text(member.name)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(Theme.textPrimary)
 
             if member.isOwner {
                 Text("Owner")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.textSecondary)
             }
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(8)
+        .background(Theme.surfaceSecondary)
+        .cornerRadius(Theme.radiusSmall)
         .accessibilityLabel("\(member.name)\(member.isOwner ? ", owner" : "")")
     }
 
@@ -153,11 +159,13 @@ struct HouseholdDashboardView: View {
     private var balancesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Balances")
-                .font(.headline)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(Theme.textPrimary)
 
             if householdService.balances.isEmpty {
                 Text("No outstanding balances")
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
             } else {
@@ -167,25 +175,30 @@ struct HouseholdDashboardView: View {
             }
         }
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(12)
+        .background(Theme.surface)
+        .cornerRadius(Theme.radiusMedium)
     }
 
     private func balanceRow(_ balance: MemberBalance) -> some View {
         HStack {
             Text(balance.memberName)
+                .font(.system(size: 13))
+                .foregroundColor(Theme.textPrimary)
 
             Spacer()
 
             if balance.isOwed {
                 Text("+\(formatCents(balance.netBalanceCents))")
-                    .foregroundColor(.green)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(Theme.success)
             } else if balance.owes {
                 Text("-\(formatCents(abs(balance.netBalanceCents)))")
-                    .foregroundColor(.red)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(Theme.danger)
             } else {
                 Text("Settled")
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 13))
+                    .foregroundColor(Theme.textSecondary)
             }
         }
         .padding(.vertical, 4)
@@ -198,12 +211,14 @@ struct HouseholdDashboardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Bills This Month")
-                    .font(.headline)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.textPrimary)
 
                 Spacer()
 
                 Text("\(getBillsThisMonth().count) bills")
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 12))
+                    .foregroundColor(Theme.textSecondary)
             }
 
             ForEach(getBillsThisMonth()) { bill in
@@ -211,28 +226,30 @@ struct HouseholdDashboardView: View {
             }
         }
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(12)
+        .background(Theme.surface)
+        .cornerRadius(Theme.radiusMedium)
     }
 
     private func billRow(_ bill: Bill) -> some View {
         HStack {
             VStack(alignment: .leading) {
                 Text(bill.name)
-                    .font(.subheadline)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(Theme.textPrimary)
                 Text(bill.category.rawValue)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.textSecondary)
             }
 
             Spacer()
 
             Text(bill.formattedAmount)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundColor(Theme.textPrimary)
 
             Image(systemName: bill.isPaid ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(bill.isPaid ? .green : .secondary)
+                .font(.system(size: 14))
+                .foregroundColor(bill.isPaid ? Theme.success : Theme.textTertiary)
         }
         .padding(.vertical, 4)
         .accessibilityLabel("\(bill.name), \(bill.formattedAmount), \(bill.isPaid ? "paid" : "unpaid")")
@@ -243,23 +260,24 @@ struct HouseholdDashboardView: View {
     private func qrCodeSheet(_ household: Household) -> some View {
         VStack(spacing: 24) {
             Text("Invite to \(household.name)")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
 
             if let qrImage = householdService.generateInviteQRCode(for: household) {
                 Image(nsImage: qrImage)
                     .interpolation(.none)
                     .resizable()
                     .frame(width: 200, height: 200)
+                    .accessibilityLabel("QR code for household invite. Code is: \(household.inviteCode)")
             }
 
             Text("Invite Code: \(household.inviteCode)")
-                .font(.system(.title3, design: .monospaced))
-                .fontWeight(.bold)
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .foregroundColor(Theme.textPrimary)
 
             Text("Scan this QR code or enter the invite code on another Mac to join this household.")
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
+                .foregroundColor(Theme.textSecondary)
                 .frame(maxWidth: 300)
 
             Button("Done") {
@@ -277,8 +295,8 @@ struct HouseholdDashboardView: View {
     private var createHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Create Household")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
 
             TextField("Household Name", text: $householdName)
                 .textFieldStyle(.roundedBorder)
@@ -313,8 +331,8 @@ struct HouseholdDashboardView: View {
     private var joinHouseholdSheet: some View {
         VStack(spacing: 20) {
             Text("Join Household")
-                .font(.title2)
-                .fontWeight(.bold)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
 
             TextField("Invite Code", text: $inviteCode)
                 .textFieldStyle(.roundedBorder)
@@ -351,7 +369,7 @@ struct HouseholdDashboardView: View {
             return []
         }
 
-        return BillStore().bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
+        return billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
     }
 
     private func formatCents(_ cents: Int) -> String {

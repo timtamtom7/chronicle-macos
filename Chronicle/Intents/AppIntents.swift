@@ -19,7 +19,7 @@ struct GetUpcomingBillsIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<[String]> {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         let calendar = Calendar.current
@@ -70,7 +70,7 @@ struct AddBillIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         let calendar = Calendar.current
@@ -114,7 +114,7 @@ struct MarkBillPaidIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         if let index = billStore.bills.firstIndex(where: { $0.name.localizedCaseInsensitiveContains(billName) && !$0.isPaid }) {
@@ -137,7 +137,7 @@ struct GetMonthlySpendingIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<Double> {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         let calendar = Calendar.current
@@ -171,7 +171,7 @@ struct GetSpendingByCategoryIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         let calendar = Calendar.current
@@ -216,7 +216,7 @@ struct CreateBillFromTextIntent: AppIntent {
     
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         // Simple parser: "Netflix $15.99 monthly on the 15th"

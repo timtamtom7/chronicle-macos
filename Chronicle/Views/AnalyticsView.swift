@@ -78,7 +78,7 @@ struct AnalyticsView: View {
                 title: "Avg per Bill",
                 value: formattedCurrency(averagePerBill),
                 icon: "chart.bar",
-                color: Theme.warning
+                color: Theme.textSecondary
             )
         }
     }

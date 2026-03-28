@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        billStore = BillStore()
+        billStore = BillStore.shared
 
         // Setup notifications
         setupNotifications()

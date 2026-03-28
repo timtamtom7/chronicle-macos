@@ -231,7 +231,7 @@ struct AddBillSheet: View {
                     .foregroundColor(Theme.textSecondary)
                 if required {
                     Text("*")
-                        .foregroundColor(Theme.danger)
+                        .foregroundColor(Theme.textTertiary)
                 }
             }
             content()

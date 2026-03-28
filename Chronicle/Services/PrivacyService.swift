@@ -110,7 +110,7 @@ public final class PrivacyService {
     /// Exports all user data as JSON - MUST be called from MainActor context
     @MainActor
     public func exportAllData() throws -> Data {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         let exportData: [String: Any] = [
@@ -135,7 +135,7 @@ public final class PrivacyService {
     /// Exports data as CSV - MUST be called from MainActor context
     @MainActor
     public func exportAllDataAsCSV() -> String {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         var csv = "ID,Name,Amount,Due Date,Category,Is Paid,Due Day\n"
@@ -161,7 +161,7 @@ public final class PrivacyService {
     /// Wipes all local data - MUST be called from MainActor context
     @MainActor
     public func wipeAllData() {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         billStore.loadBills()
         
         // Delete all bills

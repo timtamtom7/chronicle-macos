@@ -78,6 +78,7 @@ struct ContentView: View {
         .background(Theme.background)
         .sheet(isPresented: $showingAddSheet) {
             AddBillSheet(isPresented: $showingAddSheet)
+                .environmentObject(billStore)
         }
         .sheet(item: $selectedBill) { bill in
             AddBillSheet(isPresented: .constant(true), editingBill: bill)
@@ -276,7 +277,7 @@ struct ContentView: View {
                 Spacer()
                 Button(action: showMainWindow) {
                     Text("View All")
-                        .font(.system(size: 10, weight: .medium))
+                        .font(.system(size: 11, weight: .medium))
                         .foregroundColor(Theme.accent)
                 }
                 .buttonStyle(.plain)
@@ -554,7 +555,7 @@ struct SettingsSheet: View {
             Text(title)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(Theme.textTertiary)
-                .tracking(0.05)
+                .tracking(Theme.trackingWide)
 
             VStack(alignment: .leading, spacing: Theme.spacing8) {
                 content()

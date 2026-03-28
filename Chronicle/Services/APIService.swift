@@ -126,7 +126,7 @@ final class APIService: ObservableObject {
     }
 
     private func routeRequest(method: String, path: String, connection: NWConnection) {
-        let billStore = BillStore()
+        let billStore = BillStore.shared
         let householdService = HouseholdService.shared
 
         // Parse path
