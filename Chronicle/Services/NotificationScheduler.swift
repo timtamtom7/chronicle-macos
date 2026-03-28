@@ -257,7 +257,18 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .sound])
+        // Check if Focus/DND is active by verifying notification settings.
+        // When Focus mode or Do Not Disturb is enabled, alerts are suppressed.
+        center.getNotificationSettings { settings in
+            // If alerts are explicitly disabled, Focus/DND is active — suppress banner/sound
+            if settings.alertSetting == .disabled {
+                completionHandler([.badge])
+                return
+            }
+
+            // Normal presentation when Focus is not active
+            completionHandler([.banner, .sound])
+        }
     }
 
     func userNotificationCenter(

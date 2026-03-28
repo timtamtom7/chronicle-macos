@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 // MARK: - Widget Bundle
 
@@ -19,6 +20,7 @@ struct ChronicleEntry: TimelineEntry {
     let bills: [BillSnapshot]
     let monthlyTotal: Double
     let nextBillDue: BillSnapshot?
+    let selectedBillId: UUID?
 }
 
 struct BillSnapshot: Identifiable {
@@ -38,17 +40,18 @@ struct ChronicleProvider: TimelineProvider {
             date: Date(),
             bills: [],
             monthlyTotal: 0,
-            nextBillDue: nil
+            nextBillDue: nil,
+            selectedBillId: nil
         )
     }
     
     func getSnapshot(in context: Context, completion: @escaping (ChronicleEntry) -> Void) {
-        let entry = loadEntry()
+        let entry = loadEntry(selectedBillId: nil)
         completion(entry)
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<ChronicleEntry>) -> Void) {
-        let entry = loadEntry()
+        let entry = loadEntry(selectedBillId: nil)
         
         // Update every hour
         let nextUpdate = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
@@ -57,7 +60,7 @@ struct ChronicleProvider: TimelineProvider {
         completion(timeline)
     }
     
-    private func loadEntry() -> ChronicleEntry {
+    private func loadEntry(selectedBillId: UUID?) -> ChronicleEntry {
         // Load from shared UserDefaults (app group)
         let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
         
@@ -94,7 +97,69 @@ struct ChronicleProvider: TimelineProvider {
             nextBillDue = upcoming.first
         }
         
-        return ChronicleEntry(date: Date(), bills: bills, monthlyTotal: monthlyTotal, nextBillDue: nextBillDue)
+        return ChronicleEntry(date: Date(), bills: bills, monthlyTotal: monthlyTotal, nextBillDue: nextBillDue, selectedBillId: selectedBillId)
+    }
+}
+
+// MARK: - Select Bill Intent (macOS 14+)
+
+struct SelectBillIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "Select Bill"
+    static var description = IntentDescription("Choose a specific bill to track in the widget.")
+
+    @Parameter(title: "Bill")
+    var bill: BillEntity?
+
+    init() {}
+
+    init(bill: BillEntity?) {
+        self.bill = bill
+    }
+}
+
+// MARK: - Bill Entity for Widget
+
+struct BillEntity: AppEntity {
+    let id: UUID
+    let name: String
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Bill"
+    static var defaultQuery = BillEntityQuery()
+
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(name)")
+    }
+
+    init(id: UUID, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+
+struct BillEntityQuery: EntityQuery {
+    func entities(for identifiers: [UUID]) async throws -> [BillEntity] {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+        guard let data = defaults.data(forKey: "widget_bills"),
+              let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) else {
+            return []
+        }
+
+        let bills = decoded.filter { identifiers.contains($0.id) }
+        return bills.map { BillEntity(id: $0.id, name: $0.name) }
+    }
+
+    func suggestedEntities() async throws -> [BillEntity] {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+        guard let data = defaults.data(forKey: "widget_bills"),
+              let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) else {
+            return []
+        }
+
+        return decoded.map { BillEntity(id: $0.id, name: $0.name) }
+    }
+
+    func defaultResult() async -> BillEntity? {
+        try? await suggestedEntities().first
     }
 }
 
@@ -115,12 +180,86 @@ struct ChronicleWidget: Widget {
     let kind: String = "ChronicleWidget"
     
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: ChronicleProvider()) { entry in
+        // Use IntentConfiguration on macOS 14+ so users can pick a specific bill
+        AppIntentConfiguration(kind: kind, intent: SelectBillIntent.self, provider: ChronicleWidgetProvider()) { entry in
             SmallWidgetView(entry: entry)
         }
         .configurationDisplayName("Next Bill")
-        .description("Countdown to your next bill")
+        .description("Countdown to your next bill or a specific bill you choose")
         .supportedFamilies([.systemSmall])
+    }
+}
+
+// MARK: - Widget Provider for Intent-based Widget
+
+struct ChronicleWidgetProvider: TimelineProvider {
+    typealias Entry = ChronicleEntry
+    typealias Intent = SelectBillIntent
+
+    func placeholder(in context: Context) -> ChronicleEntry {
+        ChronicleEntry(
+            date: Date(),
+            bills: [],
+            monthlyTotal: 0,
+            nextBillDue: nil,
+            selectedBillId: nil
+        )
+    }
+
+    func snapshot(for configuration: SelectBillIntent, in context: Context) async -> ChronicleEntry {
+        let selectedId = configuration.bill?.id
+        return loadEntry(selectedBillId: selectedId)
+    }
+
+    func timeline(for configuration: SelectBillIntent, in context: Context) async -> Timeline<ChronicleEntry> {
+        let selectedId = configuration.bill?.id
+        let entry = loadEntry(selectedBillId: selectedId)
+        let nextUpdate = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
+        return Timeline(entries: [entry], policy: .after(nextUpdate))
+    }
+
+    private func loadEntry(selectedBillId: UUID?) -> ChronicleEntry {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+
+        var bills: [BillSnapshot] = []
+        var monthlyTotal: Double = 0
+        var nextBillDue: BillSnapshot?
+        var selectedBill: BillSnapshot?
+
+        if let data = defaults.data(forKey: "widget_bills"),
+           let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) {
+            bills = decoded.map { WidgetBill in
+                BillSnapshot(
+                    id: WidgetBill.id,
+                    name: WidgetBill.name,
+                    amount: WidgetBill.amount,
+                    dueDate: WidgetBill.dueDate,
+                    isPaid: WidgetBill.isPaid,
+                    category: WidgetBill.category
+                )
+            }
+
+            let calendar = Calendar.current
+            let now = Date()
+            let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
+
+            monthlyTotal = bills
+                .filter { $0.isPaid && $0.dueDate >= startOfMonth && $0.dueDate <= now }
+                .reduce(0) { $0 + (($1.amount as NSDecimalNumber).doubleValue) }
+
+            // If a bill was selected, show it; otherwise fall back to next upcoming
+            if let selectedId = selectedBillId {
+                selectedBill = bills.first { $0.id == selectedId && !$0.isPaid }
+                nextBillDue = selectedBill
+            } else {
+                let upcoming = bills
+                    .filter { !$0.isPaid && $0.dueDate >= calendar.startOfDay(for: now) }
+                    .sorted { $0.dueDate < $1.dueDate }
+                nextBillDue = upcoming.first
+            }
+        }
+
+        return ChronicleEntry(date: Date(), bills: bills, monthlyTotal: monthlyTotal, nextBillDue: nextBillDue, selectedBillId: selectedBillId)
     }
 }
 

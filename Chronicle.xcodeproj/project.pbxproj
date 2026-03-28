@@ -53,6 +53,7 @@
 		D656609B74141CE8B9D0A7F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BCD415074FFD7AFFF8CDD10A /* Assets.xcassets */; };
 		D972D635A0221634CC6DC9CF /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8B62D8823FC99D51FEC37F /* DatabaseService.swift */; };
 		DCB0AAB3A025CC6B08C085D3 /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */; };
+		DF014D7936F43ED17E9CDDB0 /* BillPredictionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */; };
 		E55EC816AD0AFB433A9BDD9B /* AppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FF1A53B2AB62D7CC290BF8 /* AppIntents.swift */; };
 		EAD58D22DE394BED6DBAD32E /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70AF3152ABB26286542EF9A /* Business.swift */; };
 		EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5246250499B2D3CCC2F4D3CD /* MainTabView.swift */; };
@@ -114,6 +115,7 @@
 		DCCC8828CCA8131A33F06E08 /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudSyncManager.swift; sourceTree = "<group>"; };
 		F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillPredictionModel.swift; sourceTree = "<group>"; };
 		F897D66648A68A31D19D4750 /* InsightsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsGenerator.swift; sourceTree = "<group>"; };
 		FC7B10996FCFA28B1CC6FE29 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
 		FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 		31597D6AE40AE79EE11542E0 /* AI */ = {
 			isa = PBXGroup;
 			children = (
+				F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */,
 				095FE1109841555CC1CAEFDF /* CategorizationEngine.swift */,
 				7FE6EFDA2BB4C70F2EC5914E /* DuplicateDetector.swift */,
 				F897D66648A68A31D19D4750 /* InsightsGenerator.swift */,
@@ -358,6 +361,7 @@
 				B3C56EB5050CAA1249C99854 /* AuditLogService.swift in Sources */,
 				1FB9E4C3402F0563E22953E2 /* Bill.swift in Sources */,
 				A5DC182753667D4195B33F64 /* BillListView.swift in Sources */,
+				DF014D7936F43ED17E9CDDB0 /* BillPredictionModel.swift in Sources */,
 				CCD59614274D4C6996A1AA55 /* BillStore.swift in Sources */,
 				C71F261B53152E557222CCAA /* BillTemplate.swift in Sources */,
 				7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */,
