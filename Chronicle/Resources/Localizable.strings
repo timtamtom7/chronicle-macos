@@ -1,0 +1,33 @@
+/* AI Insight Strings for Chronicle */
+
+/* Payment Pattern Insights */
+"ai.insight.payment_pattern.timing.title" = "Payment Pattern Detected";
+"ai.insight.payment_pattern.timing.body" = "Based on your history, you typically pay bills around day %@ of each month. Consider scheduling payment reminders a few days before.";
+
+/* Early Payer Trend */
+"ai.insight.trend.early_payer.title" = "Early Payer";
+"ai.insight.trend.early_payer.body" = "You typically pay bills %@ days before the due date. Great job staying ahead!";
+
+/* Room to Optimize Trend */
+"ai.insight.trend.room_to_optimize.title" = "Room to Optimize";
+"ai.insight.trend.room_to_optimize.body" = "Bills tend to get paid around %@ days past due. Setting reminders a bit earlier could help you avoid late fees.";
+
+/* Category Dominates Spending - title uses category name dynamically */
+"ai.insight.budget_alert.category_dominates.title" = "%@ Dominates Spending";
+"ai.insight.budget_alert.category_dominates.body" = "%@ bills make up %@%% of your monthly bills. Review if this allocation works for you.";
+
+/* Heavy Week Ahead */
+"ai.insight.budget_alert.heavy_week.title" = "Heavy Week Ahead";
+"ai.insight.budget_alert.heavy_week.body" = "You have %@ bills due in the next week totaling %@. Plan your cash flow accordingly.";
+
+/* Large Bill Upcoming */
+"ai.insight.budget_alert.large_bill.title" = "Large Bill Upcoming";
+"ai.insight.budget_alert.large_bill.body" = "Your %@ bill for %@ is due %@. Ensure you have funds set aside.";
+
+/* Irregular Payment Pattern Anomaly */
+"ai.insight.anomaly.irregular_pattern.title" = "Irregular Payment Pattern";
+"ai.insight.anomaly.irregular_pattern.body" = "%@ has been paid only %@ times in the past 6 months, which is unusual for a %@ bill.";
+
+/* Savings Tip - General */
+"ai.insight.savings_tip.general.title" = "Savings Opportunity";
+"ai.insight.savings_tip.general.body" = "Consider setting up automatic payments for your regular bills to avoid late fees and maintain good credit.";

@@ -259,11 +259,12 @@ struct CreateBillFromTextIntent: AppIntent {
     }
 }
 
-// MARK: - App Shortcuts Provider (R18)
+// MARK: - App Shortcuts Provider (R18 + R11 Siri Suggestions)
 
 @available(macOS 13.0, *)
 struct ChronicleShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
+        // Get Upcoming Bills
         AppShortcut(
             intent: GetUpcomingBillsIntent(),
             phrases: [
@@ -274,14 +275,62 @@ struct ChronicleShortcuts: AppShortcutsProvider {
             systemImageName: "list.bullet"
         )
         
+        // Get Monthly Spending
         AppShortcut(
             intent: GetMonthlySpendingIntent(),
             phrases: [
+                "How much have I spent this month in \(.applicationName)",
                 "How much have I spent this month on \(.applicationName)",
                 "Monthly spending in \(.applicationName)"
             ],
             shortTitle: "Monthly Spending",
             systemImageName: "dollarsign.circle"
+        )
+        
+        // Add Bill
+        AppShortcut(
+            intent: AddBillIntent(),
+            phrases: [
+                "Add a bill to \(.applicationName)",
+                "Log a bill in \(.applicationName)",
+                "Create new bill in \(.applicationName)"
+            ],
+            shortTitle: "Add Bill",
+            systemImageName: "plus.circle"
+        )
+        
+        // Mark Bill Paid
+        AppShortcut(
+            intent: MarkBillPaidIntent(),
+            phrases: [
+                "Mark bill paid in \(.applicationName)",
+                "Pay a bill in \(.applicationName)"
+            ],
+            shortTitle: "Mark Bill Paid",
+            systemImageName: "checkmark.circle"
+        )
+        
+        // Create Bill from Text
+        AppShortcut(
+            intent: CreateBillFromTextIntent(),
+            phrases: [
+                "Create bill from text in \(.applicationName)",
+                "Parse a bill in \(.applicationName)"
+            ],
+            shortTitle: "Create Bill from Text",
+            systemImageName: "text.badge.plus"
+        )
+        
+        // Get Spending by Category
+        AppShortcut(
+            intent: GetSpendingByCategoryIntent(),
+            phrases: [
+                "Show my spending by category in \(.applicationName)",
+                "Category spending in \(.applicationName)",
+                "Break down my bills by category in \(.applicationName)"
+            ],
+            shortTitle: "Spending by Category",
+            systemImageName: "chart.pie"
         )
     }
 }

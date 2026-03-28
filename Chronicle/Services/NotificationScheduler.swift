@@ -53,6 +53,28 @@ final class NotificationScheduler {
             let fireDate = calculateFireDate(for: bill, timing: timing)
             scheduleNotification(for: bill, timing: timing, fireDate: fireDate)
         }
+
+        // Feature: Predictive Smart Reminder
+        // If the user has payment history for this bill, check if AI recommends a different timing
+        Task { @MainActor in
+            let store = BillStore.shared
+            guard store.hasPaymentHistory(for: bill) else { return }
+
+            let paymentRecords = store.paymentRecords(for: bill)
+            let optimalTiming = AIInsightsService.shared.optimalReminderTiming(for: bill, paymentRecords: paymentRecords)
+
+            // Add a "smart" reminder only if it's different from all user-selected timings
+            let userTimingSet = Set(timings)
+            if !userTimingSet.contains(optimalTiming) && optimalTiming != .none {
+                let smartIdentifier = self.notificationIdentifier(for: bill, timing: optimalTiming)
+                // Only schedule if not already pending
+                let pending = await center.pendingNotificationRequests()
+                if !pending.contains(where: { $0.identifier == smartIdentifier }) {
+                    let fireDate = self.calculateFireDate(for: bill, timing: optimalTiming)
+                    self.scheduleNotification(for: bill, timing: optimalTiming, fireDate: fireDate)
+                }
+            }
+        }
     }
 
     func cancelNotifications(for bill: Bill) {
@@ -227,6 +249,86 @@ final class NotificationScheduler {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
+    }
+
+    // MARK: - Monthly Summary
+
+    /// Schedule a monthly summary notification for the 1st of each month at 9am local time.
+    func scheduleMonthlySummary() {
+        // Remove any previously scheduled monthly summary
+        center.removePendingNotificationRequests(withIdentifiers: ["monthly_summary"])
+        center.removeDeliveredNotifications(withIdentifiers: ["monthly_summary"])
+
+        let calendar = Calendar.current
+        let now = Date()
+
+        // Calculate next 1st of month at 9am
+        var components = calendar.dateComponents([.year, .month], from: now)
+        components.day = 1
+        components.hour = notificationHour
+        components.minute = 0
+
+        guard let nextFirst = calendar.date(from: components) else { return }
+
+        // If today is already past the 1st at 9am, advance to next month
+        var scheduleDate = nextFirst
+        if scheduleDate <= now {
+            scheduleDate = calendar.date(byAdding: .month, value: 1, to: scheduleDate) ?? scheduleDate
+        }
+
+        Task { @MainActor in
+            let store = BillStore.shared
+            let bills = store.bills
+            let paymentRecords = store.allPaymentRecords()
+            let insights = InsightsGenerator.shared.generateInsights(from: bills, paymentRecords: paymentRecords)
+
+            // Build summary content
+            let totalSpent = store.totalPaidThisMonth
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = "USD"
+            let totalSpentStr = formatter.string(from: NSDecimalNumber(decimal: totalSpent)) ?? "$0.00"
+
+            // Find biggest category
+            let spending = store.spendingByCategory(for: YearMonth(date: now))
+            let biggestCategory = spending.max(by: { $0.value < $1.value })
+            let biggestCategoryStr = biggestCategory.map { "\($0.key.rawValue) (\(formatter.string(from: NSDecimalNumber(decimal: $0.value)) ?? "$0.00"))" } ?? "None"
+
+            // Find unusual patterns from insights
+            let anomalies = insights.filter { $0.type == .anomaly }
+            let unusualPatternsStr: String
+            if let first = anomalies.first {
+                unusualPatternsStr = first.body
+            } else {
+                unusualPatternsStr = "No unusual patterns detected."
+            }
+
+            let monthNameFormatter = DateFormatter()
+            monthNameFormatter.dateFormat = "MMMM"
+            let monthName = monthNameFormatter.string(from: now)
+
+            let body = "\(monthName) Summary: Total spent \(totalSpentStr). Biggest category: \(biggestCategoryStr). \(unusualPatternsStr)"
+
+            let content = UNMutableNotificationContent()
+            content.title = "Chronicle - \(monthName) Summary"
+            content.body = body
+            content.sound = soundForNotification()
+            content.categoryIdentifier = "MONTHLY_SUMMARY"
+
+            let trigger = UNCalendarNotificationTrigger(
+                dateMatching: calendar.dateComponents([.year, .month, .day, .hour, .minute], from: scheduleDate),
+                repeats: false
+            )
+            let request = UNNotificationRequest(identifier: "monthly_summary", content: content, trigger: trigger)
+
+            center.add(request) { error in
+                if let error = error {
+                    print("Failed to schedule monthly summary: \(error)")
+                } else {
+                    UserDefaults.standard.set(scheduleDate, forKey: "lastMonthlySummaryDate")
+                }
+            }
+        }
     }
 
     // MARK: - Badge Count
