@@ -49,14 +49,19 @@ final class NotificationScheduler {
         let timings = bill.reminderTimings.filter { $0 != .none }
         guard !timings.isEmpty else { return }
 
-        for timing in timings {
-            let fireDate = calculateFireDate(for: bill, timing: timing)
-            scheduleNotification(for: bill, timing: timing, fireDate: fireDate)
-        }
-
-        // Feature: Predictive Smart Reminder
-        // If the user has payment history for this bill, check if AI recommends a different timing
+        // Check if this bill has a split — if so, send individual member reminders
         Task { @MainActor in
+            if let split = SplitBillService.shared.getSplit(for: bill.id) {
+                self.scheduleSplitBillNotifications(for: bill, split: split, timings: timings)
+            } else {
+                for timing in timings {
+                    let fireDate = self.calculateFireDate(for: bill, timing: timing)
+                    self.scheduleNotification(for: bill, timing: timing, fireDate: fireDate)
+                }
+            }
+
+            // Feature: Predictive Smart Reminder
+            // If the user has payment history for this bill, check if AI recommends a different timing
             let store = BillStore.shared
             guard store.hasPaymentHistory(for: bill) else { return }
 
@@ -68,7 +73,7 @@ final class NotificationScheduler {
             if !userTimingSet.contains(optimalTiming) && optimalTiming != .none {
                 let smartIdentifier = self.notificationIdentifier(for: bill, timing: optimalTiming)
                 // Only schedule if not already pending
-                let pending = await center.pendingNotificationRequests()
+                let pending = await self.center.pendingNotificationRequests()
                 if !pending.contains(where: { $0.identifier == smartIdentifier }) {
                     let fireDate = self.calculateFireDate(for: bill, timing: optimalTiming)
                     self.scheduleNotification(for: bill, timing: optimalTiming, fireDate: fireDate)
@@ -77,10 +82,87 @@ final class NotificationScheduler {
         }
     }
 
+    /// Schedules individual reminder notifications for each household member with an unpaid share.
+    private func scheduleSplitBillNotifications(for bill: Bill, split: BillSplit, timings: [ReminderTiming]) {
+        Task { @MainActor in
+            guard let household = HouseholdService.shared.household else { return }
+
+            for share in split.splits where !share.isPaid {
+                guard let member = household.members.first(where: { $0.id == share.memberId }) else { continue }
+
+                for timing in timings {
+                    let identifier = splitNotificationIdentifier(for: bill, share: share, timing: timing)
+                    let fireDate = self.calculateFireDate(for: bill, timing: timing)
+
+                    let content = UNMutableNotificationContent()
+                    content.title = "Chronicle"
+
+                    let daysText: String
+                    switch timing {
+                    case .threeDays: daysText = "in 3 days"
+                    case .oneDay: daysText = "tomorrow"
+                    case .dueDate: daysText = "today"
+                    case .none: daysText = ""
+                    }
+
+                    let shareAmount = self.formatCents(share.amountCents)
+                    content.body = "\(bill.name) share: \(shareAmount) due \(daysText). You owe \(self.formatCents(share.amountCents)) of the total \(bill.formattedAmount)."
+                    content.sound = soundForNotification()
+                    content.categoryIdentifier = "BILL_REMINDER"
+                    content.userInfo = [
+                        "billId": bill.id.uuidString,
+                        "timing": timing.rawValue,
+                        "memberId": member.id.uuidString,
+                        "shareId": share.id.uuidString
+                    ]
+
+                    let calendar = Calendar.current
+                    var components = calendar.dateComponents([.year, .month, .day], from: fireDate)
+                    components.hour = notificationHour
+                    components.minute = 0
+
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                    let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+                    center.add(request) { error in
+                        if let error = error {
+                            print("Failed to schedule split notification: \(error)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func splitNotificationIdentifier(for bill: Bill, share: SplitShare, timing: ReminderTiming) -> String {
+        "\(bill.id.uuidString)_split_\(share.id.uuidString)_\(timing.rawValue)"
+    }
+
+    private func formatCents(_ cents: Int) -> String {
+        let amount = Decimal(cents) / 100
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
+    }
+
     func cancelNotifications(for bill: Bill) {
         let identifiers = notificationIdentifiers(for: bill)
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
         center.removeDeliveredNotifications(withIdentifiers: identifiers)
+
+        // Also cancel any split notifications for this bill
+        Task { @MainActor in
+            if let split = SplitBillService.shared.getSplit(for: bill.id) {
+                for share in split.splits {
+                    for timing in ReminderTiming.allCases {
+                        let identifier = self.splitNotificationIdentifier(for: bill, share: share, timing: timing)
+                        self.center.removePendingNotificationRequests(withIdentifiers: [identifier])
+                        self.center.removeDeliveredNotifications(withIdentifiers: [identifier])
+                    }
+                }
+            }
+        }
     }
 
     func cancelAllNotifications() {

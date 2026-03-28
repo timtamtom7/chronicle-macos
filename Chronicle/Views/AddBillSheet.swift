@@ -18,10 +18,41 @@ struct AddBillSheet: View {
     @State private var reminderDueDate: Bool = false
     @State private var autoMarkPaid: Bool = false
 
+    // Split with household
+    @State private var splitWithHousehold: Bool = false
+    @State private var shareAmounts: [UUID: String] = [:]  // memberId -> amount string
+
     @State private var showValidationError = false
     @State private var validationMessage = ""
 
+    @ObservedObject private var householdService = HouseholdService.shared
+    @ObservedObject private var splitService = SplitBillService.shared
+
     private var isEditing: Bool { editingBill != nil }
+
+    private var hasHousehold: Bool {
+        householdService.household != nil
+    }
+
+    private var currentAmountCents: Int {
+        let amountValue = Decimal(string: amountString.replacingOccurrences(of: ",", with: ".")) ?? 0
+        let divisor = currency.isZeroDecimal ? Decimal(1) : Decimal(100)
+        return Int(NSDecimalNumber(decimal: amountValue * divisor).intValue)
+    }
+
+    private var shareTotalCents: Int {
+        shareAmounts.values.reduce(0) { total, str in
+            let value = Decimal(string: str.replacingOccurrences(of: ",", with: ".")) ?? 0
+            return total + Int(NSDecimalNumber(decimal: value * 100).intValue)
+        }
+    }
+
+    private var sharesValid: Bool {
+        if !splitWithHousehold { return true }
+        let total = currentAmountCents
+        guard total > 0, shareAmounts.count == householdService.household?.members.count else { return false }
+        return shareTotalCents == total
+    }
 
     private var isValid: Bool {
         !name.trimmingCharacters(in: .whitespaces).isEmpty &&
@@ -150,6 +181,11 @@ struct AddBillSheet: View {
                             .accessibilityHint("When enabled, this bill will be automatically marked as paid on its due date")
                     }
 
+                    // Split with Household
+                    if hasHousehold {
+                        splitSection
+                    }
+
                     // Notes
                     formField(title: "Notes (optional)") {
                         TextEditor(text: $notes)
@@ -197,10 +233,127 @@ struct AddBillSheet: View {
                 reminderThreeDays = bill.reminderTimings.contains(.threeDays)
                 reminderOneDay = bill.reminderTimings.contains(.oneDay)
                 reminderDueDate = bill.reminderTimings.contains(.dueDate)
+
+                // Load existing split
+                if let existingSplit = splitService.getSplit(for: bill.id) {
+                    splitWithHousehold = true
+                    for share in existingSplit.splits {
+                        shareAmounts[share.memberId] = String(format: "%.2f", Double(share.amountCents) / 100.0)
+                    }
+                }
             } else {
                 currency = Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
             }
         }
+    }
+
+    // MARK: - Split Section
+
+    private var splitSection: some View {
+        VStack(alignment: .leading, spacing: Theme.spacing8) {
+            HStack {
+                Text("Split with Household")
+                    .font(.footnote)
+                    .foregroundColor(Theme.textSecondary)
+                Spacer()
+                Toggle("", isOn: $splitWithHousehold)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .accessibilityLabel("Split with household")
+                    .accessibilityHint("Toggle to split this bill with household members")
+            }
+
+            if splitWithHousehold {
+                if let household = householdService.household {
+                    // Split equally button
+                    Button("Split Equally") {
+                        splitEqually()
+                    }
+                    .buttonStyle(.bordered)
+                    .font(.caption)
+                    .accessibilityLabel("Split equally among members")
+                    .accessibilityHint("Divides the bill amount equally among all household members")
+
+                    // Member share rows
+                    ForEach(household.members) { member in
+                        memberShareRow(member)
+                    }
+
+                    // Validation
+                    if currentAmountCents > 0 {
+                        let diff = abs(shareTotalCents - currentAmountCents)
+                        if shareTotalCents < currentAmountCents {
+                            Text("Remaining: \(formatCents(currentAmountCents - shareTotalCents))")
+                                .font(.caption)
+                                .foregroundColor(Theme.warning)
+                        } else if shareTotalCents > currentAmountCents {
+                            Text("Over by: \(formatCents(shareTotalCents - currentAmountCents))")
+                                .font(.caption)
+                                .foregroundColor(Theme.danger)
+                        } else {
+                            Text("Shares add up correctly")
+                                .font(.caption)
+                                .foregroundColor(Theme.success)
+                        }
+                    }
+
+                    // Show existing split if editing
+                    if isEditing, let existingSplit = splitService.getSplit(for: editingBill!.id) {
+                        Text("Current split: \(existingSplit.splits.count) members")
+                            .font(.caption)
+                            .foregroundColor(Theme.textTertiary)
+                            .padding(.top, 4)
+                    }
+                }
+            }
+        }
+    }
+
+    private func memberShareRow(_ member: HouseholdMember) -> some View {
+        HStack(spacing: Theme.spacing8) {
+            Image(systemName: member.avatarName)
+                .font(.body)
+                .foregroundColor(Color(hex: member.colorHex))
+                .accessibilityHidden(true)
+                .frame(width: 20)
+
+            Text(member.name)
+                .font(.body)
+                .foregroundColor(Theme.textPrimary)
+
+            Spacer()
+
+            TextField("0.00", text: Binding(
+                get: { shareAmounts[member.id] ?? "" },
+                set: { shareAmounts[member.id] = $0 }
+            ))
+            .textFieldStyle(.roundedBorder)
+            .frame(width: 80)
+            .accessibilityLabel("\(member.name) share amount")
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func splitEqually() {
+        guard let household = householdService.household else { return }
+        let total = currentAmountCents
+        let count = household.members.count
+        guard count > 0 else { return }
+        let baseAmount = total / count
+        let remainder = total % count
+
+        for (index, member) in household.members.enumerated() {
+            let amount = baseAmount + (index < remainder ? 1 : 0)
+            shareAmounts[member.id] = String(format: "%.2f", Double(amount) / 100.0)
+        }
+    }
+
+    private func formatCents(_ cents: Int) -> String {
+        let amount = Decimal(cents) / 100
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
 
     // MARK: - Subviews
@@ -315,6 +468,23 @@ struct AddBillSheet: View {
             billStore.updateBill(bill)
         } else {
             billStore.addBill(bill)
+        }
+
+        // Handle split
+        if splitWithHousehold, let household = householdService.household {
+            let memberAmounts = shareAmounts.compactMap { memberId, amountStr -> (UUID, Int)? in
+                guard !amountStr.isEmpty else { return nil }
+                let value = Decimal(string: amountStr.replacingOccurrences(of: ",", with: ".")) ?? 0
+                let cents = Int(NSDecimalNumber(decimal: value * 100).intValue)
+                return (memberId, cents)
+            }
+            if !memberAmounts.isEmpty {
+                splitService.createCustomSplit(
+                    billId: bill.id,
+                    memberAmounts: memberAmounts.map { (memberId: $0.0, amountCents: $0.1) },
+                    totalAmountCents: currentAmountCents
+                )
+            }
         }
 
         NotificationCenter.default.post(name: NSNotification.Name("ChronicleDataDidChange"), object: nil)
