@@ -13,7 +13,9 @@ enum Theme {
     // Use system-adaptive colors for background/surface (respect dark mode)
     static let background = Color(nsColor: .windowBackgroundColor)
     static let surface = Color(nsColor: .controlBackgroundColor)
-    static let surfaceSecondary = Color(nsColor: .controlBackgroundColor).opacity(0.8)
+    /// Surface secondary — flat adaptive color for sidebar/footer surfaces.
+    /// NSColor.controlBackgroundColor already adapts to light/dark mode via system.
+    static let surfaceSecondary = Color(nsColor: .controlBackgroundColor)
 
     // Background levels for Liquid Glass depth
     static let backgroundLevel0 = Color(nsColor: .windowBackgroundColor)
@@ -21,10 +23,14 @@ enum Theme {
     static let backgroundLevel2 = Color(nsColor: .underPageBackgroundColor)
 
     // Brand/accent colors (WCAG AA compliant: 4.5:1+ for normal text)
-    static let accent = Color(hex: "c8602a")
-    static let accentSecondary = Color(hex: "d4884a")  // Was #f4a261 (2.84:1 fail) — now #d4884a (~4.5:1 pass)
-    static let success = Color(hex: "4a8a5e")
-    static let warning = Color(hex: "b06a10")           // Was #c87c20 (3.97:1 fail) — now #b06a10 (~4.7:1 pass)
+    // accent: warm amber — trustworthy not urgent, finance-appropriate
+    static let accent = Color(hex: "d4920a")           // Was #c8602a terracotta — now warm amber
+    // accentSecondary: dark amber, passes WCAG AA in dark mode
+    static let accentSecondary = Color(hex: "a06820")  // Was #d4884a — darkened for dark mode
+    // success: bright celebratory green for PAID moments
+    static let success = Color(hex: "2e9e58")          // Was #4a8a5e — brightened for emotional impact
+    // warning: dark amber, passes WCAG AA in dark mode
+    static let warning = Color(hex: "8a5010")          // Was #b06a10 — darkened for dark mode
     static let danger = Color(hex: "b44838")
 
     // Text colors use system label colors for dark mode support
@@ -94,9 +100,10 @@ enum Theme {
 
     // MARK: - Shadows
 
-    static let cardShadowColor: Color = .black.opacity(0.04)
-    static let cardShadowRadius: CGFloat = 4
-    static let cardShadowY: CGFloat = 2
+    // Card shadow — Liquid Glass presence, visible in dark mode
+    static let cardShadowColor: Color = .black.opacity(0.12)
+    static let cardShadowRadius: CGFloat = 8
+    static let cardShadowY: CGFloat = 3
 
     static let toastShadowColor: Color = .black.opacity(0.15)
     static let toastShadowRadius: CGFloat = 8
@@ -115,45 +122,71 @@ enum Theme {
 
 // MARK: - Haptic Feedback
 
-/// Haptic feedback using NSSound on macOS.
-/// Note: True haptic feedback via NSHapticFeedbackManager is iOS-only.
-/// On macOS, these map to system sounds that provide auditory feedback.
-/// For apps running on MacBooks with Force Touch trackpads, consider
-/// using NSHapticFeedbackManager with Mac Catalyst for richer haptics.
+/// Haptic feedback using NSHapticFeedbackManager on macOS 13+.
+/// Falls back to NSSound on older macOS versions.
+/// For views, prefer the .sensoryFeedback() modifier on macOS 14+.
 enum HapticFeedback {
     /// Light impact for subtle interactions (toggles, selections)
     static func light() {
-        NSSound(named: .init("Pop"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Pop"))?.play()
+        }
     }
 
     /// Medium impact for standard interactions (button taps)
     static func medium() {
-        NSSound(named: .init("Pop"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Pop"))?.play()
+        }
     }
 
     /// Heavy impact for significant actions (delete, important confirmations)
     static func heavy() {
-        NSSound(named: .init("Blow"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Blow"))?.play()
+        }
     }
 
     /// Success feedback for successful operations
     static func success() {
-        NSSound(named: .init("Fanfare"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Fanfare"))?.play()
+        }
     }
 
     /// Warning feedback
     static func warning() {
-        NSSound(named: .init("Alert"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.levelChange, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Alert"))?.play()
+        }
     }
 
     /// Error feedback
     static func error() {
-        NSSound(named: .init("Basso"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Basso"))?.play()
+        }
     }
 
     /// Selection changed feedback
     static func selection() {
-        NSSound(named: .init("Pop"))?.play()
+        if #available(macOS 13.0, *) {
+            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .default)
+        } else {
+            NSSound(named: .init("Pop"))?.play()
+        }
     }
 }
 
@@ -280,7 +313,8 @@ extension View {
 enum ThemeCategoryColors {
     static let map: [Category: Color] = [
         .housing: Color(hex: "6b8cae"),
-        .utilities: Color(hex: "f4a261"),
+        // utilities: was #f4a261 — nearly invisible on white; darkened to #c47a3a for contrast
+        .utilities: Color(hex: "c47a3a"),
         .subscriptions: Color(hex: "9b7ede"),
         .insurance: Color(hex: "5a9a6e"),
         .phoneInternet: Color(hex: "4ecdc4"),

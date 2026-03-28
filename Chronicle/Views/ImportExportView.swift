@@ -124,6 +124,7 @@ struct ImportExportView: View {
                     title: "Export All Bills (JSON)",
                     subtitle: "Full backup with all details",
                     icon: "doc.fill",
+                    isPrimary: true,
                     action: exportAllBillsJSON
                 )
 
@@ -131,6 +132,7 @@ struct ImportExportView: View {
                     title: "Export Bills (CSV)",
                     subtitle: "Spreadsheet-compatible format",
                     icon: "tablecells",
+                    isPrimary: false,
                     action: exportBillsCSV
                 )
 
@@ -138,6 +140,7 @@ struct ImportExportView: View {
                     title: "Export Payment History (CSV)",
                     subtitle: "All payment records",
                     icon: "clock",
+                    isPrimary: false,
                     action: exportPaymentsCSV
                 )
             }
@@ -145,35 +148,35 @@ struct ImportExportView: View {
         }
     }
 
-    private func exportButton(title: String, subtitle: String, icon: String, action: @escaping () -> Void) -> some View {
+    private func exportButton(title: String, subtitle: String, icon: String, isPrimary: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
                 Image(systemName: icon)
                     .font(.callout)
-                    .foregroundColor(Theme.accent)
+                    .foregroundColor(isPrimary ? Theme.textOnAccent : Theme.accent)
                     .frame(width: 24)
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
                         .font(.footnote)
-                        .foregroundColor(Theme.textPrimary)
+                        .foregroundColor(isPrimary ? Theme.textOnAccent : Theme.textPrimary)
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundColor(Theme.textTertiary)
+                        .foregroundColor(isPrimary ? Theme.textOnAccent.opacity(0.8) : Theme.textTertiary)
                 }
 
                 Spacer()
 
                 Image(systemName: "arrow.down.doc")
                     .font(.system(size: 12))
-                    .foregroundColor(Theme.textTertiary)
+                    .foregroundColor(isPrimary ? Theme.textOnAccent.opacity(0.8) : Theme.textTertiary)
             }
             .padding(Theme.spacing12)
-            .background(Theme.surface)
+            .background(isPrimary ? Theme.accent : Theme.surface)
             .cornerRadius(Theme.radiusMedium)
             .overlay(
                 RoundedRectangle(cornerRadius: Theme.radiusMedium)
-                    .stroke(Theme.border, lineWidth: 1)
+                    .stroke(isPrimary ? Color.clear : Theme.border, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)

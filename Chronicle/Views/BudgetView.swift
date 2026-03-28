@@ -178,6 +178,7 @@ struct BudgetCard: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(statusColor)
                         .frame(width: geo.size.width * min(progress, 1.0), height: 8)
+                        .animation(.easeInOut(duration: 0.3), value: progress)
                 }
             }
             .frame(height: 8)

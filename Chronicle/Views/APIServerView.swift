@@ -22,8 +22,7 @@ struct APIServerView: View {
 
                     Toggle("Server", isOn: $isRunning)
                         .toggleStyle(.switch)
-                        .accessibilityLabel("API server toggle")
-                        .accessibilityHint(isRunning ? "Disables the API server" : "Enables the API server")
+                        .accessibilityLabel(isRunning ? "API server is running. Tap to stop." : "API server is stopped. Tap to start.")
                         .onChange(of: isRunning) { newValue in
                             Task {
                                 if newValue {
@@ -36,7 +35,7 @@ struct APIServerView: View {
                 }
 
                 Text("Enable the local API server to access Chronicle data from other apps, scripts, or the web dashboard.")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Theme.textSecondary)
 
                 Divider()
 
@@ -68,8 +67,8 @@ struct APIServerView: View {
                     }
                 }
                 .padding()
-                .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(8)
+                .background(Theme.surface)
+                .cornerRadius(Theme.radiusSmall)
 
                 Divider()
 
@@ -79,7 +78,7 @@ struct APIServerView: View {
                         .font(.headline)
 
                     Text("Your API key is required for all requests.")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Theme.textSecondary)
 
                     if let apiKey = currentAPIKey {
                         HStack {
@@ -119,8 +118,8 @@ struct APIServerView: View {
                     }
                 }
                 .padding()
-                .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(8)
+                .background(Theme.surface)
+                .cornerRadius(Theme.radiusSmall)
 
                 Divider()
 
@@ -175,8 +174,8 @@ struct APIServerView: View {
             endpointRow("GET", "/openapi.json", "OpenAPI 3.0 specification")
         }
         .padding()
-        .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(8)
+        .background(Theme.surface)
+        .cornerRadius(Theme.radiusSmall)
     }
 
     private func endpointRow(_ method: String, _ path: String, _ description: String) -> some View {
@@ -195,17 +194,19 @@ struct APIServerView: View {
 
             Text(description)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(Theme.textSecondary)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(method) \(path): \(description)")
     }
 
     private func methodColor(_ method: String) -> Color {
         switch method {
-        case "GET": return .green
-        case "POST": return .blue
-        case "PUT": return .orange
-        case "DELETE": return .red
-        default: return .gray
+        case "GET": return Theme.success
+        case "POST": return Theme.accent
+        case "PUT": return Theme.warning
+        case "DELETE": return Theme.danger
+        default: return Theme.textTertiary
         }
     }
 
@@ -216,7 +217,7 @@ struct APIServerView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(NSColor.textBackgroundColor))
-            .cornerRadius(8)
+            .cornerRadius(Theme.radiusSmall)
     }
 
     // MARK: - Actions

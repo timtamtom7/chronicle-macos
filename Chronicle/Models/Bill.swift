@@ -192,7 +192,7 @@ enum Category: String, CaseIterable, Codable {
         case .phoneInternet: return "globe"
         case .transportation: return "car.fill"
         case .health: return "heart.fill"
-        case .other: return "ellipsis.circle.fill"
+        case .other: return "tag.fill"
         }
     }
 }

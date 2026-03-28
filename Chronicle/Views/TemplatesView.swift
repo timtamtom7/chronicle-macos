@@ -437,6 +437,7 @@ struct TemplateEditorSheet: View {
             Toggle(label, isOn: isOn)
                 .toggleStyle(.switch)
                 .labelsHidden()
+                .accessibilityLabel("Remind me \(label)")
             Text(label)
                 .font(.body)
                 .foregroundColor(Theme.textPrimary)

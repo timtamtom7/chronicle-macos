@@ -108,10 +108,10 @@ final class InsightsGenerator {
             } else if avgDays > 2 {
                 insights.append(Insight(
                     type: .trend,
-                    title: String(localized: "Payments Often Late"),
-                    body: String(localized: "You typically pay bills \(avgDays) days after the due date. Consider setting reminders earlier to avoid late fees."),
+                    title: String(localized: "Room to Optimize"),
+                    body: String(localized: "Bills tend to get paid around \(avgDays) days past due. Setting reminders a bit earlier could help you avoid late fees."),
                     category: nil,
-                    severity: .warning
+                    severity: .info
                 ))
             }
         }

@@ -244,6 +244,7 @@ struct OverviewView: View {
                         Image(systemName: "chart.line.uptrend.xyaxis")
                             .font(.system(size: 24))
                             .foregroundColor(Theme.textTertiary)
+                            .accessibilityHidden(true)
                         Text("Need more data")
                             .font(.system(size: 12))
                             .foregroundColor(Theme.textTertiary)

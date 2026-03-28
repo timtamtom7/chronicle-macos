@@ -4,6 +4,7 @@ import SwiftUI
 
 struct HouseholdDashboardView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject private var householdService = HouseholdService.shared
     @State private var showCreateHousehold = false
     @State private var showJoinHousehold = false
@@ -131,10 +132,17 @@ struct HouseholdDashboardView: View {
     }
 
     private func memberCard(_ member: HouseholdMember) -> some View {
-        VStack(spacing: 8) {
+        let avatarColor: Color = {
+            if colorScheme == .dark, let darkHex = member.colorHexDark {
+                return Color(hex: darkHex)
+            }
+            return Color(hex: member.colorHex)
+        }()
+
+        return VStack(spacing: 8) {
             Image(systemName: member.avatarName)
                 .font(.system(size: 32))
-                .foregroundColor(Color(hex: member.colorHex))
+                .foregroundColor(avatarColor)
                 .accessibilityHidden(true)
 
             Text(member.name)

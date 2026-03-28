@@ -5,12 +5,13 @@ struct AnalyticsView: View {
     @Binding var isPresented: Bool
 
     @State private var selectedPeriod: AnalyticsPeriod = .thisMonth
+    @StateObject private var viewModel = AnalyticsViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 Text("Analytics")
-                    .font(.headline)
+                    .font(Theme.fontHeadline)
                     .foregroundColor(Theme.textPrimary)
 
                 Spacer()
@@ -23,10 +24,13 @@ struct AnalyticsView: View {
                 .pickerStyle(.menu)
                 .accessibilityLabel("Analytics period")
                 .accessibilityHint("Select the time period for analytics data")
+                .onChange(of: selectedPeriod) { _ in
+                    viewModel.recompute(for: selectedPeriod, bills: billStore.bills)
+                }
 
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark")
-                        .font(.footnote)
+                        .font(Theme.fontLabel)
                         .foregroundColor(Theme.textTertiary)
                 }
                 .buttonStyle(.plain)
@@ -53,6 +57,9 @@ struct AnalyticsView: View {
                 }
                 .padding(Theme.spacing16)
             }
+            .task(id: billStore.bills) {
+                viewModel.recompute(for: selectedPeriod, bills: billStore.bills)
+            }
         }
         .frame(width: 520, height: 580)
         .background(Theme.background)
@@ -64,19 +71,19 @@ struct AnalyticsView: View {
         HStack(spacing: Theme.spacing12) {
             summaryCard(
                 title: "Total Spent",
-                value: formattedCurrency(totalSpentInPeriod),
+                value: formattedCurrency(viewModel.totalSpentInPeriod),
                 icon: "dollarsign.circle",
                 color: Theme.accent
             )
             summaryCard(
                 title: "Bills Paid",
-                value: "\(billsPaidInPeriod.count)",
+                value: "\(viewModel.billsPaidInPeriod.count)",
                 icon: "checkmark.circle",
                 color: Theme.success
             )
             summaryCard(
                 title: "Avg per Bill",
-                value: formattedCurrency(averagePerBill),
+                value: formattedCurrency(viewModel.averagePerBill),
                 icon: "chart.bar",
                 color: Theme.textSecondary
             )
@@ -88,11 +95,12 @@ struct AnalyticsView: View {
             Image(systemName: icon)
                 .font(.system(size: 20))
                 .foregroundColor(color)
+                .accessibilityHidden(true)
             Text(value)
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundColor(Theme.textPrimary)
             Text(title)
-                .font(.caption)
+                .font(Theme.fontCaption)
                 .foregroundColor(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)
@@ -110,12 +118,12 @@ struct AnalyticsView: View {
     private var categoryBreakdownSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Spending by Category")
-                .font(.body)
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             VStack(spacing: Theme.spacing8) {
-                ForEach(sortedCategories, id: \.category) { item in
-                    categoryBar(category: item.category, amount: item.amount, total: totalSpentInPeriod)
+                ForEach(viewModel.sortedCategories, id: \.category) { item in
+                    categoryBar(category: item.category, amount: item.amount, total: viewModel.totalSpentInPeriod)
                 }
             }
             .padding(Theme.spacing12)
@@ -171,10 +179,10 @@ struct AnalyticsView: View {
     private var monthlyTrendSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Monthly Trend")
-                .font(.body)
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
-            SimpleTrendChart(data: monthlyTrendData)
+            SimpleTrendChart(data: viewModel.monthlyTrendData)
                 .frame(height: 120)
                 .padding(Theme.spacing12)
                 .background(Theme.surface)
@@ -191,12 +199,12 @@ struct AnalyticsView: View {
     private var yearlyOverviewSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Text("Yearly Overview")
-                .font(.body)
+                .font(Theme.fontBodySemibold)
                 .foregroundColor(Theme.textPrimary)
 
             HStack(spacing: Theme.spacing8) {
-                ForEach(monthlyBreakdown, id: \.month) { item in
-                    monthlyColumn(month: item.month, spent: item.spent, isCurrentMonth: item.isCurrentMonth, maxSpent: monthlyMaxSpent)
+                ForEach(viewModel.monthlyBreakdown, id: \.month) { item in
+                    monthlyColumn(month: item.month, spent: item.spent, isCurrentMonth: item.isCurrentMonth, maxSpent: viewModel.monthlyMaxSpent)
                 }
             }
             .padding(Theme.spacing12)
@@ -224,109 +232,7 @@ struct AnalyticsView: View {
         .frame(maxWidth: .infinity)
     }
 
-    // MARK: - Computed Data
-
-    private var billsInPeriod: [Bill] {
-        let calendar = Calendar.current
-        let now = Date()
-
-        switch selectedPeriod {
-        case .thisMonth:
-            guard let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: now)),
-                  let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else {
-                return []
-            }
-            return billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd }
-        case .last3Months:
-            guard let threeMonthsAgo = calendar.date(byAdding: .month, value: -3, to: now) else {
-                return []
-            }
-            return billStore.bills.filter { $0.dueDate >= threeMonthsAgo }
-        case .last6Months:
-            guard let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: now) else {
-                return []
-            }
-            return billStore.bills.filter { $0.dueDate >= sixMonthsAgo }
-        case .thisYear:
-            guard let yearStart = calendar.date(from: calendar.dateComponents([.year], from: now)) else {
-                return []
-            }
-            return billStore.bills.filter { $0.dueDate >= yearStart }
-        }
-    }
-
-    private var billsPaidInPeriod: [Bill] {
-        billsInPeriod.filter { $0.isPaid }
-    }
-
-    private var totalSpentInPeriod: Decimal {
-        billsPaidInPeriod.reduce(Decimal(0)) { $0 + $1.amount }
-    }
-
-    private var averagePerBill: Decimal {
-        guard !billsPaidInPeriod.isEmpty else { return 0 }
-        return totalSpentInPeriod / Decimal(billsPaidInPeriod.count)
-    }
-
-    private var sortedCategories: [(category: Category, amount: Decimal)] {
-        var result: [Category: Decimal] = [:]
-        for bill in billsPaidInPeriod {
-            result[bill.category, default: 0] += bill.amount
-        }
-        return result.map { ($0.key, $0.value) }.sorted { $0.amount > $1.amount }
-    }
-
-    private var monthlyTrendData: [(month: String, amount: Decimal)] {
-        let calendar = Calendar.current
-        let now = Date()
-        var result: [String: Decimal] = [:]
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "MMM"
-
-        for i in 0..<6 {
-            guard let monthStart = calendar.date(byAdding: .month, value: -i, to: now),
-                  let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else { continue }
-
-            let monthName = monthFormatter.string(from: monthStart)
-            let monthBills = billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd && $0.isPaid }
-            result[monthName] = monthBills.reduce(Decimal(0)) { $0 + $1.amount }
-        }
-
-        return result.map { (month: $0.key, amount: $0.value) }.sorted { lhs, rhs in
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM"
-            let lhsDate = formatter.date(from: lhs.month) ?? Date()
-            let rhsDate = formatter.date(from: rhs.month) ?? Date()
-            return lhsDate < rhsDate
-        }
-    }
-
-    private var monthlyBreakdown: [(month: String, spent: Decimal, isCurrentMonth: Bool)] {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentMonth = calendar.component(.month, from: now)
-        var result: [(String, Decimal, Bool)] = []
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "MMM"
-
-        for i in (0..<12).reversed() {
-            guard let monthStart = calendar.date(byAdding: .month, value: -i, to: now),
-                  let monthEnd = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: monthStart) else { continue }
-
-            let monthName = monthFormatter.string(from: monthStart)
-            let monthNum = calendar.component(.month, from: monthStart)
-            let monthBills = billStore.bills.filter { $0.dueDate >= monthStart && $0.dueDate <= monthEnd && $0.isPaid }
-            let spent = monthBills.reduce(Decimal(0)) { $0 + $1.amount }
-            result.append((monthName, spent, monthNum == currentMonth))
-        }
-
-        return result
-    }
-
-    /// Precomputed max spent — avoids O(n) max() call per column per render
-    private var monthlyMaxSpent: Decimal {
-        monthlyBreakdown.map { $0.spent }.max() ?? 1
-    }
+    // MARK: - Helpers
 
     private func formattedCurrency(_ amount: Decimal) -> String {
         let formatter = NumberFormatter()
@@ -346,7 +252,7 @@ struct SimpleTrendChart: View {
         GeometryReader { geo in
             chartContent(geo: geo)
         }
-        .accessibilityElement(children: .ignore)
+        .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityDescription)
         .animation(reduceMotion ? .none : .spring(response: 0.4, dampingFraction: 0.7), value: data.count)
     }
