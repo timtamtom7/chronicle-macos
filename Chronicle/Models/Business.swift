@@ -32,6 +32,9 @@ struct BusinessBillInfo: Codable, Equatable {
 
 // MARK: - Business Tag
 
+// Backwards compatibility alias
+typealias BusinessCategory = BusinessTag
+
 enum BusinessTag: String, CaseIterable, Codable, Identifiable {
     case office = "Office"
     case software = "Software"

@@ -23,11 +23,15 @@ enum BillSortOrder: String, CaseIterable {
 enum SheetDestination: Identifiable {
     case addBill
     case editBill(Bill)
+    case viewInvoice(Bill)
+    case viewReceipt(Bill)
 
     var id: String {
         switch self {
         case .addBill: return "add"
         case .editBill(let bill): return "edit-\(bill.id)"
+        case .viewInvoice(let bill): return "viewInvoice-\(bill.id)"
+        case .viewReceipt(let bill): return "viewReceipt-\(bill.id)"
         }
     }
 }
@@ -85,6 +89,14 @@ struct BillListView: View {
                 AddBillSheet()
             case .editBill(let bill):
                 AddBillSheet(editingBill: bill)
+            case .viewInvoice(let bill):
+                if let url = bill.attachedInvoiceURL {
+                    InvoicePreviewView(invoiceURL: url)
+                }
+            case .viewReceipt(let bill):
+                if let url = bill.receiptURL {
+                    ReceiptPreviewView(receiptURL: url)
+                }
             }
         }
         .alert("Delete Bill?", isPresented: $showDeleteAlert) {
@@ -222,6 +234,21 @@ struct BillListView: View {
 
     private var toolbar: some View {
         HStack(spacing: Theme.spacing12) {
+            // Accountant mode indicator
+            if billStore.isAccountantMode {
+                HStack(spacing: 4) {
+                    Image(systemName: "lock.fill")
+                        .font(.caption)
+                    Text("Accountant Mode — read only")
+                        .font(.system(size: 11))
+                }
+                .foregroundColor(Theme.warning)
+                .padding(.horizontal, Theme.spacing8)
+                .padding(.vertical, 4)
+                .background(Theme.warning.opacity(0.1))
+                .cornerRadius(Theme.radiusSmall)
+            }
+
             // Search
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -407,7 +434,9 @@ struct BillListView: View {
                             onDelete: {
                                 billToDelete = bill
                                 showDeleteAlert = true
-                            }
+                            },
+                            onViewInvoice: bill.attachedInvoiceURL != nil ? { activeSheet = .viewInvoice(bill) } : nil,
+                            onViewReceipt: bill.receiptURL != nil ? { activeSheet = .viewReceipt(bill) } : nil
                         )
                     }
                 }
@@ -431,7 +460,9 @@ struct BillListView: View {
                         onDelete: {
                             billToDelete = bill
                             showDeleteAlert = true
-                        }
+                        },
+                        onViewInvoice: bill.attachedInvoiceURL != nil ? { activeSheet = .viewInvoice(bill) } : nil,
+                        onViewReceipt: bill.receiptURL != nil ? { activeSheet = .viewReceipt(bill) } : nil
                     )
                 }
             }
@@ -472,6 +503,8 @@ struct BillRowView: View {
     let onTogglePaid: () -> Void
     let onEdit: () -> Void
     let onDelete: () -> Void
+    let onViewInvoice: (() -> Void)?
+    let onViewReceipt: (() -> Void)?
 
     @State private var isHovering = false
 
@@ -535,6 +568,14 @@ struct BillRowView: View {
                     Text(bill.category.rawValue)
                         .font(.system(size: 12))
                         .foregroundColor(Theme.textTertiary)
+
+                    if bill.invoiceReference != nil {
+                        Text("·")
+                            .foregroundColor(Theme.textTertiary)
+                        Text("#\(bill.invoiceReference ?? "")")
+                            .font(.system(size: 11))
+                            .foregroundColor(Theme.accent)
+                    }
                 }
             }
 
@@ -576,6 +617,32 @@ struct BillRowView: View {
                 .accessibilityHint("Permanently deletes this bill")
                 .opacity(isHovering ? 1 : 0.3)  // Always visible at 30% for keyboard/VoiceOver users
                 .focusable()
+
+                if let onViewInvoice = onViewInvoice {
+                    Button(action: onViewInvoice) {
+                        Image(systemName: "doc.fill")
+                            .font(.system(size: 11))
+                            .foregroundColor(Theme.accent)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("View invoice")
+                    .accessibilityHint("Opens the attached invoice PDF")
+                    .opacity(isHovering ? 1 : 0.3)
+                    .focusable()
+                }
+
+                if let onViewReceipt = onViewReceipt {
+                    Button(action: onViewReceipt) {
+                        Image(systemName: "photo.fill")
+                            .font(.system(size: 11))
+                            .foregroundColor(Theme.accent)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("View receipt")
+                    .accessibilityHint("Opens the attached receipt image")
+                    .opacity(isHovering ? 1 : 0.3)
+                    .focusable()
+                }
             }
         }
         .padding(Theme.spacing12)

@@ -438,6 +438,12 @@ struct SettingsSheet: View {
     @State private var showingTestNotification = false
     @State private var notificationHour: Int = 9
 
+    // Accountant Mode
+    @State private var accountantModeEnabled: Bool = false
+    @State private var accountantStartDate: Date = Calendar.current.date(byAdding: .year, value: -2, to: Date()) ?? Date()
+    @State private var accountantEndDate: Date = Date()
+    @StateObject private var businessService = BusinessService.shared
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -537,6 +543,48 @@ struct SettingsSheet: View {
                             .buttonStyle(.plain)
                             .accessibilityLabel("Open notification settings")
                             .accessibilityHint("Opens system notification preferences")
+                        }
+                    }
+
+                    // Accountant Mode Section
+                    settingsSection(title: "ACCOUNTANT MODE") {
+                        VStack(alignment: .leading, spacing: Theme.spacing12) {
+                            Toggle("Enable Accountant Mode", isOn: $accountantModeEnabled)
+                                .toggleStyle(.switch)
+                                .accessibilityLabel("Enable accountant mode")
+                                .accessibilityHint("When enabled, bills outside the date range are hidden and read-only")
+                                .onChange(of: accountantModeEnabled) { newValue in
+                                    if newValue {
+                                        businessService.enableAccountantMode(lockedRange: accountantStartDate...accountantEndDate)
+                                    } else {
+                                        businessService.disableAccountantMode()
+                                    }
+                                }
+
+                            if accountantModeEnabled {
+                                VStack(alignment: .leading, spacing: Theme.spacing8) {
+                                    DatePicker("Start Date", selection: $accountantStartDate, displayedComponents: .date)
+                                        .accessibilityLabel("Accountant mode start date")
+                                        .onChange(of: accountantStartDate) { _ in
+                                            if accountantModeEnabled {
+                                                businessService.enableAccountantMode(lockedRange: accountantStartDate...accountantEndDate)
+                                            }
+                                        }
+
+                                    DatePicker("End Date", selection: $accountantEndDate, displayedComponents: .date)
+                                        .accessibilityLabel("Accountant mode end date")
+                                        .onChange(of: accountantEndDate) { _ in
+                                            if accountantModeEnabled {
+                                                businessService.enableAccountantMode(lockedRange: accountantStartDate...accountantEndDate)
+                                            }
+                                        }
+
+                                    Text("Bills outside this date range will be hidden and read-only.")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textTertiary)
+                                }
+                                .padding(.top, Theme.spacing4)
+                            }
                         }
                     }
 

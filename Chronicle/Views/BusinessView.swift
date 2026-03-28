@@ -124,7 +124,7 @@ struct BusinessView: View {
                 .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 
-            Text(info.businessCategory.rawValue)
+            Text(info.businessTag.rawValue)
                 .font(.caption)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -309,7 +309,7 @@ struct BusinessView: View {
 
             Divider()
 
-            Text("By Category")
+            Text("By Business Tag")
                 .font(.footnote)
                 .foregroundColor(Theme.textPrimary)
 

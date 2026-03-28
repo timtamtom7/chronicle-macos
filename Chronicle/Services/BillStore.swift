@@ -10,6 +10,7 @@ final class BillStore: ObservableObject {
     @Published var searchText: String = ""
     @Published var templates: [BillTemplate] = []
     @Published var categoryBudgets: [CategoryBudget] = []
+    @Published var isAccountantMode: Bool = false
 
     var baseCurrency: Currency {
         Currency(rawValue: UserDefaults.standard.string(forKey: "baseCurrency") ?? "USD") ?? .usd
@@ -25,6 +26,34 @@ final class BillStore: ObservableObject {
         loadTemplates()
         loadBudgets()
         Task { await ExchangeRateService.shared.fetchRatesIfNeeded() }
+
+        // Observe accountant mode from BusinessService
+        BusinessService.shared.$accountantMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] mode in
+                self?.isAccountantMode = mode.isEnabled
+            }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - Accountant Mode
+
+    func lockToDateRange(start: Date, end: Date) {
+        BusinessService.shared.enableAccountantMode(lockedRange: start...end)
+    }
+
+    var isLocked: Bool {
+        isAccountantMode
+    }
+
+    var lockedDateRange: ClosedRange<Date>? {
+        BusinessService.shared.accountantMode.lockedDateRange
+    }
+
+    /// Returns bills filtered by the locked date range if accountant mode is active
+    var lockedBills: [Bill] {
+        guard let range = lockedDateRange else { return bills }
+        return bills.filter { range.contains($0.dueDate) }
     }
 
     // MARK: - Templates

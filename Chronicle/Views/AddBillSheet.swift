@@ -475,6 +475,8 @@ struct AddBillSheet: View {
         .background(Theme.surface)
         .cornerRadius(Theme.radiusMedium)
     }
+
+    private func memberShareRow(_ member: HouseholdMember) -> some View {
         HStack(spacing: Theme.spacing8) {
             Image(systemName: member.avatarName)
                 .font(.body)

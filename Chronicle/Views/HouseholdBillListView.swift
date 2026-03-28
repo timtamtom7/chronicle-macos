@@ -251,6 +251,14 @@ struct HouseholdBillListView: View {
                 AddBillSheet()
             case .editBill(let bill):
                 AddBillSheet(editingBill: bill)
+            case .viewInvoice(let bill):
+                if let url = bill.attachedInvoiceURL {
+                    InvoicePreviewView(invoiceURL: url)
+                }
+            case .viewReceipt(let bill):
+                if let url = bill.receiptURL {
+                    InvoicePreviewView(invoiceURL: url)
+                }
             }
         }
     }

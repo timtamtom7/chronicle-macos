@@ -13,6 +13,7 @@
 		0A6BE53CCF7ADBA0B9A13533 /* HouseholdService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B59DBBC87A4277D369F9A6D /* HouseholdService.swift */; };
 		0CAA19246C71196E86C5D535 /* iCloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1F2CAACA40C0CCEEC989F4 /* iCloudSyncManager.swift */; };
 		0CB0D3992C17A95903199332 /* YearMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */; };
+		0DD4521197D3D38CBCCA8DCE /* InvoicePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F686EBDAD171EC6874549208 /* InvoicePreviewView.swift */; };
 		0EBDF1681C8A84E063F2999A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D45E31511A397CB0984E4BB1 /* PrivacyInfo.xcprivacy */; };
 		1862EE300041DADD8039AFEF /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6812515AE26BACB902DD7178 /* Team.swift */; };
 		1C355E095D4AB9D8D1288684 /* ChronicleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7402FC2D13E0C57F4B6B59DF /* ChronicleApp.swift */; };
@@ -33,6 +34,7 @@
 		5F1788601B33E55EBF7E29B4 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8E9ED8293D64EB3B0FF4CE /* ExportService.swift */; };
 		61FCF25D550910919A917DF0 /* AddBillSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6420745CA44BCEB45A2BE5E7 /* AddBillSheet.swift */; };
 		666365061234DEB80713515F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A93815CDE197FADCBF58BB /* HistoryView.swift */; };
+		68075EF68DB59276D7DC145B /* TaxExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F0D3AC5C4536E4C4E811C0A /* TaxExportView.swift */; };
 		6FB060FE480769F4FB15DCDE /* ExchangeRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D23ED800DAC1B3D8CE5A0A9 /* ExchangeRateService.swift */; };
 		7069DFFFA1AE80C1BD13B8C3 /* Budget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C10F679571983C9EC78C7 /* Budget.swift */; };
 		7788134DCB1B68BFA6BB60AC /* AIInsightsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC8B8EE689291D4150502293 /* AIInsightsService.swift */; };
@@ -45,6 +47,7 @@
 		970F591C89F7BD9E97E200FA /* HouseholdDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B45078EEC5D7E769144E37 /* HouseholdDashboardView.swift */; };
 		98DC06937B2D6FDA4C7BC802 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91342124452FB09F9E03DCC5 /* ShareView.swift */; };
 		999F1131A9180C2046659DCF /* HouseholdBillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4C2768C7CE902C801F19A9 /* HouseholdBillListView.swift */; };
+		A21AF9CD388FB1A50F71F4BA /* TaxExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C89E27BB6F7D437514D620 /* TaxExportService.swift */; };
 		A562EE2265EF4594FD789926 /* PlatformExpansionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFEDAD7C16FC597942794D1 /* PlatformExpansionService.swift */; };
 		A5DC182753667D4195B33F64 /* BillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6E547AACCF1F8B5A15EA10 /* BillListView.swift */; };
 		AB73FA3B86B2E81B82A8F011 /* PrivacyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D867CBCCDA334646347760CC /* PrivacyService.swift */; };
@@ -116,9 +119,11 @@
 		7ED96943CB6DF55D67205470 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7FE6EFDA2BB4C70F2EC5914E /* DuplicateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateDetector.swift; sourceTree = "<group>"; };
 		8E60BE2909D224FA810173A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8F0D3AC5C4536E4C4E811C0A /* TaxExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxExportView.swift; sourceTree = "<group>"; };
 		8F19E4BC4BAD31C00BAA85AF /* SplitBillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitBillView.swift; sourceTree = "<group>"; };
 		8FF77EB48B31CA1189E2222E /* ShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareService.swift; sourceTree = "<group>"; };
 		91342124452FB09F9E03DCC5 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		A9C89E27BB6F7D437514D620 /* TaxExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxExportService.swift; sourceTree = "<group>"; };
 		ADA52BF6C5CF51D1E9366C32 /* YearMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearMonth.swift; sourceTree = "<group>"; };
 		B05C5F47DFF873B52C0F0349 /* CSVImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVImportService.swift; sourceTree = "<group>"; };
 		B08B0B1F448DBE69B0BDCB4C /* SiriSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSuggestions.swift; sourceTree = "<group>"; };
@@ -139,6 +144,7 @@
 		F12FFFC2875555279E3320EF /* HouseholdSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseholdSettingsView.swift; sourceTree = "<group>"; };
 		F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		F5A7AFBCBC027643D9649902 /* BillPredictionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillPredictionModel.swift; sourceTree = "<group>"; };
+		F686EBDAD171EC6874549208 /* InvoicePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicePreviewView.swift; sourceTree = "<group>"; };
 		F897D66648A68A31D19D4750 /* InsightsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsGenerator.swift; sourceTree = "<group>"; };
 		FB4C2768C7CE902C801F19A9 /* HouseholdBillListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseholdBillListView.swift; sourceTree = "<group>"; };
 		FC7B10996FCFA28B1CC6FE29 /* AppIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconView.swift; sourceTree = "<group>"; };
@@ -189,6 +195,7 @@
 				8FF77EB48B31CA1189E2222E /* ShareService.swift */,
 				32D643A58AD172A17F02270F /* SplitBillService.swift */,
 				F2310C4D0A4211A6C43CC467 /* SubscriptionManager.swift */,
+				A9C89E27BB6F7D437514D620 /* TaxExportService.swift */,
 				670941E9510F62C3351B0EEB /* TeamService.swift */,
 				5B58E6F5DA35EAB9E56CB705 /* TemplateService.swift */,
 			);
@@ -253,11 +260,13 @@
 				6644F5BC6805A4EE7E9FEAED /* HouseholdView.swift */,
 				B3BB7091737C20A247D738FE /* ImportExportView.swift */,
 				BF4D2954E3920762B29E0874 /* InviteSheet.swift */,
+				F686EBDAD171EC6874549208 /* InvoicePreviewView.swift */,
 				5246250499B2D3CCC2F4D3CD /* MainTabView.swift */,
 				FC7DEFC9FDD182D19A6F9B80 /* OverviewView.swift */,
 				3C87FDABB54E8ADB5C810324 /* SettleUpView.swift */,
 				91342124452FB09F9E03DCC5 /* ShareView.swift */,
 				8F19E4BC4BAD31C00BAA85AF /* SplitBillView.swift */,
+				8F0D3AC5C4536E4C4E811C0A /* TaxExportView.swift */,
 				3B4FCCE36AD2ED8D39E3A56F /* TemplatesView.swift */,
 			);
 			path = Views;
@@ -472,6 +481,7 @@
 				CC9DE3500293D58E7A980D57 /* InsightsGenerator.swift in Sources */,
 				463B3F78C4505B23C5A86A2D /* InviteService.swift in Sources */,
 				95ED0044187AC74B91B6A6C5 /* InviteSheet.swift in Sources */,
+				0DD4521197D3D38CBCCA8DCE /* InvoicePreviewView.swift in Sources */,
 				EFA45B887A07C16928A55F53 /* MainTabView.swift in Sources */,
 				530ECF4C172C5AB63633EA40 /* NotificationScheduler.swift in Sources */,
 				F9FD6E67C5B180EC705DD441 /* OverviewView.swift in Sources */,
@@ -485,6 +495,8 @@
 				FA5A50CEF0177E2142F58D06 /* SplitBillView.swift in Sources */,
 				320576ACA2F63671CB41105D /* SubscriptionManager.swift in Sources */,
 				8C4FD14BD921F2F06988232A /* SubscriptionTier.swift in Sources */,
+				A21AF9CD388FB1A50F71F4BA /* TaxExportService.swift in Sources */,
+				68075EF68DB59276D7DC145B /* TaxExportView.swift in Sources */,
 				1862EE300041DADD8039AFEF /* Team.swift in Sources */,
 				C353569C8D598BEEF2427D68 /* TeamService.swift in Sources */,
 				2624197315802638F28506D2 /* TemplateService.swift in Sources */,
