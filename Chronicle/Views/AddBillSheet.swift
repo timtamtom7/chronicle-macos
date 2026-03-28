@@ -182,7 +182,7 @@ struct AddBillSheet: View {
             // Footer
             footer
         }
-        .frame(width: 500)
+        .frame(width: Theme.sheetMedium.width)
         .background(Theme.background)
         .onAppear {
             if let bill = editingBill {

@@ -61,7 +61,7 @@ struct AnalyticsView: View {
                 viewModel.recompute(for: selectedPeriod, bills: billStore.bills)
             }
         }
-        .frame(width: 520, height: 580)
+        .frame(width: Theme.sheetLarge.width, height: Theme.sheetLarge.height)
         .background(Theme.background)
     }
 

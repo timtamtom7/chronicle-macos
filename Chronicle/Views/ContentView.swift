@@ -75,7 +75,7 @@ struct ContentView: View {
             // Monthly overview footer
             monthlyOverview
         }
-        .frame(width: 480, height: 400)
+        .frame(width: Theme.sheetMedium.width, height: Theme.sheetMedium.height)
         .background(Theme.background)
         .sheet(isPresented: $showingAddSheet) {
             AddBillSheet()
