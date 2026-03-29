@@ -1,0 +1,103 @@
+{
+  "name": "Chronicle",
+  "version": "1.0.0",
+  "description": "Never miss a bill",
+  "triggers": [
+    {
+      "key": "bill_due",
+      "name": "Bill Due",
+      "description": "Triggers when a bill is due today",
+      "inputFields": []
+    },
+    {
+      "key": "bill_overdue",
+      "name": "Bill Overdue",
+      "description": "Triggers when a bill is past its due date and unpaid",
+      "inputFields": []
+    },
+    {
+      "key": "bill_paid",
+      "name": "Bill Paid",
+      "description": "Triggers when a bill is marked as paid",
+      "inputFields": []
+    }
+  ],
+  "actions": [
+    {
+      "key": "create_bill",
+      "name": "Create Bill",
+      "description": "Create a new bill in Chronicle",
+      "inputFields": [
+        {
+          "key": "name",
+          "type": "string",
+          "required": true,
+          "label": "Bill Name"
+        },
+        {
+          "key": "amount",
+          "type": "number",
+          "required": true,
+          "label": "Amount"
+        },
+        {
+          "key": "due_day",
+          "type": "integer",
+          "required": true,
+          "label": "Due Day (1–31)"
+        },
+        {
+          "key": "payee",
+          "type": "string",
+          "required": false,
+          "label": "Payee"
+        },
+        {
+          "key": "category",
+          "type": "string",
+          "required": false,
+          "label": "Category",
+          "choices": ["utilities", "subscription", "insurance", "rent", "mortgage", "phone", "internet", "creditCard", "loan", "other"]
+        }
+      ]
+    },
+    {
+      "key": "mark_bill_paid",
+      "name": "Mark Bill Paid",
+      "description": "Mark a specific bill as paid",
+      "inputFields": [
+        {
+          "key": "bill_id",
+          "type": "string",
+          "required": true,
+          "label": "Bill ID"
+        }
+      ]
+    },
+    {
+      "key": "update_bill",
+      "name": "Update Bill",
+      "description": "Update an existing bill",
+      "inputFields": [
+        {
+          "key": "bill_id",
+          "type": "string",
+          "required": true,
+          "label": "Bill ID"
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "required": false,
+          "label": "New Name"
+        },
+        {
+          "key": "amount",
+          "type": "number",
+          "required": false,
+          "label": "New Amount"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Chronicle Bill Due Alert",
+  "description": "Receive a notification when a bill is due in Chronicle",
+  "version": "1.0.0",
+  "trigger": {
+    "service": "chronicle",
+    "event": "bill_due",
+    "description": "A bill is due today",
+    "fields": []
+  },
+  "actions": [
+    {
+      "service": "notification",
+      "action": "send_notification",
+      "fields": {
+        "title": "Chronicle: Bill Due Today",
+        "body": "You have a bill due. Open Chronicle to view details."
+      }
+    }
+  ],
+  "optional_actions": [
+    {
+      "service": "email",
+      "action": "send_email",
+      "fields": {
+        "to": "{{user.email}}",
+        "subject": "Chronicle Reminder: Bill Due Today",
+        "body": "A bill is due today. Log into Chronicle to view and pay it."
+      }
+    }
+  ]
+}

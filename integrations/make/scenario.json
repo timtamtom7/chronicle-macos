@@ -1,0 +1,71 @@
+{
+  "name": "Chronicle Bill Automation",
+  "description": "Template scenario for automating bill tracking in Chronicle",
+  "modules": [
+    {
+      "id": "trigger",
+      "type": "customWebhook",
+      "name": "Chronicle Webhook",
+      "description": "Receives bill events from Chronicle",
+      "params": {
+        "webhookName": "chronicle-bill-event"
+      }
+    },
+    {
+      "id": "filter",
+      "type": "filter",
+      "name": "Bill Due Today?",
+      "description": "Continue only if event type is 'bill_due'",
+      "params": {
+        "condition": {
+          "logic": "and",
+          "conditions": [
+            {
+              "field": "event_type",
+              "operator": "equal",
+              "value": "bill_due"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "action2",
+      "type": "http",
+      "name": "Get Bill Details",
+      "description": "Fetch full bill data from Chronicle API",
+      "params": {
+        "url": "https://api.chronicle.app/v1/bills/{{trigger.bill_id}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{connection.api_key}}"
+        }
+      }
+    },
+    {
+      "id": "action3",
+      "type": "notification",
+      "name": "Send Notification",
+      "description": "Send a push notification or email for the due bill",
+      "params": {
+        "type": "push",
+        "title": "Bill Due: {{action2.body.name}}",
+        "body": "{{action2.body.amount}} is due today for {{action2.body.payee}}"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": "trigger",
+      "to": "filter"
+    },
+    {
+      "from": "filter",
+      "to": "action2"
+    },
+    {
+      "from": "action2",
+      "to": "action3"
+    }
+  ]
+}
