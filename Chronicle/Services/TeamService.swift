@@ -178,6 +178,7 @@ final class TeamService: ObservableObject {
     }
     
     /// Gets all team-shared bills
+    @MainActor
     func getTeamBills() -> [Bill] {
         guard let team = currentTeam else { return [] }
         
