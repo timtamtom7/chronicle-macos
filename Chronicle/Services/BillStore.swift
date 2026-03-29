@@ -242,6 +242,13 @@ final class BillStore: ObservableObject {
             loadBills()
             NotificationScheduler.shared.scheduleNotifications(for: bill)
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
+            
+            // R17: Audit log
+            AuditLogService.shared.log(
+                .billCreated,
+                entity: .bill(id: bill.id),
+                details: ["name": bill.name, "amount": String(bill.amountCents)]
+            )
         } catch {
             print("Failed to add bill: \(error)")
         }
@@ -249,10 +256,21 @@ final class BillStore: ObservableObject {
 
     func updateBill(_ bill: Bill) {
         do {
+            // Capture old amount for audit
+            let oldBill = bills.first(where: { $0.id == bill.id })
+            
             try db.updateBill(bill)
             loadBills()
             NotificationScheduler.shared.scheduleNotifications(for: bill)
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
+            
+            // R17: Audit log
+            var details: [String: String] = ["name": bill.name]
+            if let old = oldBill {
+                details["oldAmount"] = String(old.amountCents)
+            }
+            details["newAmount"] = String(bill.amountCents)
+            AuditLogService.shared.log(.billUpdated, entity: .bill(id: bill.id), details: details)
         } catch {
             print("Failed to update bill: \(error)")
         }
@@ -260,12 +278,21 @@ final class BillStore: ObservableObject {
 
     func deleteBill(_ billId: UUID) {
         do {
+            let billName = bills.first(where: { $0.id == billId })?.name ?? "unknown"
+            
             if let bill = bills.first(where: { $0.id == billId }) {
                 NotificationScheduler.shared.cancelNotifications(for: bill)
             }
             try db.deleteBill(billId)
             loadBills()
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
+            
+            // R17: Audit log
+            AuditLogService.shared.log(
+                .billDeleted,
+                entity: .bill(id: billId),
+                details: ["name": billName]
+            )
         } catch {
             print("Failed to delete bill: \(error)")
         }
@@ -281,6 +308,13 @@ final class BillStore: ObservableObject {
             }
             loadBills()
             NotificationCenter.default.post(name: .billsDidChange, object: nil)
+            
+            // R17: Audit log
+            AuditLogService.shared.log(
+                paid ? .billPaid : .billUnpaid,
+                entity: .bill(id: bill.id),
+                details: ["name": bill.name]
+            )
         } catch {
             print("Failed to mark bill paid: \(error)")
         }

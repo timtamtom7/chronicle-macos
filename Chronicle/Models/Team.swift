@@ -5,252 +5,138 @@ import Foundation
 
 // MARK: - Team Model
 
-struct Team: Codable, Identifiable {
+struct Team: Identifiable, Codable {
     let id: UUID
     var name: String
+    var adminId: UUID
     var members: [TeamMember]
-    var teamBills: [Bill]
-    var settings: TeamSettings
+    var bills: [UUID] // team-shared bill IDs
+    var policy: TeamPolicy
     var createdAt: Date
-    var subscriptionTier: SubscriptionTier
     
     init(
         id: UUID = UUID(),
         name: String,
+        adminId: UUID,
         members: [TeamMember] = [],
-        teamBills: [Bill] = [],
-        settings: TeamSettings = TeamSettings(),
-        createdAt: Date = Date(),
-        subscriptionTier: SubscriptionTier = .enterprise
+        bills: [UUID] = [],
+        policy: TeamPolicy = TeamPolicy(),
+        createdAt: Date = Date()
     ) {
         self.id = id
         self.name = name
+        self.adminId = adminId
         self.members = members
-        self.teamBills = teamBills
-        self.settings = settings
+        self.bills = bills
+        self.policy = policy
         self.createdAt = createdAt
-        self.subscriptionTier = subscriptionTier
     }
 }
 
 // MARK: - Team Member
 
-struct TeamMember: Codable, Identifiable {
+struct TeamMember: Identifiable, Codable {
     let id: UUID
-    var email: String
+    var userId: UUID
     var name: String
+    var email: String?
     var role: TeamRole
-    var status: MemberStatus
     var joinedAt: Date
-    var lastActiveAt: Date?
-    var visibleBillCategories: [String]?
     
     init(
         id: UUID = UUID(),
-        email: String,
+        userId: UUID,
         name: String,
+        email: String? = nil,
         role: TeamRole = .member,
-        status: MemberStatus = .pending,
-        joinedAt: Date = Date(),
-        lastActiveAt: Date? = nil,
-        visibleBillCategories: [String]? = nil
+        joinedAt: Date = Date()
     ) {
         self.id = id
-        self.email = email
+        self.userId = userId
         self.name = name
+        self.email = email
         self.role = role
-        self.status = status
         self.joinedAt = joinedAt
-        self.lastActiveAt = lastActiveAt
-        self.visibleBillCategories = visibleBillCategories
     }
 }
 
-enum TeamRole: String, Codable, CaseIterable {
+// MARK: - Team Role
+
+enum TeamRole: String, Codable {
     case admin
     case member
     case viewer
-    
-    var displayName: String {
-        switch self {
-        case .admin: return "Admin"
-        case .member: return "Member"
-        case .viewer: return "Viewer"
-        }
-    }
-    
-    var canManageTeam: Bool { self == .admin }
-    var canEditBills: Bool { self == .admin || self == .member }
-    var canViewBills: Bool { true }
-    var canExportData: Bool { self == .admin }
 }
 
-enum MemberStatus: String, Codable {
-    case pending
-    case active
-    case suspended
-    case removed
-}
+// MARK: - Team Policy
 
-// MARK: - Team Settings
-
-struct TeamSettings: Codable {
-    var dataResidency: DataResidency
-    var requireSSO: Bool
-    var allowedDomains: [String]
-    var defaultReminderDays: Int
-    var enforceCategories: Bool
-    var blockedCategories: [String]
-    var auditLogRetentionDays: Int
+struct TeamPolicy: Codable {
+    var requireCategory: Bool = false
+    var blockPersonalBills: Bool = false
+    var defaultReminderDays: Int = 3
+    var allowedCategories: [Category]? = nil // nil = all allowed
     
     init(
-        dataResidency: DataResidency = .us,
-        requireSSO: Bool = false,
-        allowedDomains: [String] = [],
+        requireCategory: Bool = false,
+        blockPersonalBills: Bool = false,
         defaultReminderDays: Int = 3,
-        enforceCategories: Bool = false,
-        blockedCategories: [String] = [],
-        auditLogRetentionDays: Int = 730
+        allowedCategories: [Category]? = nil
     ) {
-        self.dataResidency = dataResidency
-        self.requireSSO = requireSSO
-        self.allowedDomains = allowedDomains
+        self.requireCategory = requireCategory
+        self.blockPersonalBills = blockPersonalBills
         self.defaultReminderDays = defaultReminderDays
-        self.enforceCategories = enforceCategories
-        self.blockedCategories = blockedCategories
-        self.auditLogRetentionDays = auditLogRetentionDays
+        self.allowedCategories = allowedCategories
     }
 }
 
-enum DataResidency: String, Codable, CaseIterable {
-    case us = "US"
-    case eu = "EU"
-    case apac = "APAC"
-    case global = "Global"
-}
+// MARK: - Audit Log Entry
 
-// MARK: - Audit Log
-
-struct AuditLogEntry: Codable, Identifiable {
+struct AuditLogEntry: Identifiable, Codable {
     let id: UUID
     let timestamp: Date
     let actorId: UUID
-    let actorEmail: String
     let actorName: String
     let action: AuditAction
-    let resourceType: String
-    let resourceId: UUID?
-    let details: [String: String]
+    let entityType: String
+    let entityId: UUID
+    let details: [String: String]? // e.g., ["oldAmount": "100", "newAmount": "150"]
     let ipAddress: String?
-    let userAgent: String?
     
     init(
         id: UUID = UUID(),
         timestamp: Date = Date(),
         actorId: UUID,
-        actorEmail: String,
         actorName: String,
         action: AuditAction,
-        resourceType: String,
-        resourceId: UUID? = nil,
-        details: [String: String] = [:],
-        ipAddress: String? = nil,
-        userAgent: String? = nil
+        entityType: String,
+        entityId: UUID,
+        details: [String: String]? = nil,
+        ipAddress: String? = nil
     ) {
         self.id = id
         self.timestamp = timestamp
         self.actorId = actorId
-        self.actorEmail = actorEmail
         self.actorName = actorName
         self.action = action
-        self.resourceType = resourceType
-        self.resourceId = resourceId
+        self.entityType = entityType
+        self.entityId = entityId
         self.details = details
         self.ipAddress = ipAddress
-        self.userAgent = userAgent
     }
 }
+
+// MARK: - Audit Action
 
 enum AuditAction: String, Codable {
-    case billCreated = "bill.created"
-    case billUpdated = "bill.updated"
-    case billDeleted = "bill.deleted"
-    case billPaid = "bill.paid"
-    case billUnpaid = "bill.unpaid"
-    case memberInvited = "member.invited"
-    case memberAdded = "member.added"
-    case memberRemoved = "member.removed"
-    case memberRoleChanged = "member.role_changed"
-    case teamCreated = "team.created"
-    case teamSettingsChanged = "team.settings_changed"
-    case subscriptionChanged = "subscription.changed"
-    case dataExported = "data.exported"
-    case dataDeleted = "data.deleted"
-}
-
-// MARK: - SSO Configuration (R17)
-
-struct SSOConfiguration: Codable {
-    var enabled: Bool
-    var idpType: IdentityProvider
-    var ssoURL: String?
-    var certificateData: Data?
-    var metadataURL: String?
-    var allowedDomains: [String]
-    
-    init(
-        enabled: Bool = false,
-        idpType: IdentityProvider = .okta,
-        ssoURL: String? = nil,
-        certificateData: Data? = nil,
-        metadataURL: String? = nil,
-        allowedDomains: [String] = []
-    ) {
-        self.enabled = enabled
-        self.idpType = idpType
-        self.ssoURL = ssoURL
-        self.certificateData = certificateData
-        self.metadataURL = metadataURL
-        self.allowedDomains = allowedDomains
-    }
-}
-
-enum IdentityProvider: String, Codable, CaseIterable {
-    case okta = "Okta"
-    case azureAD = "Azure AD"
-    case googleWorkspace = "Google Workspace"
-    case genericSAML = "Generic SAML 2.0"
-}
-
-// MARK: - MDM Configuration (R17)
-
-struct MDMConfiguration: Codable {
-    var enabled: Bool
-    var managedAppleIdRequired: Bool
-    var preconfiguredTeamId: UUID?
-    var forceCategories: Bool
-    var blockedPersonalBills: Bool
-    var defaultReminderDays: Int
-    var allowDataExport: Bool
-    var remoteWipeEnabled: Bool
-    
-    init(
-        enabled: Bool = false,
-        managedAppleIdRequired: Bool = false,
-        preconfiguredTeamId: UUID? = nil,
-        forceCategories: Bool = false,
-        blockedPersonalBills: Bool = false,
-        defaultReminderDays: Int = 3,
-        allowDataExport: Bool = true,
-        remoteWipeEnabled: Bool = false
-    ) {
-        self.enabled = enabled
-        self.managedAppleIdRequired = managedAppleIdRequired
-        self.preconfiguredTeamId = preconfiguredTeamId
-        self.forceCategories = forceCategories
-        self.blockedPersonalBills = blockedPersonalBills
-        self.defaultReminderDays = defaultReminderDays
-        self.allowDataExport = allowDataExport
-        self.remoteWipeEnabled = remoteWipeEnabled
-    }
+    case billCreated
+    case billUpdated
+    case billDeleted
+    case billPaid
+    case billUnpaid
+    case memberInvited
+    case memberJoined
+    case memberRemoved
+    case memberRoleChanged
+    case policyUpdated
+    case teamCreated
 }

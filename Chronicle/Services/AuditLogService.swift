@@ -1,104 +1,240 @@
 import Foundation
+import SQLite
 
 /// R17: Immutable audit logging service
 /// Records all significant changes for compliance reporting
+/// Append-only - entries are never deleted (2 year retention)
 final class AuditLogService: ObservableObject {
     
     static let shared = AuditLogService()
     
     @Published private(set) var entries: [AuditLogEntry] = []
     
-    private let storageKey = "chronicle_audit_log"
-    private let maxEntries = 10000 // 2 years at ~5 entries/day
+    private var db: Connection?
+    private let retentionDays = 730 // 2 years
+    
+    // Table definitions
+    private let auditLog = Table("audit_log")
+    private let colId = Expression<String>("id")
+    private let colTimestamp = Expression<Date>("timestamp")
+    private let colActorId = Expression<String>("actor_id")
+    private let colActorName = Expression<String>("actor_name")
+    private let colAction = Expression<String>("action")
+    private let colEntityType = Expression<String>("entity_type")
+    private let colEntityId = Expression<String>("entity_id")
+    private let colDetails = Expression<String?>("details")
+    private let colIpAddress = Expression<String?>("ip_address")
     
     private init() {
+        setupDatabase()
         loadEntries()
     }
     
-    // MARK: - Add Entry
+    // MARK: - Database Setup
     
-    internal func addEntry(_ entry: AuditLogEntry) {
-        entries.insert(entry, at: 0) // Most recent first
-        
-        // Trim old entries if over limit
-        if entries.count > maxEntries {
-            entries = Array(entries.prefix(maxEntries))
+    private func setupDatabase() {
+        do {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            let appFolder = appSupport.appendingPathComponent("Chronicle", isDirectory: true)
+            
+            if !FileManager.default.fileExists(atPath: appFolder.path) {
+                try FileManager.default.createDirectory(at: appFolder, withIntermediateDirectories: true)
+            }
+            
+            let dbPath = appFolder.appendingPathComponent("chronicle.db").path
+            db = try Connection(dbPath)
+            
+            try createAuditLogTable()
+        } catch {
+            print("AuditLog database setup error: \(error)")
         }
+    }
+    
+    private func createAuditLogTable() throws {
+        guard let db = db else { return }
         
-        saveEntries()
+        try db.run(auditLog.create(ifNotExists: true) { t in
+            t.column(colId, primaryKey: true)
+            t.column(colTimestamp)
+            t.column(colActorId)
+            t.column(colActorName)
+            t.column(colAction)
+            t.column(colEntityType)
+            t.column(colEntityId)
+            t.column(colDetails)
+            t.column(colIpAddress)
+        })
+        
+        // Create index on timestamp for efficient range queries
+        try db.run(auditLog.createIndex(colTimestamp, ifNotExists: true))
+        try db.run(auditLog.createIndex(colActorId, ifNotExists: true))
+    }
+    
+    // MARK: - Logging
+    
+    /// Logs an audit event (append-only)
+    func log(_ action: AuditAction, entity: AuditEntity, details: [String: String]? = nil) {
+        // In production, actor info would come from AuthService
+        let actorId = UUID()
+        let actorName = "Current User"
+        
+        let entry = AuditLogEntry(
+            id: UUID(),
+            timestamp: Date(),
+            actorId: actorId,
+            actorName: actorName,
+            action: action,
+            entityType: entity.type,
+            entityId: entity.id,
+            details: details,
+            ipAddress: nil
+        )
+        
+        insertEntry(entry)
+        entries.insert(entry, at: 0) // Most recent first
+    }
+    
+    private func insertEntry(_ entry: AuditLogEntry) {
+        guard let db = db else { return }
+        
+        do {
+            let detailsJson = entry.details.flatMap { try? JSONEncoder().encode($0) }.flatMap { String(data: $0, encoding: .utf8) }
+            
+            try db.run(auditLog.insert(
+                colId <- entry.id.uuidString,
+                colTimestamp <- entry.timestamp,
+                colActorId <- entry.actorId.uuidString,
+                colActorName <- entry.actorName,
+                colAction <- entry.action.rawValue,
+                colEntityType <- entry.entityType,
+                colEntityId <- entry.entityId.uuidString,
+                colDetails <- detailsJson,
+                colIpAddress <- entry.ipAddress
+            ))
+        } catch {
+            print("Failed to insert audit log entry: \(error)")
+        }
     }
     
     // MARK: - Query
     
-    internal func entriesForResource(type: String, id: UUID) -> [AuditLogEntry] {
-        entries.filter { $0.resourceType == type && $0.resourceId == id }
+    /// Retrieves audit log entries with optional filters
+    func getEntries(for dateRange: ClosedRange<Date>? = nil, actorId: UUID? = nil) -> [AuditLogEntry] {
+        guard let db = db else { return entries }
+        
+        do {
+            var query = auditLog.order(colTimestamp.desc)
+            
+            if let range = dateRange {
+                query = query.filter(colTimestamp >= range.lowerBound && colTimestamp <= range.upperBound)
+            }
+            
+            if let actorId = actorId {
+                query = query.filter(colActorId == actorId.uuidString)
+            }
+            
+            var results: [AuditLogEntry] = []
+            
+            for row in try db.prepare(query) {
+                let entry = try parseRow(row)
+                results.append(entry)
+            }
+            
+            return results
+        } catch {
+            print("Failed to query audit log: \(error)")
+            return entries
+        }
     }
     
-    internal func entriesByActor(_ actorId: UUID) -> [AuditLogEntry] {
-        entries.filter { $0.actorId == actorId }
-    }
-    
-    internal func entriesInRange(from: Date, to: Date) -> [AuditLogEntry] {
-        entries.filter { $0.timestamp >= from && $0.timestamp <= to }
-    }
-    
-    internal func entries(action: AuditAction) -> [AuditLogEntry] {
-        entries.filter { $0.action == action }
+    private func parseRow(_ row: Row) throws -> AuditLogEntry {
+        let details: [String: String]?
+        if let detailsJson = row[colDetails],
+           let data = detailsJson.data(using: .utf8),
+           let decoded = try? JSONDecoder().decode([String: String].self, from: data) {
+            details = decoded
+        } else {
+            details = nil
+        }
+        
+        return AuditLogEntry(
+            id: UUID(uuidString: row[colId]) ?? UUID(),
+            timestamp: row[colTimestamp],
+            actorId: UUID(uuidString: row[colActorId]) ?? UUID(),
+            actorName: row[colActorName],
+            action: AuditAction(rawValue: row[colAction]) ?? .billCreated,
+            entityType: row[colEntityType],
+            entityId: UUID(uuidString: row[colEntityId]) ?? UUID(),
+            details: details,
+            ipAddress: row[colIpAddress]
+        )
     }
     
     // MARK: - Export
     
-    internal func exportAsCSV() -> String {
-        var csv = "ID,Timestamp,Actor Email,Actor Name,Action,Resource Type,Resource ID,Details\n"
+    /// Exports entries to CSV format
+    func exportToCSV(entries: [AuditLogEntry]) -> URL? {
+        var csv = "timestamp,actor,action,entity,details\n"
         
         let dateFormatter = ISO8601DateFormatter()
         
         for entry in entries {
-            let details = entry.details.map { "\($0.key)=\($0.value)" }.joined(separator: ";")
+            let details = entry.details?.map { "\($0.key)=\($0.value)" }.joined(separator: ";") ?? ""
             let row = [
-                entry.id.uuidString,
                 dateFormatter.string(from: entry.timestamp),
-                entry.actorEmail,
                 entry.actorName,
                 entry.action.rawValue,
-                entry.resourceType,
-                entry.resourceId?.uuidString ?? "",
+                "\(entry.entityType)/\(entry.entityId.uuidString)",
                 details
             ].map { "\"\($0)\"" }.joined(separator: ",")
             
             csv += row + "\n"
         }
         
-        return csv
+        do {
+            let tempDir = FileManager.default.temporaryDirectory
+            let csvURL = tempDir.appendingPathComponent("audit_log_export_\(Date().timeIntervalSince1970).csv")
+            try csv.write(to: csvURL, atomically: true, encoding: .utf8)
+            return csvURL
+        } catch {
+            print("Failed to export CSV: \(error)")
+            return nil
+        }
     }
     
-    internal func exportAsJSON() throws -> Data {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        return try encoder.encode(entries)
-    }
-    
-    // MARK: - Cleanup
-    
-    internal func purgeOldEntries(olderThan days: Int) {
-        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
-        entries = entries.filter { $0.timestamp >= cutoff }
-        saveEntries()
-    }
-    
-    // MARK: - Persistence
+    // MARK: - Load from Database
     
     private func loadEntries() {
-        guard let data = UserDefaults.standard.data(forKey: storageKey),
-              let decoded = try? JSONDecoder().decode([AuditLogEntry].self, from: data) else {
-            return
+        guard let db = db else { return }
+        
+        do {
+            let cutoffDate = Calendar.current.date(byAdding: .day, value: -retentionDays, to: Date()) ?? Date()
+            
+            let query = auditLog
+                .filter(colTimestamp >= cutoffDate)
+                .order(colTimestamp.desc)
+                .limit(10000) // Cap at reasonable limit
+            
+            entries = []
+            for row in try db.prepare(query) {
+                let entry = try parseRow(row)
+                entries.append(entry)
+            }
+        } catch {
+            print("Failed to load audit log: \(error)")
         }
-        entries = decoded
     }
     
-    private func saveEntries() {
-        guard let data = try? JSONEncoder().encode(entries) else { return }
-        UserDefaults.standard.set(data, forKey: storageKey)
+    // MARK: - Cleanup (only removes entries older than retention period)
+    
+    func cleanupOldEntries() {
+        guard let db = db else { return }
+        
+        do {
+            let cutoffDate = Calendar.current.date(byAdding: .day, value: -retentionDays, to: Date()) ?? Date()
+            try db.run(auditLog.filter(colTimestamp < cutoffDate).delete())
+        } catch {
+            print("Failed to cleanup old audit entries: \(error)")
+        }
     }
 }
