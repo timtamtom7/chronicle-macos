@@ -20,6 +20,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         billStore = BillStore.shared
 
+        // R16: Initialize subscription service on launch
+        if #available(macOS 13.0, *) {
+            Task {
+                await SubscriptionService.shared.refreshStatus()
+            }
+        }
+
         // Setup notifications
         setupNotifications()
 

@@ -36,6 +36,8 @@ final class APIService: ObservableObject {
             _ = APIKeyService.shared.generateKey()
         }
 
+        // R19: Network security - localhost-only API server
+        // No external network calls except iCloud. This server is local-only.
         let params = NWParameters.tcp
         params.allowLocalEndpointReuse = true
 
@@ -176,6 +178,15 @@ final class APIService: ObservableObject {
             if token.isEmpty || !APIKeyService.shared.validate(token) {
                 sendError(status: .unauthorized, message: "Invalid or missing API key", connection: connection)
                 return
+            }
+
+            // R19: TOTP 2FA check - require X-TOTP header if 2FA is enabled
+            if TOTPService.shared.isEnabled {
+                let totpHeader = headers["x-totp"] ?? ""
+                if !TOTPService.shared.verifyCode(totpHeader) {
+                    sendError(status: .unauthorized, message: "Invalid or missing TOTP code. Enable 2FA in API settings.", connection: connection)
+                    return
+                }
             }
         }
 
