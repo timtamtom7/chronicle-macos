@@ -443,6 +443,40 @@ struct SettingsSheet: View {
     @State private var accountantStartDate: Date = Calendar.current.date(byAdding: .year, value: -2, to: Date()) ?? Date()
     @State private var accountantEndDate: Date = Date()
     @StateObject private var businessService = BusinessService.shared
+    
+    // R16: Subscription state
+    @State private var showUpgradeSheet = false
+    @State private var isRestoringPurchases = false
+    @State private var subscriptionError: String?
+    
+    @available(macOS 13.0, *)
+    private var subscriptionService: SubscriptionService {
+        SubscriptionService.shared
+    }
+    
+    @available(macOS 13.0, *)
+    private var storeKitService: StoreKitService {
+        StoreKitService.shared
+    }
+    
+    private var currentTierBadge: String {
+        if #available(macOS 13.0, *) {
+            return subscriptionService.status.tier.displayName
+        }
+        return "Free"
+    }
+    
+    private var currentTierColor: Color {
+        if #available(macOS 13.0, *) {
+            switch subscriptionService.status.tier {
+            case .free: return Theme.textTertiary
+            case .pro: return Theme.accent
+            case .household: return .purple
+            case .enterprise: return .orange
+            }
+        }
+        return Theme.textTertiary
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -588,6 +622,9 @@ struct SettingsSheet: View {
                         }
                     }
 
+                    // R16: Subscriptions Section
+                    subscriptionSettingsSection
+
                     // About Section
                     settingsSection(title: "ABOUT") {
                         VStack(alignment: .leading, spacing: Theme.spacing8) {
@@ -622,6 +659,149 @@ struct SettingsSheet: View {
         let period = hour >= 12 ? "PM" : "AM"
         let displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)
         return "\(displayHour):00 \(period)"
+    }
+
+    // MARK: - R16: Subscription Settings
+
+    @ViewBuilder
+    private var subscriptionSettingsSection: some View {
+        if #available(macOS 13.0, *) {
+            settingsSection(title: "SUBSCRIPTIONS") {
+                VStack(alignment: .leading, spacing: Theme.spacing12) {
+                    // Current plan
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Current Plan")
+                                .font(.body)
+                                .foregroundColor(Theme.textPrimary)
+                            HStack(spacing: 6) {
+                                Text(currentTierBadge)
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundColor(Theme.textOnAccent)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .background(currentTierColor)
+                                    .cornerRadius(4)
+                                
+                                if subscriptionService.status.isTrialActive, let trialEnds = subscriptionService.status.trialExpiresAt {
+                                    Text("Trial ends \(trialEnds.formatted(date: .abbreviated, time: .omitted))")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.success)
+                                }
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        if subscriptionService.status.tier == .free {
+                            Button("Upgrade to Pro") {
+                                showUpgradeSheet = true
+                            }
+                            .font(.footnote)
+                            .foregroundColor(Theme.textOnAccent)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Theme.accent)
+                            .cornerRadius(Theme.radiusSmall)
+                            .accessibilityLabel("Upgrade to Pro")
+                        } else {
+                            Button("Manage Subscription") {
+                                openAppStoreSubscription()
+                            }
+                            .font(.footnote)
+                            .foregroundColor(Theme.accent)
+                            .accessibilityLabel("Manage subscription")
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    // Restore purchases
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Restore Purchases")
+                                .font(.body)
+                                .foregroundColor(Theme.textPrimary)
+                            Text("Reconnect to your existing subscription")
+                                .font(.caption)
+                                .foregroundColor(Theme.textTertiary)
+                        }
+                        
+                        Spacer()
+                        
+                        Button {
+                            Task {
+                                isRestoringPurchases = true
+                                subscriptionError = nil
+                                do {
+                                    try await subscriptionService.restorePurchases()
+                                } catch {
+                                    subscriptionError = error.localizedDescription
+                                }
+                                isRestoringPurchases = false
+                            }
+                        } label: {
+                            if isRestoringPurchases {
+                                ProgressView()
+                                    .scaleEffect(0.7)
+                            } else {
+                                Text("Restore")
+                                    .font(.footnote)
+                                    .foregroundColor(Theme.accent)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isRestoringPurchases)
+                        .accessibilityLabel("Restore purchases")
+                    }
+                    
+                    // Error message
+                    if let error = subscriptionError {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundColor(Theme.danger)
+                    }
+                    
+                    // Pro features list when free
+                    if subscriptionService.status.tier == .free {
+                        Divider()
+                        
+                        VStack(alignment: .leading, spacing: Theme.spacing8) {
+                            Text("Pro Features")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(Theme.textSecondary)
+                            
+                            ForEach(Array(Feature.proFeatures.prefix(5)), id: \.self) { feature in
+                                HStack(spacing: 6) {
+                                    Image(systemName: "lock.fill")
+                                        .font(.caption2)
+                                        .foregroundColor(Theme.textTertiary)
+                                    Text(feature.description)
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+                            }
+                            
+                            Button("See All Features") {
+                                showUpgradeSheet = true
+                            }
+                            .font(.caption)
+                            .foregroundColor(Theme.accent)
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showUpgradeSheet) {
+                UpgradePromptView(isPresented: $showUpgradeSheet, trigger: .settings)
+            }
+        }
+    }
+
+    private func openAppStoreSubscription() {
+        if let url = URL(string: "macappstore://subscriptions") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     private func settingsSection<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {

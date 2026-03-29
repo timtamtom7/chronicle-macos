@@ -151,6 +151,9 @@ struct BillListView: View {
                 }
             }
 
+            // R16: Advanced Recurrence (Pro feature)
+            recurrenceSidebarSection
+
             Spacer()
 
             // Stats at bottom of sidebar
@@ -193,6 +196,83 @@ struct BillListView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(title), \(count) bills\(selected ? ", selected" : "")")
+    }
+
+    // MARK: - R16: Advanced Recurrence Section (Pro Feature)
+
+    @available(macOS 13.0, *)
+    private var subscriptionService: SubscriptionService {
+        SubscriptionService.shared
+    }
+
+    private var isFreeTier: Bool {
+        if #available(macOS 13.0, *) {
+            return subscriptionService.status.tier == .free
+        }
+        return false
+    }
+
+    private var recurrenceSidebarSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("RECURRENCE")
+                .font(.caption)
+                .foregroundColor(Theme.textTertiary)
+                .padding(.horizontal, Theme.spacing16)
+                .padding(.top, Theme.spacing16)
+                .padding(.bottom, Theme.spacing8)
+
+            ForEach(Recurrence.allCases, id: \.self) { recurrence in
+                let isAdvanced = recurrence == .biweekly || recurrence == .quarterly || recurrence == .semiAnnual || recurrence == .annual
+                let count = billStore.bills.filter { $0.recurrence == recurrence }.count
+                if count > 0 || !isAdvanced {
+                    recurrenceSidebarItem(recurrence: recurrence, isAdvanced: isAdvanced, count: count)
+                }
+            }
+        }
+    }
+
+    private func recurrenceSidebarItem(recurrence: Recurrence, isAdvanced: Bool, count: Int) -> some View {
+        Button {
+            // Free users can't filter by advanced recurrence
+            if !isAdvanced || !isFreeTier {
+                // Filter by this recurrence
+            }
+        } label: {
+            HStack {
+                if isAdvanced && isFreeTier {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(Theme.textTertiary.opacity(0.5))
+                        .frame(width: 16)
+                } else {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 10))
+                        .foregroundColor(Theme.textTertiary)
+                        .frame(width: 16)
+                }
+
+                Text(recurrence.shortName)
+                    .font(.system(size: 12))
+                    .foregroundColor(isAdvanced && isFreeTier ? Theme.textTertiary : Theme.textSecondary)
+
+                Spacer()
+
+                Text("\(count)")
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.textTertiary)
+
+                if isAdvanced && isFreeTier {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 9))
+                        .foregroundColor(Theme.textTertiary.opacity(0.4))
+                }
+            }
+            .padding(.horizontal, Theme.spacing16)
+            .padding(.vertical, Theme.spacing8)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(recurrence.shortName), \(count) bills\(isAdvanced && isFreeTier ? ", Pro feature" : "")")
+        .opacity(isAdvanced && isFreeTier ? 0.6 : 1.0)
     }
 
     private var statsView: some View {

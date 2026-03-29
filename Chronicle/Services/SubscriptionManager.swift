@@ -120,28 +120,28 @@ public final class SubscriptionManager: ObservableObject {
             return sub.tier != .free
         case .customRecurrence:
             return sub.tier != .free
-        case .mlReminders:
+        case .smartReminders:
+            return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
+        case .spendingInsights:
             return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
         case .taxExport:
             return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
-        case .businessTagging:
+        case .businessTags:
             return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
         case .advancedWidgets:
             return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
-        case .shortcuts:
+        case .shortcutsIntegration:
             return sub.tier == .pro || sub.tier == .household || sub.tier == .enterprise
         case .householdMembers:
             return sub.tier == .household || sub.tier == .enterprise
-        case .icloudSync:
+        case .realTimeSync:
             return sub.tier == .household || sub.tier == .enterprise
-        case .teamManagement:
-            return sub.tier == .enterprise
-        case .ssoSaml:
-            return sub.tier == .enterprise
-        case .auditLog:
-            return sub.tier == .enterprise
-        case .mdm:
-            return sub.tier == .enterprise
+        case .splitBillTracking:
+            return sub.tier == .household || sub.tier == .enterprise
+        case .settleUp:
+            return sub.tier == .household || sub.tier == .enterprise
+        case .sharedInvoiceAttachments:
+            return sub.tier == .household || sub.tier == .enterprise
         }
     }
     
@@ -183,24 +183,6 @@ public final class SubscriptionManager: ObservableObject {
             return safe
         }
     }
-}
-
-// MARK: - Feature Enum
-
-public enum Feature {
-    case unlimitedBills
-    case customRecurrence
-    case mlReminders
-    case taxExport
-    case businessTagging
-    case advancedWidgets
-    case shortcuts
-    case householdMembers
-    case icloudSync
-    case teamManagement
-    case ssoSaml
-    case auditLog
-    case mdm
 }
 
 // MARK: - Errors

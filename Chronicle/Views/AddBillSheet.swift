@@ -5,6 +5,21 @@ struct AddBillSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     var editingBill: Bill?
+    
+    // R16: Upgrade nudge state
+    @State private var showUpgradeNudge = false
+    @State private var showUpgradeSheet = false
+    
+    @available(macOS 13.0, *)
+    private var subscriptionService: SubscriptionService {
+        SubscriptionService.shared
+    }
+    
+    private var isFreeUserAtLimit: Bool {
+        guard editingBill == nil else { return false }
+        guard let service = Optional(subscriptionService) else { return false }
+        return service.status.tier == .free && billStore.bills.count >= 10
+    }
 
     @State private var name: String = ""
     @State private var amountString: String = ""
@@ -82,6 +97,11 @@ struct AddBillSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // R16: Upgrade nudge banner for free users at limit
+            if isFreeUserAtLimit && !showUpgradeNudge {
+                upgradeNudgeBanner
+            }
+
             // Header
             header
 
@@ -234,6 +254,9 @@ struct AddBillSheet: View {
         }
         .frame(width: Theme.sheetMedium.width)
         .background(Theme.background)
+        .sheet(isPresented: $showUpgradeSheet) {
+            UpgradePromptView(isPresented: $showUpgradeSheet, trigger: .billLimit)
+        }
         .onAppear {
             if let bill = editingBill {
                 name = bill.name
@@ -330,6 +353,43 @@ struct AddBillSheet: View {
                 }
             }
         }
+    }
+
+    // MARK: - R16: Upgrade Nudge
+    
+    private var upgradeNudgeBanner: some View {
+        HStack(spacing: Theme.spacing8) {
+            Image(systemName: "arrow.up.circle.fill")
+                .font(.body)
+                .foregroundColor(Theme.accent)
+            
+            Text("Upgrade for unlimited bills")
+                .font(.callout)
+                .foregroundColor(Theme.textPrimary)
+            
+            Spacer()
+            
+            Button("Upgrade") {
+                showUpgradeSheet = true
+            }
+            .font(.footnote)
+            .foregroundColor(Theme.textOnAccent)
+            .padding(.horizontal, Theme.spacing12)
+            .padding(.vertical, 5)
+            .background(Theme.accent)
+            .cornerRadius(Theme.radiusSmall)
+            .accessibilityLabel("Upgrade to Pro")
+            
+            Button(action: { showUpgradeNudge = true }) {
+                Image(systemName: "xmark")
+                    .font(.caption)
+                    .foregroundColor(Theme.textTertiary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss upgrade nudge")
+        }
+        .padding(Theme.spacing12)
+        .background(Theme.accent.opacity(0.08))
     }
 
     private var businessSection: some View {
