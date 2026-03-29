@@ -39,8 +39,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupPopover()
         setupMainWindow()
 
-        // Hide dock icon - menu bar app only
-        NSApp.setActivationPolicy(.accessory)
+        // Show dock icon - regular app with menu bar extra
+        NSApp.setActivationPolicy(.regular)
 
         // Listen for bill changes to update badge
         NotificationCenter.default.addObserver(
