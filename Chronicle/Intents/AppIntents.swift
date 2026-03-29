@@ -259,6 +259,179 @@ struct CreateBillFromTextIntent: AppIntent {
     }
 }
 
+// MARK: - R18 New Intents
+
+// MARK: - Get Overdue Bills Intent
+
+@available(macOS 13.0, *)
+struct GetOverdueBillsIntent: AppIntent {
+    static var title: LocalizedStringResource = "Get Overdue Bills"
+    static var description = IntentDescription("Returns all overdue unpaid bills from Chronicle")
+    
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<[String]> {
+        let billStore = BillStore.shared
+        billStore.loadBills()
+        
+        let overdue = billStore.pastDue
+        
+        let result = overdue.map { bill -> String in
+            let dueFormatter = DateFormatter()
+            dueFormatter.dateStyle = .medium
+            dueFormatter.timeStyle = .none
+            let dueStr = dueFormatter.string(from: bill.dueDate)
+            return "\(bill.name): \(bill.formattedAmount) (was due \(dueStr))"
+        }
+        
+        return .result(value: result)
+    }
+}
+
+// MARK: - Get Bill Details Intent
+
+@available(macOS 13.0, *)
+struct GetBillDetailsIntent: AppIntent {
+    static var title: LocalizedStringResource = "Get Bill Details"
+    static var description = IntentDescription("Returns full details for a specific bill as JSON")
+    
+    @Parameter(title: "Bill Name")
+    var billName: String
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("Get details for bill: \(\.$billName)")
+    }
+    
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<String> {
+        let billStore = BillStore.shared
+        billStore.loadBills()
+        
+        guard let bill = billStore.bills.first(where: { $0.name.localizedCaseInsensitiveContains(billName) }) else {
+            return .result(value: "{\"error\": \"Bill not found\"}")
+        }
+        
+        let dueFormatter = ISO8601DateFormatter()
+        dueFormatter.formatOptions = [.withInternetDateTime]
+        
+        let details: [String: Any] = [
+            "id": bill.id.uuidString,
+            "name": bill.name,
+            "amount": (Decimal(bill.amountCents) / 100 as Decimal as NSDecimalNumber).doubleValue,
+            "currency": bill.currency.rawValue,
+            "dueDate": dueFormatter.string(from: bill.dueDate),
+            "dueDay": bill.dueDay,
+            "category": bill.category.rawValue,
+            "recurrence": bill.recurrence.rawValue,
+            "isPaid": bill.isPaid,
+            "isActive": bill.isActive,
+            "isTaxDeductible": bill.isTaxDeductible,
+            "notes": bill.notes ?? "",
+            "createdAt": dueFormatter.string(from: bill.createdAt)
+        ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: details, options: .prettyPrinted),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            return .result(value: "{\"error\": \"Failed to serialize bill details\"}")
+        }
+        
+        return .result(value: jsonString)
+    }
+}
+
+// MARK: - Set Budget Intent
+
+@available(macOS 13.0, *)
+struct SetBudgetIntent: AppIntent {
+    static var title: LocalizedStringResource = "Set Monthly Budget"
+    static var description = IntentDescription("Sets the monthly budget amount in Chronicle")
+    
+    @Parameter(title: "Budget Amount")
+    var budgetAmount: Double
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("Set monthly budget to $\(\.$budgetAmount)")
+    }
+    
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let billStore = BillStore.shared
+        billStore.loadBills()
+        
+        let amount = Decimal(budgetAmount)
+        billStore.setMonthlyBudget(amount)
+        
+        return .result(dialog: "Monthly budget set to $\(String(format: "%.2f", budgetAmount))")
+    }
+}
+
+// MARK: - Get Budget Status Intent
+
+@available(macOS 13.0, *)
+struct GetBudgetStatusIntent: AppIntent {
+    static var title: LocalizedStringResource = "Get Budget Status"
+    static var description = IntentDescription("Returns current spend vs budget percentage")
+    
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<String> {
+        let billStore = BillStore.shared
+        billStore.loadBills()
+        
+        let status = billStore.overallBudgetStatus
+        guard status.limit > 0 else {
+            return .result(value: "No budget set")
+        }
+        
+        let percentage = (status.spent / status.limit) * 100
+        let remaining = status.limit - status.spent
+        
+        let result = String(format: "%.0f%% of budget used (%.2f spent, %.2f remaining)",
+                          (percentage as NSDecimalNumber).doubleValue,
+                          (status.spent as NSDecimalNumber).doubleValue,
+                          (remaining as NSDecimalNumber).doubleValue)
+        
+        return .result(value: result)
+    }
+}
+
+// MARK: - When Bill Overdue Trigger (AppIntent Trigger for Shortcuts Automation)
+
+@available(macOS 13.0, *)
+struct WhenBillOverdueTrigger: AppIntent {
+    static var title: LocalizedStringResource = "When a Bill Becomes Overdue"
+    static var description = IntentDescription("Triggers when any bill crosses its due date without payment")
+    static var openAppWhenRun: Bool = false
+    
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        // This trigger is used by Shortcuts automation
+        // The actual trigger logic is handled by AutomationService
+        return .result()
+    }
+}
+
+// MARK: - When Budget Exceeded Trigger (AppIntent Trigger for Shortcuts Automation)
+
+@available(macOS 13.0, *)
+struct WhenBudgetExceededTrigger: AppIntent {
+    static var title: LocalizedStringResource = "When Budget Exceeded"
+    static var description = IntentDescription("Triggers when monthly spending exceeds the set budget")
+    static var openAppWhenRun: Bool = false
+    
+    @Parameter(title: "Threshold Percentage", default: 100)
+    var thresholdPercentage: Int
+    
+    static var parameterSummary: some ParameterSummary {
+        Summary("Trigger when budget exceeds \(\.$thresholdPercentage)%")
+    }
+    
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        // This trigger is used by Shortcuts automation
+        // The actual trigger logic is handled by AutomationService
+        return .result()
+    }
+}
+
 // MARK: - App Shortcuts Provider (R18 + R11 Siri Suggestions)
 
 @available(macOS 13.0, *)
@@ -331,6 +504,38 @@ struct ChronicleShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Spending by Category",
             systemImageName: "chart.pie"
+        )
+        
+        // R18 new shortcuts
+        AppShortcut(
+            intent: GetOverdueBillsIntent(),
+            phrases: [
+                "Are any bills overdue in \(.applicationName)",
+                "Check for overdue bills in \(.applicationName)"
+            ],
+            shortTitle: "Overdue Bills",
+            systemImageName: "exclamationmark.triangle"
+        )
+        
+        AppShortcut(
+            intent: GetBudgetStatusIntent(),
+            phrases: [
+                "What's my budget status in \(.applicationName)",
+                "Budget status in \(.applicationName)",
+                "How much of my budget have I used in \(.applicationName)"
+            ],
+            shortTitle: "Budget Status",
+            systemImageName: "chart.bar"
+        )
+        
+        AppShortcut(
+            intent: SetBudgetIntent(),
+            phrases: [
+                "Set my monthly budget to in \(.applicationName)",
+                "Change my budget in \(.applicationName)"
+            ],
+            shortTitle: "Set Budget",
+            systemImageName: "dollarsign.circle.badge.plus"
         )
     }
 }

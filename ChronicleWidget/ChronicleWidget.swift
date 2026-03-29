@@ -13,6 +13,9 @@ struct ChronicleWidgetBundle: WidgetBundle {
         BusinessExpenseWidget()
         TaxDeductibleWidget()
         BusinessUpcomingWidget()
+        MonthlyCalendarWidget()
+        FundWidget()
+        InteractivePayWidget()
     }
 }
 
@@ -280,7 +283,192 @@ struct BusinessWidgetProvider: TimelineProvider {
 
 // MARK: - Select Bill Intent (macOS 14+)
 // Keeping for reference; AppIntentConfiguration requires macOS 14+
-// struct SelectBillIntent: WidgetConfigurationIntent { ... }
+// MARK: - R18 Calendar Widget Entry
+
+struct CalendarEntry: TimelineEntry {
+    let date: Date
+    let bills: [BillSnapshot]
+    let month: Int
+    let year: Int
+    let selectedMonth: Int
+    let selectedYear: Int
+}
+
+// MARK: - R18 Fund Widget Entry
+
+struct FundEntry: TimelineEntry {
+    let date: Date
+    let spent: Double
+    let budget: Double
+    let category: String?
+}
+
+// MARK: - R18 Interactive Pay Widget Entry
+
+struct InteractivePayEntry: TimelineEntry {
+    let date: Date
+    let selectedBill: BillSnapshot?
+    let allBills: [BillSnapshot]
+}
+
+
+
+// MARK: - R18 Calendar Widget Provider
+
+struct CalendarWidgetProvider: TimelineProvider {
+    typealias Entry = CalendarEntry
+    
+    func placeholder(in context: Context) -> CalendarEntry {
+        CalendarEntry(date: Date(), bills: [], month: 0, year: 0, selectedMonth: 0, selectedYear: 0)
+    }
+    
+    func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> Void) {
+        let entry = loadEntry(monthOffset: 0)
+        completion(entry)
+    }
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CalendarEntry>) -> Void) {
+        var entries: [CalendarEntry] = []
+        for offset in 0..<3 {
+            let entry = loadEntry(monthOffset: offset)
+            entries.append(entry)
+        }
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) ?? Date()
+        let timeline = Timeline(entries: entries, policy: .after(nextUpdate))
+        completion(timeline)
+    }
+    
+    private func loadEntry(monthOffset: Int) -> CalendarEntry {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+        let calendar = Calendar.current
+        let now = Date()
+        
+        guard let targetMonth = calendar.date(byAdding: .month, value: -monthOffset, to: now) else {
+            return CalendarEntry(date: Date(), bills: [], month: 0, year: 0, selectedMonth: 0, selectedYear: 0)
+        }
+        
+        let month = calendar.component(.month, from: targetMonth)
+        let year = calendar.component(.year, from: targetMonth)
+        
+        var bills: [BillSnapshot] = []
+        if let data = defaults.data(forKey: "widget_bills"),
+           let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) {
+            bills = decoded.map { bill in
+                BillSnapshot(
+                    id: bill.id,
+                    name: bill.name,
+                    amount: bill.amount,
+                    dueDate: bill.dueDate,
+                    isPaid: bill.isPaid,
+                    category: bill.category,
+                    isTaxDeductible: false,
+                    businessCategory: ""
+                )
+            }
+        }
+        
+        return CalendarEntry(date: Date(), bills: bills, month: month, year: year, selectedMonth: month, selectedYear: year)
+    }
+}
+
+// MARK: - R18 Fund Widget Provider
+
+struct FundWidgetProvider: TimelineProvider {
+    typealias Entry = FundEntry
+    
+    func placeholder(in context: Context) -> FundEntry {
+        FundEntry(date: Date(), spent: 1234, budget: 2000, category: nil)
+    }
+    
+    func getSnapshot(in context: Context, completion: @escaping (FundEntry) -> Void) {
+        let entry = loadEntry()
+        completion(entry)
+    }
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<FundEntry>) -> Void) {
+        let entry = loadEntry()
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) ?? Date()
+        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+        completion(timeline)
+    }
+    
+    private func loadEntry() -> FundEntry {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
+        
+        var spent: Double = 0
+        if let data = defaults.data(forKey: "widget_bills"),
+           let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) {
+            spent = decoded
+                .filter { $0.isPaid && $0.dueDate >= startOfMonth && $0.dueDate <= now }
+                .reduce(0) { $0 + (($1.amount as NSDecimalNumber).doubleValue) }
+        }
+        
+        let budget = defaults.double(forKey: "monthly_budget")
+        
+        return FundEntry(date: Date(), spent: spent, budget: budget, category: nil)
+    }
+}
+
+// MARK: - R18 Interactive Pay Widget Provider
+
+struct InteractivePayWidgetProvider: TimelineProvider {
+    typealias Entry = InteractivePayEntry
+    
+    func placeholder(in context: Context) -> InteractivePayEntry {
+        let sampleBill = BillSnapshot(id: UUID(), name: "Netflix", amount: 15.99, dueDate: Date(), isPaid: false, category: "Subscriptions", isTaxDeductible: false, businessCategory: "")
+        return InteractivePayEntry(date: Date(), selectedBill: sampleBill, allBills: [sampleBill])
+    }
+    
+    func getSnapshot(in context: Context, completion: @escaping (InteractivePayEntry) -> Void) {
+        let entry = loadEntry(billName: nil)
+        completion(entry)
+    }
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<InteractivePayEntry>) -> Void) {
+        let entry = loadEntry(billName: nil)
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) ?? Date()
+        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+        completion(timeline)
+    }
+    
+    private func loadEntry(billName: String?) -> InteractivePayEntry {
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+        let calendar = Calendar.current
+        let now = calendar.startOfDay(for: Date())
+        
+        var allBills: [BillSnapshot] = []
+        if let data = defaults.data(forKey: "widget_bills"),
+           let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) {
+            allBills = decoded.map { bill in
+                BillSnapshot(
+                    id: bill.id,
+                    name: bill.name,
+                    amount: bill.amount,
+                    dueDate: bill.dueDate,
+                    isPaid: bill.isPaid,
+                    category: bill.category,
+                    isTaxDeductible: false,
+                    businessCategory: ""
+                )
+            }
+        }
+        
+        let upcoming = allBills.filter { !$0.isPaid && $0.dueDate >= now }.sorted { $0.dueDate < $1.dueDate }
+        
+        let selected: BillSnapshot?
+        if let name = billName {
+            selected = upcoming.first { $0.name.localizedCaseInsensitiveContains(name) }
+        } else {
+            selected = upcoming.first
+        }
+        
+        return InteractivePayEntry(date: Date(), selectedBill: selected, allBills: upcoming)
+    }
+}
+
 // struct BillEntity: AppEntity { ... }
 // struct BillEntityQuery: EntityQuery { ... }
 
@@ -311,6 +499,29 @@ struct BusinessBillInfo: Codable {
         self.businessCategory = businessCategory
         self.isReimbursable = isReimbursable
     }
+}
+
+// MARK: - Helper to load all bills (shared)
+
+private func loadAllBills() -> [BillSnapshot] {
+    let defaults = UserDefaults(suiteName: "group.com.chronicle.macos") ?? .standard
+    var bills: [BillSnapshot] = []
+    if let data = defaults.data(forKey: "widget_bills"),
+       let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) {
+        bills = decoded.map { bill in
+            BillSnapshot(
+                id: bill.id,
+                name: bill.name,
+                amount: bill.amount,
+                dueDate: bill.dueDate,
+                isPaid: bill.isPaid,
+                category: bill.category,
+                isTaxDeductible: false,
+                businessCategory: ""
+            )
+        }
+    }
+    return bills
 }
 
 enum BusinessCategory: String, CaseIterable, Codable, Identifiable {
@@ -856,3 +1067,398 @@ struct BusinessUpcomingWidgetView: View {
         .padding()
     }
 }
+import Foundation
+import AppIntents
+
+// MARK: - Monthly Calendar Widget (systemLarge)
+
+struct MonthlyCalendarWidget: Widget {
+    let kind: String = "MonthlyCalendarWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CalendarWidgetProvider()) { entry in
+            MonthlyCalendarWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Monthly Calendar")
+        .description("Full month calendar with bill due dates")
+        .supportedFamilies([.systemLarge])
+    }
+}
+
+struct MonthlyCalendarWidgetView: View {
+    let entry: CalendarEntry
+    
+    private let calendar = Calendar.current
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
+    private let weekdaySymbols = ["S", "M", "T", "W", "T", "F", "S"]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(monthYearString)
+                    .font(.headline)
+                Spacer()
+                Image(systemName: "calendar")
+                    .foregroundColor(.accentColor)
+            }
+            
+            LazyVGrid(columns: columns, spacing: 2) {
+                ForEach(weekdaySymbols, id: \.self) { symbol in
+                    Text(symbol)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            
+            LazyVGrid(columns: columns, spacing: 2) {
+                ForEach(Array(calendarDays.enumerated()), id: \.offset) { _, day in
+                    if let day = day {
+                        CalendarDayView(
+                            day: day,
+                            bills: billsForDay(day),
+                            isToday: isToday(day),
+                            isPaid: isPaid(day)
+                        )
+                    } else {
+                        Text("")
+                            .frame(maxWidth: .infinity, minHeight: 28)
+                    }
+                }
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private var monthYearString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        var components = DateComponents()
+        components.year = entry.year
+        components.month = entry.month
+        components.day = 1
+        if let date = calendar.date(from: components) {
+            return dateFormatter.string(from: date)
+        }
+        return ""
+    }
+    
+    private var calendarDays: [Int?] {
+        var components = DateComponents()
+        components.year = entry.year
+        components.month = entry.month
+        components.day = 1
+        
+        guard let firstOfMonth = calendar.date(from: components),
+              let range = calendar.range(of: .day, in: .month, for: firstOfMonth) else {
+            return []
+        }
+        
+        let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
+        let leadingEmpty = firstWeekday - 1
+        
+        var days: [Int?] = Array(repeating: nil, count: leadingEmpty)
+        for day in range {
+            days.append(day)
+        }
+        
+        while days.count % 7 != 0 {
+            days.append(nil)
+        }
+        
+        return days
+    }
+    
+    private func billsForDay(_ day: Int) -> [BillSnapshot] {
+        var components = DateComponents()
+        components.year = entry.year
+        components.month = entry.month
+        components.day = day
+        guard let dayDate = calendar.date(from: components) else { return [] }
+        let startOfDay = calendar.startOfDay(for: dayDate)
+        
+        return entry.bills.filter { bill in
+            calendar.isDate(bill.dueDate, inSameDayAs: startOfDay)
+        }
+    }
+    
+    private func isToday(_ day: Int) -> Bool {
+        var components = calendar.dateComponents([.year, .month, .day], from: Date())
+        return components.day == day && components.month == entry.month && components.year == entry.year
+    }
+    
+    private func isPaid(_ day: Int) -> Bool {
+        let bills = billsForDay(day)
+        return !bills.isEmpty && bills.allSatisfy { $0.isPaid }
+    }
+}
+
+struct CalendarDayView: View {
+    let day: Int
+    let bills: [BillSnapshot]
+    let isToday: Bool
+    let isPaid: Bool
+    
+    var body: some View {
+        VStack(spacing: 2) {
+            Text("\(day)")
+                .font(.caption)
+                .fontWeight(isToday ? .bold : .regular)
+                .foregroundColor(isToday ? .white : (isPaid ? .secondary : .primary))
+                .frame(width: 24, height: 24)
+                .background(isToday ? Color.accentColor : Color.clear)
+                .cornerRadius(12)
+            
+            if !bills.isEmpty {
+                HStack(spacing: 1) {
+                    ForEach(bills.prefix(3).indices, id: \.self) { _ in
+                        Circle()
+                            .fill(bills[0].isPaid ? Color.green : Color.accentColor)
+                            .frame(width: 4, height: 4)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 28)
+    }
+}
+
+// MARK: - Fund Widget (systemMedium)
+
+struct FundWidget: Widget {
+    let kind: String = "FundWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: FundWidgetProvider()) { entry in
+            FundWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Budget Tracker")
+        .description("Track spending vs monthly budget")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
+struct FundWidgetView: View {
+    let entry: FundEntry
+    
+    private var progress: Double {
+        guard entry.budget > 0 else { return 0 }
+        return min(entry.spent / entry.budget, 1.0)
+    }
+    
+    private var progressColor: Color {
+        if progress >= 0.9 {
+            return .red
+        } else if progress >= 0.75 {
+            return .yellow
+        } else {
+            return .green
+        }
+    }
+    
+    private var monthString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM"
+        return formatter.string(from: Date())
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "dollarsign.circle.fill")
+                    .foregroundColor(.accentColor)
+                Text("Budget")
+                    .font(.headline)
+                Spacer()
+                Text(monthString)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("$\(entry.spent, specifier: "%.2f")")
+                    .font(.system(size: 28, weight: .bold))
+                
+                Text("of $\(entry.budget, specifier: "%.2f") spent")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.secondary.opacity(0.2))
+                        .frame(height: 16)
+                    
+                    Rectangle()
+                        .fill(Color.secondary.opacity(0.5))
+                        .frame(width: 2, height: 20)
+                        .offset(x: geometry.size.width - 1)
+                    
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(progressColor)
+                        .frame(width: geometry.size.width * progress, height: 16)
+                }
+            }
+            .frame(height: 20)
+            
+            HStack {
+                Text("\(Int(progress * 100))% of budget used")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+                if progress >= 0.9 {
+                    Label("Over limit", systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                } else if progress >= 0.75 {
+                    Label("Nearing limit", systemImage: "exclamationmark.circle.fill")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+// MARK: - Interactive Pay Widget (systemSmall with Button - macOS 14+)
+
+struct InteractivePayWidget: Widget {
+    let kind: String = "InteractivePayWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: InteractivePayWidgetProvider()) { entry in
+            InteractivePayWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Pay Bill")
+        .description("Quickly mark a bill as paid directly from the widget")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
+struct InteractivePayWidgetView: View {
+    let entry: InteractivePayEntry
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "dollarsign.circle.fill")
+                    .foregroundColor(.accentColor)
+                Text("Chronicle")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+                Image(systemName: "hand.tap.fill")
+                    .font(.caption)
+                    .foregroundColor(.accentColor)
+            }
+            
+            Spacer()
+            
+            if let bill = entry.selectedBill {
+                Text(bill.name)
+                    .font(.headline)
+                    .lineLimit(1)
+                
+                Text("$\((bill.amount as NSDecimalNumber).doubleValue, specifier: "%.2f")")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                let days = Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: bill.dueDate).day ?? 0
+                Text(days == 0 ? "Due today" : "Due in \(days)d")
+                    .font(.caption)
+                    .foregroundColor(days <= 3 ? .orange : .secondary)
+                
+                Spacer()
+                
+                if #available(macOS 14.0, *) {
+                    Button(intent: MarkBillFromWidgetIntent(billId: bill.id.uuidString)) {
+                        Text("Pay")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 6)
+                            .background(Color.green)
+                            .cornerRadius(6)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Text("Open app to pay")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                        .background(Color.secondary.opacity(0.2))
+                        .cornerRadius(6)
+                }
+            } else {
+                Text("No bills due")
+                    .font(.headline)
+                Text("All caught up!")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+        }
+        .padding()
+    }
+}
+
+// MARK: - Mark Bill From Widget Intent
+
+@available(macOS 13.0, *)
+struct MarkBillFromWidgetIntent: AppIntent {
+    static var title: LocalizedStringResource = "Mark Bill as Paid from Widget"
+    static var description = IntentDescription("Marks a bill as paid from the widget")
+    
+    @Parameter(title: "Bill ID")
+    var billId: String
+    
+    init() {}
+    
+    init(billId: String) {
+        self.billId = billId
+    }
+    
+    @MainActor
+    func perform() async throws -> some IntentResult {
+        guard let uuid = UUID(uuidString: billId) else {
+            return .result()
+        }
+        
+        let defaults = UserDefaults(suiteName: "group.com.chronicle.macos")
+        if var bills = loadWidgetBills(from: defaults) {
+            if let index = bills.firstIndex(where: { $0.id == uuid && !$0.isPaid }) {
+                var bill = bills[index]
+                bill = WidgetBill(id: bill.id, name: bill.name, amount: bill.amount, dueDate: bill.dueDate, isPaid: true, category: bill.category)
+                bills[index] = bill
+                saveWidgetBills(bills, to: defaults)
+            }
+        }
+        
+        return .result()
+    }
+    
+    private func loadWidgetBills(from defaults: UserDefaults?) -> [WidgetBill]? {
+        guard let defaults = defaults,
+              let data = defaults.data(forKey: "widget_bills"),
+              let decoded = try? JSONDecoder().decode([WidgetBill].self, from: data) else {
+            return nil
+        }
+        return decoded
+    }
+    
+    private func saveWidgetBills(_ bills: [WidgetBill], to defaults: UserDefaults?) {
+        guard let defaults = defaults,
+              let encoded = try? JSONEncoder().encode(bills) else { return }
+        defaults.set(encoded, forKey: "widget_bills")
+    }
+}
+
+
