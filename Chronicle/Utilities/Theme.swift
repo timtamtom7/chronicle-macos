@@ -9,7 +9,7 @@ enum Theme {
     // Use system-adaptive colors for background/surface (respect dark mode)
     static let background = Color(nsColor: .windowBackgroundColor)
     static let surface = Color(nsColor: .controlBackgroundColor)
-    static let surfaceSecondary = Color(nsColor: .controlBackgroundColor).opacity(0.8)
+    static let surfaceSecondary = Color(nsColor: .underPageBackgroundColor)
 
     // Background levels for Liquid Glass depth
     static let backgroundLevel0 = Color(nsColor: .windowBackgroundColor)
@@ -67,9 +67,8 @@ enum Theme {
 
     // MARK: - Shadows
 
-    static func cardShadow() -> some View {
-        Color.black.opacity(0.05)
-    }
+    /// Card shadow color (semi-transparent black for elevation)
+    static let cardShadowColor = Color.black.opacity(0.08)
 }
 
 // MARK: - Haptic Feedback
