@@ -15,13 +15,34 @@ final class NotificationScheduler {
     // MARK: - Permission
 
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("Notification authorization error: \(error)")
-            }
-            DispatchQueue.main.async {
-                UserDefaults.standard.set(granted, forKey: "notificationPermissionGranted")
-                completion(granted)
+        center.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                // Already authorized
+                DispatchQueue.main.async {
+                    UserDefaults.standard.set(true, forKey: "notificationPermissionGranted")
+                    completion(true)
+                }
+            case .notDetermined:
+                self.center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                    if let error = error {
+                        print("Notification authorization error: \(error)")
+                    }
+                    DispatchQueue.main.async {
+                        UserDefaults.standard.set(granted, forKey: "notificationPermissionGranted")
+                        completion(granted)
+                    }
+                }
+            case .denied:
+                DispatchQueue.main.async {
+                    UserDefaults.standard.set(false, forKey: "notificationPermissionGranted")
+                    completion(false)
+                }
+            @unknown default:
+                DispatchQueue.main.async {
+                    UserDefaults.standard.set(false, forKey: "notificationPermissionGranted")
+                    completion(false)
+                }
             }
         }
     }
@@ -106,7 +127,8 @@ final class NotificationScheduler {
     func snoozeNotification(for bill: Bill, timing: ReminderTiming) {
         let identifier = "\(bill.id.uuidString)_\(timing.rawValue)_snooze"
         let fireDate = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
         var components = calendar.dateComponents([.year, .month, .day], from: fireDate)
         components.hour = notificationHour
         components.minute = 0
@@ -174,7 +196,8 @@ final class NotificationScheduler {
         content.categoryIdentifier = "BILL_REMINDER"
         content.userInfo = ["billId": bill.id.uuidString, "timing": timing.rawValue]
 
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
         var components = calendar.dateComponents([.year, .month, .day], from: fireDate)
         components.hour = notificationHour
         components.minute = 0
@@ -190,7 +213,8 @@ final class NotificationScheduler {
     }
 
     private func calculateFireDate(for bill: Bill, timing: ReminderTiming) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
         let dueDate = calendar.startOfDay(for: bill.dueDate)
         let daysOffset = timing.daysOffset
         guard let fireDate = calendar.date(byAdding: .day, value: -daysOffset, to: dueDate) else {

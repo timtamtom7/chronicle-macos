@@ -24,7 +24,7 @@ final class ExportService {
         let payments = try DatabaseService.shared.fetchAllPaymentRecords()
 
         let metadata = ExportMetadata(
-            appVersion: "R8",
+            appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0",
             exportDate: Date(),
             billCount: bills.count,
             paymentCount: payments.count
@@ -39,7 +39,7 @@ final class ExportService {
         let jsonData = try jsonEncoder.encode(export)
 
         let tempDir = FileManager.default.temporaryDirectory
-        let exportFileName = "Chronicle-\(formattedDate()).chronicle-export"
+        let exportFileName = "Chronicle-\(formattedDate()).chronicle"
         let exportURL = tempDir.appendingPathComponent(exportFileName)
 
         if FileManager.default.fileExists(atPath: exportURL.path) {
