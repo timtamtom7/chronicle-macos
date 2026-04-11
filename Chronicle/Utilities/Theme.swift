@@ -74,52 +74,38 @@ enum Theme {
 // MARK: - Haptic Feedback
 
 enum HapticFeedback {
-    /// Check if haptics should play based on system accessibility settings
-    private static var isEnabled: Bool {
-        // Play haptic feedback when accessibility enhancements are OFF (standard mode)
-        // When enhancements are ON, the system may provide its own feedback
-        return !NSApp.accessibilityEnhancementEnabled
-    }
-
     /// Light impact for subtle interactions (toggles, selections)
     static func light() {
-        guard isEnabled else { return }
         NSSound(named: .init("Pop"))?.play()
     }
 
     /// Medium impact for standard interactions (button taps)
     static func medium() {
-        guard isEnabled else { return }
         NSSound(named: .init("Pop"))?.play()
     }
 
     /// Heavy impact for significant actions (delete, important confirmations)
     static func heavy() {
-        guard isEnabled else { return }
         NSSound(named: .init("Blow"))?.play()
     }
 
     /// Success feedback for successful operations
     static func success() {
-        guard isEnabled else { return }
         NSSound(named: .init("Fanfare"))?.play()
     }
 
     /// Warning feedback
     static func warning() {
-        guard isEnabled else { return }
         NSSound(named: .init("Alert"))?.play()
     }
 
     /// Error feedback
     static func error() {
-        guard isEnabled else { return }
         NSSound(named: .init("Basso"))?.play()
     }
 
     /// Selection changed feedback
     static func selection() {
-        guard isEnabled else { return }
         NSSound(named: .init("Pop"))?.play()
     }
 }
