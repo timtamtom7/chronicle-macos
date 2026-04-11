@@ -18,6 +18,7 @@ enum BillSortOrder: String, CaseIterable {
 
 struct BillListView: View {
     @EnvironmentObject var billStore: BillStore
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     @State private var showingAddSheet = false
     @State private var selectedBill: Bill?
     @State private var searchText = ""
@@ -74,7 +75,7 @@ struct BillListView: View {
 
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("BILLS")
+            Text("Bills")
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
@@ -86,7 +87,7 @@ struct BillListView: View {
                 selectedCategory = nil
             }
 
-            Text("CATEGORIES")
+            Text("Categories")
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(Theme.textTertiary)
                 .padding(.horizontal, Theme.spacing16)
@@ -304,7 +305,7 @@ struct BillListView: View {
     private var pastBillsSection: some View {
         VStack(alignment: .leading, spacing: Theme.spacing8) {
             Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                     showPastBills.toggle()
                 }
             } label: {
@@ -411,12 +412,13 @@ struct BillListView: View {
             Image(systemName: "doc.text.magnifyingglass")
                 .font(.system(size: 40))
                 .foregroundColor(Theme.textTertiary)
+                .accessibilityHidden(true)
 
             Text("No bills yet")
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(Theme.textSecondary)
 
-            Text("Click + to add your first bill and never miss a payment.")
+            Text("Add your first bill to start tracking payments.")
                 .font(.system(size: 13))
                 .foregroundColor(Theme.textTertiary)
                 .multilineTextAlignment(.center)
